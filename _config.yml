@@ -1,5 +1,7 @@
 title: Simone's Statistics Blog
-theme: jekyll-theme-midnight
+theme: minima
 
 exclude: 
   - README.md
+  - Gemfile
+  - Gemfile.lock
