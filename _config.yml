@@ -1,0 +1,5 @@
+title: Simone's Statistics Blog
+theme: jekyll-theme-midnight
+
+exclude: 
+  - README.md
