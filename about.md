@@ -1,9 +1,4 @@
 ---
-title: "Simone's Statistics Blog"
-layout: default
+title: About
+permalink: /about/
 ---
-[Home](index.md) | [Homework 1](homework1/index.html) | [About](about.md)
----
-
-
-

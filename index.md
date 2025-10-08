@@ -1,11 +1,12 @@
 ---
 title: "Simone's Statistics Blog"
 layout: default
+permalink: /
 ---
-[Home](index.md) | [Homework 1](homework1/index.html) | [About](about.md)
+[Home](/) | [Homework 1](homework1/index/) | [About](about/)
 ---
 
-![Header Statistica](_site/assets/images/bullet.png)
+![Header Statistica](/assets/images/bullet.png)
 
 <header>
   # Benvenuto nel mio Blog di Statistica
