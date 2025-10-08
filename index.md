@@ -3,15 +3,15 @@ title: "Simone's Statistics Blog"
 layout: default
 permalink: /
 ---
-[Home](/) | [Homework 1](homework1/index/) | [About](about/)
+[Home](/) | [Homework 1](homework1/) | [About](about/)
 ---
 
 ![Header Statistica](/assets/images/bullet.png)
 
-<header>
-  # Benvenuto nel mio Blog di Statistica
-  Qui trovi i miei lavori e i compiti del corso.
-</header>
+---
+# Welcome to My Statistics Blog
+### Here you can find my work and assignments from the course.
+---
 
 ## My Homeworks
 
