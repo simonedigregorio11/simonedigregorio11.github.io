@@ -4,7 +4,7 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/assets/css/style.css?v=c20d27e4ecc50e91d797509cc9804f719ad675ec">
+        <link rel="stylesheet" href="/assets/css/custom.css">
     <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
 
 <!-- Setup theme-color -->
@@ -60,18 +60,64 @@
 
     <div class="container">
       <section id="main_content">
-        <h2 id="home--homework-1--about"><a href="/">Home</a> | <a href="homework1/">Homework 1</a> | <a href="about/">About</a></h2>
+        <nav style="background: url('/assets/images/bkg.png'); padding-bottom: 20px; font-family: sans-serif;">
+  <ul class="navbar" style="list-style: none; margin: 0; padding: 0; display: flex; gap: 20px; align-items: center;">
+    <li><a href="/" style="color: #63c0f5; text-decoration: none; margin-right:25px; font-size: 25px;"> Home </a></li>
+
+    <li style="position: relative;">
+      <a href="#" style="color: #63c0f5; text-decoration: none; margin-right:25px; font-size: 25px; ">Homework ▾</a>
+      <ul style="
+        display: none;
+        position: absolute;
+        background-color: #333;
+        list-style: none;
+        padding: 10px;
+        margin: 0;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      ">
+        <li><a href="/homework1/" style="color: #63c0f5; text-decoration: none; display: block; padding: 5px 10px; font-size: 18px;">- Homework 1</a></li>
+        <li><a href="/homework2/" style="color: #63c0f5; text-decoration: none; display: block; padding: 5px 10px; font-size: 18px">- Homework 2</a></li>
+      </ul>
+    </li>
+
+    <li><a href="/about/" style="color: #63c0f5; text-decoration: none; margin-right:25px; font-size: 25px;">About</a></li>
+  </ul>
+</nav>
+
+<script>
+  document.querySelectorAll("nav li").forEach(li => {
+    li.addEventListener("mouseenter", () => {
+      const submenu = li.querySelector("ul");
+      if (submenu) submenu.style.display = "block";
+    });
+    li.addEventListener("mouseleave", () => {
+      const submenu = li.querySelector("ul");
+      if (submenu) submenu.style.display = "none";
+    });
+  });
+</script>
 
 <hr />
+
 <h1 id="welcome-to-my-statistics-blog">Welcome to My Statistics Blog</h1>
-<h3 id="here-you-can-find-my-work-and-assignments-from-the-course">Here you can find my work and assignments from the course.</h3>
+
+<p>Here you can find my work and assignments from the course.</p>
+
 <hr />
 
-<h2 id="my-homeworks">My Homeworks</h2>
+<h2 id="my-homework">My Homework</h2>
 
 <ul>
-  <li><a href="homework1/index.html">Homework 1</a></li>
+  <li>
+    <p><a href="/homework1/">Homework 1</a></p>
+  </li>
+  <li>
+    <p><a href="/homework2/">Homework 2</a></p>
+  </li>
 </ul>
+
+<hr />
 
 <p>© 2025 Simone Di Gregorio — Statistics Course Blog</p>
 
