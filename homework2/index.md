@@ -4,11 +4,747 @@ layout: default
 permalink: /homework2/
 ---
 
-[← Torna alla Home](/)
+[← Back to Home](/)
 
 ---
 
+# **Datasets and Distributions**
+
+## **Introduction**
+
+In statistical science and data analysis, two fundamental concepts underpin almost every empirical and theoretical study: the dataset and the distribution.
+While a dataset represents the organized collection of observed data, a distribution expresses the probabilistic or empirical structure underlying that data.
+Understanding these concepts is essential for correctly designing experiments, modeling phenomena, and interpreting results.
+
+## **The Concept of a Dataset**
+
+A dataset is a structured collection of data, typically organized in a tabular or hierarchical format, representing measurements or observations about one or more variables.
+
+Formally, a dataset D can be defined as:
+
+<div class="formula-box">
+D = {(x<sub>1</sub>, x<sub>2</sub>​,..., x<sub>n</sub>​) ∣ x<sub>i</sub> ​∈ X<sub>i</sub>}
+</div>
+
+where each x<sub>i</sub> represents the observed value of variable X<sub>i</sub> for a given instance or unit of observation.
+
+## **Structure and Organization**
+
+Datasets are often represented as tables (matrices), where:
+
+- Rows correspond to observations or instances (e.g., individual people, experiments, time points).
+
+- Columns correspond to variables or features (e.g., age, height, temperature).
+
+An example of a simple dataset:
+
+<div class= "table-box">
+<table>
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Age</th>
+      <th scope="col">Height (cm)</th>
+      <th scope="col">Weight (kg)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td><td class="num">23</td><td class="num">175</td><td class="num">68</td>
+    </tr>
+    <tr>
+      <td>2</td><td class="num">30</td><td class="num">182</td><td class="num">80</td>
+    </tr>
+    <tr>
+      <td>3</td><td class="num">27</td><td class="num">169</td><td class="num">65</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+## **Classification of Datasets**
+
+Datasets can be classified according to different criteria, depending on their structure and the type of information they contain.
+Two of the most common distinctions are based on structure and measurement type.
+
+### **a. Based on Structure**
+
+This classification refers to the way data are organized and stored.
+
+- Structured datasets
+
+<div class="text-box">
+Data are organized in predefined formats such as rows and columns, following a consistent schema.
+This structure facilitates easy access, querying, and statistical analysis.
+Examples: Student grade tables, customer databases, sales records.
+</div>
+
+- Unstructured datasets
+
+<div class="text-box">
+Data lack a fixed organizational model or tabular format.
+They are often textual, visual, or multimedia, and require preprocessing before analysis.
+Examples: Text documents, emails, images, videos, audio recordings.
+</div>
+
+- Semi-structured datasets
+
+<div class="text-box">
+Data contain some elements of organization but do not adhere to a rigid table structure.
+They often use tags or key-value pairs to provide partial structure.
+Examples: JSON files, XML data, web server logs.
+</div>
+
+### **b. Based on Measurement Type**
+
+This classification considers the nature of the variables in the dataset — whether they represent numerical quantities or descriptive categories.
+
+- Quantitative datasets
+
+<div class="text-box">
+  Variables are numerical and express measurable quantities.<br><br>
+  They can be:
+  <ul>
+    <li>Continuous: values can take any point within a range (e.g., height, temperature).</li><br>
+    <li>Discrete: values are countable (e.g., number of siblings, daily sales).<br>
+    Examples: Students exam scores, daily rainfall, monthly income.
+  </li>
+  </ul>
+</div>
+
+- Qualitative datasets
+
+<div class="text-box">
+  Variables are categorical and describe attributes or characteristics rather than numbers.<br><br>
+  They can be:
+  <ul>
+    <li>Nominal: unordered categories (e.g., gender, nationality).</li><br>
+    <li>Ordinal: ordered categories (e.g., satisfaction level, education rank).<br>
+    Examples: Favorite colors, job titles, survey responses.
+  </li>
+  </ul>
+</div>
+
+# **Caesar Cipher Demonstration and Implementation**
+
+## **Introduction**
+Cryptography and statistics, though seemingly distinct, share a deep mathematical connection. The Caesar cipher, one of the oldest encryption schemes, replaces each letter with another a fixed number of positions down the alphabet. While trivial from a modern cryptographic perspective, it offers an excellent framework to demonstrate how statistical distribution analysis can be applied to cryptanalysis.
+This work presents a statistical method for decrypting the classical Caesar cipher by exploiting the frequency distribution of English letters. Using a combination of brute-force search and chi-squared goodness-of-fit testing, the encryption key (shift) is automatically inferred. The project illustrates how simple statistical inference and frequency analysis can transform a deterministic decryption task into a probabilistic inference problem.
+An HTML/JavaScript implementation provides an interactive demonstration designed for educational use in statistics and cryptography courses.
+
+
+## **Goals of the Implementation**
+The primary goals of this project are:
+
+- To demonstrate how statistical inference can be used to decrypt a substitution cipher.
+
+- To compare observed letter frequencies in a ciphertext with expected English frequencies.
+
+- To identify the shift parameter that minimizes the chi-squared distance between distributions.
+
+- To implement and visualize the method using JavaScript in an interactive web interface.
+<br><br>
+
+## **Example of the Caesar Cipher**
+
+A Caesar cipher with a shift of +3 transforms the alphabet as follows:
+
+<div class="example-box">
+Plaintext Alphabet:&nbsp;	A	B	C	D	E	F	G	H	I	J	K	L	M	N	O	P	Q	R	S	T	U	V	W	X	Y	Z<br>
+Ciphertext Alphabet:	D	E	F	G	H	I	J	K	L	M	N	O	P	Q	R	S	T	U	V	W	X	Y	Z	A	B	C
+</div>
+
+Example:<br>
+
+Plaintext: HELLO WORLD<br>
+Ciphertext (shift +3): KHOOR ZRUOG<br>
+
+The encryption rule can be expressed mathematically as:<br>
+
+<div class="formula-box">
+E(x) = (x+k) mod 26
+</div>
+
+and the decryption as:<br>
+
+<div class="formula-box">
+D(x) = (x−k) mod 26
+</div>
+
+where k is the shift amount and x represents the alphabetical index (A=0, …, Z=25). <br>
+
 ---
 
-[← Torna alla Home](/)
+# **Caeser Cipher Demo**
 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caesar Cipher — Live Encrypt + Analyze</title>
+</head>
+<body>
+  <section id="main_content" class="container">
+    <div class="cipher-container">
+      <div class="cipher-box">
+        <!-- Plain text -->
+        <div class="textarea-container">
+          <h3>Plain text</h3>
+          <textarea id="plain" placeholder="Type or paste your original text..." spellcheck="false"></textarea>
+        </div>
+        <!-- Cipher text -->
+        <div class="textarea-container">
+          <div class="row-inline space-between">
+            <h3 class="m0">Cipher Text</h3>
+          </div>
+          <textarea id="cipher" placeholder="Auto-filled using Caesar Cipher +3" spellcheck="false" readonly></textarea>
+          <label class="row-inline" title="Enable manual editing for the cipher box">
+              <input type="checkbox" id="toggleManualCipher" />
+              <span>Enable manual ciphertext input</span>
+            </label>
+        </div>
+        <!-- Buttons -->
+        <div class="buttons">
+          <button id="analyze">Analyze</button>
+          <button id="reset" class="danger">Reset</button>
+        </div>
+        <!-- Charts -->
+        <section class="chart-grid">
+          <div class="chart-card">
+            <h3 class="chart-title">Letter distribution — Plain text</h3>
+            <canvas id="chartPlain"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3 class="chart-title">Letter distribution — Ciphertext</h3>
+            <canvas id="chartCipher"></canvas>
+          </div>
+        </section>
+        <div id="decodeOutput" class="result-panel">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  (function(){
+    // --- English letter frequencies A..Z (for chi-squared fit) ---
+    const freqEn = {
+      A:8.17,B:1.49,C:2.78,D:4.25,E:12.70,F:2.23,G:2.02,H:6.09,I:6.97,J:0.15,K:0.77,L:4.03,M:2.41,
+      N:6.75,O:7.51,P:1.93,Q:0.10,R:5.99,S:6.33,T:9.06,U:2.76,V:0.98,W:2.36,X:0.15,Y:1.97,Z:0.07
+    };
+
+    // --- HiDPI / responsive canvas setup ---
+    function setupHiDPI(canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const cssW = Math.max(1, Math.round(rect.width));
+      const cssH = Math.max(1, Math.round(rect.height));
+      const needResize = (canvas.width !== Math.round(cssW * dpr)) || (canvas.height !== Math.round(cssH * dpr));
+      if (needResize) {
+        canvas.width  = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
+      }
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { ctx, dpr, cssW, cssH };
+    }
+
+    // --- Helpers ---
+    const mod = (n, m) => ((n % m) + m) % m;
+    function onlyLetters(s){ return (s||'').toUpperCase().replace(/[^A-Z]/g,''); }
+    function letterCounts(s){
+      const counts = Array(26).fill(0);
+      const clean = onlyLetters(s);
+      for (const ch of clean) counts[ch.charCodeAt(0) - 65]++;
+      return { counts, total: clean.length };
+    }
+    function toPercent(counts, total){ return counts.map(c => total ? (c * 100 / total) : 0); }
+    function chiSquared(obsPerc, expectedPerc){
+      let chi = 0;
+      for (let i = 0; i < 26; i++){
+        const O = obsPerc[i], E = expectedPerc[i];
+        if (E > 0) chi += ((O - E) * (O - E)) / E;
+      }
+      return chi;
+    }
+
+    // --- Caesar cipher ---
+    function caesarEncode(str, shift) {
+      let out = '';
+      for (const c of str){
+        if (/[A-Za-z]/.test(c)){
+          const base = (c === c.toUpperCase()) ? 65 : 97;
+          const code = c.charCodeAt(0) - base;
+          out += String.fromCharCode(mod(code + shift, 26) + base);
+        } else out += c;
+      }
+      return out;
+    }
+    function caesarDecode(str, shift){ return caesarEncode(str, -shift); }
+
+    // --- Brute force (1..25) ---
+    function bruteForceDecode(text){
+      const results = [];
+      for (let shift = 1; shift < 26; shift++){
+        results.push({ shift, text: caesarDecode(text, shift) });
+      }
+      return results;
+    }
+
+    // --- Auto-decode via chi-squared ---
+    function autoDecode(text){
+      const { counts, total } = letterCounts(text);
+      if (total === 0) return { text: '', shift: 0, chi: Infinity };
+      const obsPerc = toPercent(counts, total);
+      const expectedArr = Object.keys(freqEn).map(k => freqEn[k]);
+      let bestShift = 0, bestChi = Infinity;
+      for (let shift = 0; shift < 26; shift++){
+        const rotated = obsPerc.map((_, i) => obsPerc[mod(i + shift, 26)]);
+        const chi = chiSquared(rotated, expectedArr);
+        if (chi < bestChi){ bestChi = chi; bestShift = shift; }
+      }
+      return { text: caesarDecode(text, bestShift), shift: bestShift, chi: bestChi };
+    }
+
+    // --- Minimal popup (with scroll lock and edge-guard) ---
+    function showPopup({title = 'Output', content = '', nextLabel = null, onNext = null} = {}){
+      const backdrop = document.createElement('div'); backdrop.className = 'c-popup-backdrop';
+      const popup = document.createElement('div'); popup.className = 'c-popup';
+      const header = document.createElement('div'); header.className = 'c-popup__header'; header.textContent = title;
+      const body = document.createElement('div'); body.className = 'c-popup__body';
+      const pre = document.createElement('pre'); pre.className = 'c-popup__content'; pre.textContent = content;
+      const actions = document.createElement('div'); actions.className = 'c-popup__actions';
+
+      const closeBtn = document.createElement('button'); closeBtn.className = 'c-btn';
+      closeBtn.textContent = onNext ? 'Close' : 'OK'; closeBtn.addEventListener('click', cleanup);
+      actions.appendChild(closeBtn);
+
+      if (onNext) {
+        const nextBtn = document.createElement('button'); nextBtn.className = 'c-btn';
+        nextBtn.textContent = nextLabel || 'Next';
+        nextBtn.addEventListener('click', () => { cleanup(); onNext(); });
+        actions.appendChild(nextBtn);
+      }
+
+      body.appendChild(pre); popup.appendChild(header); popup.appendChild(body); popup.appendChild(actions);
+
+      // Prevent background scroll while popup is open
+      const previousBodyOverflow = document.body.style.overflow;
+      document.body.classList.add('no-scroll');
+
+      // Prevent scroll "leaking" to the page when the content reaches top/bottom
+      const wheelGuard = (e) => {
+        const el = pre;
+        const delta = e.deltaY;
+        const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+        const atTop = el.scrollTop <= 0;
+        if ((delta > 0 && atBottom) || (delta < 0 && atTop)) {
+          e.preventDefault();
+        }
+        e.stopPropagation();
+      };
+      pre.addEventListener('wheel', wheelGuard, { passive: false });
+      pre.addEventListener('touchmove', (e) => {
+        // Basic touch guard: stop propagation to body
+        e.stopPropagation();
+      }, { passive: false });
+
+      // Block page-scroll keys while popup is focused
+      const keyGuard = (e) => {
+        const keys = [' ', 'PageDown', 'PageUp', 'ArrowDown', 'ArrowUp', 'Home', 'End'];
+        if (keys.includes(e.key)) {
+          e.preventDefault();
+        }
+      };
+      popup.addEventListener('keydown', keyGuard);
+
+      function cleanup(){
+        try { document.body.removeChild(backdrop); } catch(e){}
+        try { document.body.removeChild(popup); } catch(e){}
+        document.body.classList.remove('no-scroll');
+        document.body.style.overflow = previousBodyOverflow || '';
+        pre.removeEventListener('wheel', wheelGuard);
+        popup.removeEventListener('keydown', keyGuard);
+      }
+
+      backdrop.addEventListener('click', cleanup);
+      document.body.appendChild(backdrop); 
+      document.body.appendChild(popup);
+
+      // Focus popup to capture key events
+      popup.setAttribute('tabindex', '-1');
+      popup.focus();
+    }
+
+    // --- Chart drawing ---
+    function drawAxesOnly(canvas){
+      const { ctx, dpr } = setupHiDPI(canvas);
+      const W = canvas.width  / dpr, H = canvas.height / dpr;
+      ctx.clearRect(0,0,W,H);
+
+      const pad = { top: 12, right: 10, bottom: 32, left: 40 };
+      const plotW = W - pad.left - pad.right;
+      const plotH = H - pad.top - pad.bottom;
+      const px = 0.5;
+
+      // Axes
+      ctx.strokeStyle = '#63c0f5';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad.left + px, pad.top + px);
+      ctx.lineTo(pad.left + px, pad.top + plotH + px);
+      ctx.lineTo(pad.left + plotW + px, pad.top + plotH + px);
+      ctx.stroke();
+
+      // X labels
+      ctx.fillStyle = '#eaeaea';
+      ctx.font = '10px Monaco, Consolas, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      const barGap = 2;
+      const barW = Math.max(1, Math.floor(plotW / 26) - barGap);
+      for (let i=0;i<26;i++){
+        const x = pad.left + i * (barW + barGap) + barW/2 + 1;
+        ctx.fillText(String.fromCharCode(65+i), x, pad.top + plotH + 4);
+      }
+
+      // Y ticks 0..10 (empty state)
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#eaeaea';
+      for (let y=0; y<=10; y++){
+        const yy = pad.top + plotH - ((y/10) * (plotH - 10));
+        ctx.fillText(String(y), pad.left - 6, yy);
+      }
+    }
+
+    function drawBarChartCounts(canvasId, counts, title = ''){
+      const canvas = document.getElementById(canvasId);
+      const { ctx, dpr } = setupHiDPI(canvas);
+      const W = canvas.width / dpr, H = canvas.height / dpr;
+
+      ctx.clearRect(0,0,W,H);
+
+      const pad = { top: 16, right: 10, bottom: 32, left: 40 };
+      const plotW = W - pad.left - pad.right;
+      const plotH = H - pad.top - pad.bottom;
+
+      // Title
+      if (title){
+        ctx.fillStyle = '#b5e853';
+        ctx.font = '13px Monaco, Consolas, monospace';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillText(title, pad.left + 2, pad.top - 4);
+      }
+
+      const maxCount = Math.max(10, ...(counts || [0]));
+      const yTop = maxCount;
+      const px = 0.5;
+
+      // Axes
+      ctx.strokeStyle = '#63c0f5';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad.left + px, pad.top + px);
+      ctx.lineTo(pad.left + px, pad.top + plotH + px);
+      ctx.lineTo(pad.left + plotW + px, pad.top + plotH + px);
+      ctx.stroke();
+
+      // Bars
+      const barGap = 2;
+      const barW = Math.max(1, Math.floor(plotW / 26) - barGap);
+      ctx.fillStyle = '#b5e853';
+      for (let i=0;i<26;i++){
+        const v = counts[i] || 0;
+        const h = (v / yTop) * (plotH - 10);
+        const x = pad.left + i * (barW + barGap) + 1;
+        const y = pad.top + plotH - h;
+        ctx.fillRect(x, y, barW, h);
+      }
+
+      // X labels
+      ctx.fillStyle = '#eaeaea';
+      ctx.font = '10px Monaco, Consolas, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      for (let i=0;i<26;i++){
+        const x = pad.left + i * (barW + barGap) + barW/2 + 1;
+        ctx.fillText(String.fromCharCode(65+i), x, pad.top + plotH + 4);
+      }
+
+      // Y ticks and labels: show ALL integers 0..maxCount
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#eaeaea';
+      ctx.strokeStyle = 'rgba(99,192,245,0.25)'; // light grid lines
+      ctx.lineWidth = 1;
+
+      for (let y=0; y<=yTop; y++){
+        const yy = pad.top + plotH - ((y / yTop) * (plotH - 10));
+        // Optional light horizontal grid
+        ctx.beginPath();
+        ctx.moveTo(pad.left + px, yy + px);
+        ctx.lineTo(pad.left + plotW + px, yy + px);
+        ctx.stroke();
+
+        ctx.fillText(String(y), pad.left - 6, yy);
+      }
+    }
+
+    // --- UI wiring ---
+    const elPlain  = document.getElementById('plain');
+    const elCipher = document.getElementById('cipher');
+    const btnAnalyze = document.getElementById('analyze');
+    const btnReset   = document.getElementById('reset');
+    const cPlain  = document.getElementById('chartPlain');
+    const cCipher = document.getElementById('chartCipher');
+    const chkManual = document.getElementById('toggleManualCipher');
+    const decodeOut = document.getElementById('decodeOutput');
+
+    function updateCipherLive(){
+      if (chkManual.checked) return;
+      const raw = elPlain.value || '';
+      elCipher.value = caesarEncode(raw, 3);
+    }
+
+    function redrawCharts() {
+      const plainText  = (elPlain.value || '').trim();
+      const cipherText = (elCipher.value || '').trim();
+
+      if (!plainText.length) drawAxesOnly(cPlain);
+      else {
+        const { counts: c1 } = letterCounts(plainText);
+        drawBarChartCounts('chartPlain',  c1, '');
+      }
+
+      if (!cipherText.length) drawAxesOnly(cCipher);
+      else {
+        const { counts: c2 } = letterCounts(cipherText);
+        drawBarChartCounts('chartCipher', c2, '');
+      }
+    }
+
+    // Init
+    updateCipherLive();
+    redrawCharts();
+
+    // Events
+    elPlain.addEventListener('input', () => { 
+      if (chkManual.checked) {
+        chkManual.checked = false;
+        elCipher.readOnly = true;
+        elCipher.value = '';
+      }
+      updateCipherLive();
+      redrawCharts();
+    });
+
+    elCipher.addEventListener('input', () => {
+      if (chkManual.checked) redrawCharts();
+    });
+
+    chkManual.addEventListener('change', () => {
+      elCipher.readOnly = !chkManual.checked;
+      if (!chkManual.checked) updateCipherLive();
+      redrawCharts();
+    });
+
+    btnAnalyze.addEventListener('click', () => {
+      const plainText  = (elPlain.value || '').trim();
+      const cipherText = (elCipher.value || '').trim();
+      if (!plainText.length && !cipherText.length){
+        showPopup({ title: 'Notice', content: 'Please enter some text in either Plain or Cipher.' });
+        return;
+      }
+      redrawCharts();
+
+      const all = bruteForceDecode(cipherText);
+      const bruteOutput = all.map(r => `Shift ${r.shift}:\n${r.text}`).join('\n\n');
+
+      const auto = autoDecode(cipherText);
+      const autoMsg = `Auto-Decode Result\n\nEstimated shift: ${auto.shift}\n\n${auto.text}`;
+
+      showPopup({
+        title: 'Brute-force: all shifts (1..25)',
+        content: bruteOutput,
+        nextLabel: 'Show auto-decode',
+        onNext: () => showPopup({
+          title: 'Auto-decode via frequency analysis',
+          content: autoMsg
+        })
+      });
+
+      decodeOut.innerHTML = autoMsg.replace(/\n/g, '<br>');
+      decodeOut.classList.add('visible');
+    });
+
+    // Reset button: clears fields, unchecks manual mode, restores readOnly
+    btnReset.addEventListener('click', () => {
+      elPlain.value = '';
+      elCipher.value = '';
+      chkManual.checked = false;
+      elCipher.readOnly = true;
+      updateCipherLive();
+      redrawCharts();
+      decodeOut.textContent = '';
+      decodeOut.classList.remove('visible');
+      elPlain.focus();
+    });
+    window.addEventListener('resize', redrawCharts);
+    })();
+  </script>
+</body>
+</html>
+
+
+
+---
+
+## **Methods**
+
+### **1. English Letter Frequency Distribution**
+
+Empirical linguistic studies provide the average percentage frequency of each English letter:
+
+<div class="table_2-box">
+<table>
+  <thead>
+    <tr>
+      <th>Letter</th>
+      <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th><th>K</th><th>L</th><th>M</th><th>N</th><th>O</th><th>P</th><th>Q</th><th>R</th><th>S</th><th>T</th><th>U</th><th>V</th><th>W</th><th>X</th><th>Y</th><th>Z</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>%</td>
+      <td>8.17</td><td>1.49</td><td>2.78</td><td>4.25</td><td>12.70</td><td>2.23</td><td>2.02</td><td>6.09</td><td>6.97</td><td>0.15</td><td>0.77</td><td>4.03</td><td>2.41</td><td>6.75</td><td>7.51</td><td>1.93</td><td>0.10</td><td>5.99</td><td>6.33</td><td>9.06</td><td>2.76</td><td>0.98</td><td>2.36</td><td>0.15</td><td>1.97</td><td>0.07</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+These serve as the expected probabilities E<sub>i</sub> in the chi-squared comparison.
+<br><br>
+
+### **2. Chi-Squared Test**
+
+To estimate the shift k, the algorithm compares observed and expected frequencies using the chi-squared statistic:
+
+<div class="formula-box">
+χ<sup>2</sup> = ∑<sub>i=1</sub><sup>26</sup> 
+  <span>(O<sub>i</sub> − E<sub>i</sub>)<sup>2</sup></span> / E<sub>i</sub>
+</div>
+
+where:<br>
+- O<sub>i</sub>(k) = observed frequency of the i-th letter after applying shift k<br>
+- E<sub>i</sub> = expected frequency from English distribution
+
+The smallest χ² indicates the best statistical match.
+Degrees of freedom ≈ 25 (26 letters − 1).
+This test is used here as a ranking score, not a formal hypothesis test.
+
+## **Algorihmic Steps**
+
+- Input acquisition: read ciphertext.
+
+- Sanitize text: keep uppercase letters A–Z only.
+
+- Compute observed frequencies: count each letter, normalize to percentages.
+
+- For each possible shift (0–25):
+
+  - Rotate frequency vector by k.
+  
+  - Compute χ²(k) using English expected frequencies.
+
+- Find minimum χ²: the corresponding k is the most probable key.
+
+- Decrypt: apply shift −k to recover plaintext.
+
+## **Overview of the Implementation**
+The system is implemented in HTML + JavaScript, fully client-side, without external libraries.
+The JavaScript program implements both brute-force decryption and statistical detection using English frequency analysis. <br><br>
+
+![Code](/assets/images/code.png)
+<br>
+
+### **1. Interface Overview**
+
+- Text area: for user input (plaintext or ciphertext).
+
+- Encrypt button: applies a Caesar shift of +3.
+
+- Decrypt button: launches both the brute-force and the frequency-based decoding.
+
+- Popup system: displays results dynamically without reloading the page.
+<br><br>
+
+### **2. Caesar Encoder/Decoder**
+
+```js
+function caesarEncode(str, shift) {
+  return str.split('').map(c => {
+    if (/[A-Z]/i.test(c)) {
+      const base = (c === c.toUpperCase()) ? 65 : 97;
+      return String.fromCharCode(((c.charCodeAt(0) - base + shift + 26) % 26) + base);
+    }
+    return c;
+  }).join('');
+}
+```
+This function shifts each letter by shift positions, preserving case and non-alphabetic characters.
+
+
+### **3. Brute-Force Decryption**
+
+The function bruteForceDecode() systematically tries all 25 possible shifts.
+It outputs every candidate plaintext (Shift 1 → Shift 25), allowing manual comparison by the user.
+This illustrates how simple substitution ciphers are vulnerable to exhaustive search attacks.
+<br>
+
+```js
+function bruteForceDecode(text){
+  const results = [];
+  for (let shift = 1; shift < 26; shift++){
+    results.push({ shift, text: caesarEncode(text, -shift) });
+  }
+  return results;
+}
+```
+
+### **4. Frequency Count and Normalization**
+
+```js
+function letterCounts(s){
+  const counts = Array(26).fill(0);
+  const clean = s.toUpperCase().replace(/[^A-Z]/g, '');
+  for (const ch of clean) counts[ch.charCodeAt(0) - 65]++;
+  return { counts, total: clean.length };
+}
+```
+
+This extracts the relevant data for statistical analysis, the frequency of each letter.
+
+### **5. User Interface and Interaction Flow**
+
+**When “Encrypt” is pressed:**
+
+- The text is shifted by +3 and displayed in both the text area and a popup.
+
+**When “Decrypt” is pressed:**
+
+- A first popup lists all possible plaintexts (shifts 1–25).
+
+- A second popup shows the auto-detected plaintext and estimated shift from χ² analysis.
+
+This two-step process allows students to visualize both deterministic and probabilistic decryption
+ 
+## **Conclusion**
+The Caesar Cipher Demo illustrates the fundamental principles of symmetric encryption and classical cryptanalysis.
+Although insecure for real applications, it provides a valuable didactic tool for understanding how patterns in natural language can reveal hidden information.
+The integration of frequency analysis, implemented entirely in client-side JavaScript, demonstrates how computational methods can approximate linguistic inference, marking a clear link between cryptography, data analysis, and computer science education.
+
+---
+
+[← Back to Home](/)
