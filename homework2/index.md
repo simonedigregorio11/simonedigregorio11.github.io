@@ -175,7 +175,7 @@ where k is the shift amount and x represents the alphabetical index (A=0, …, Z
 
 ---
 
-# **Caeser Cipher Demo**
+# **Caesar Cipher Demo**
 
 <html lang="en">
 <head>
@@ -638,76 +638,145 @@ To estimate the shift k, the algorithm compares observed and expected frequencie
 
 where:<br>
 - O<sub>i</sub>(k) = observed frequency of the i-th letter after applying shift k<br>
+
 - E<sub>i</sub> = expected frequency from English distribution
 
 The smallest χ² indicates the best statistical match.
 Degrees of freedom ≈ 25 (26 letters − 1).
 This test is used here as a ranking score, not a formal hypothesis test.
 
-## **Algorihmic Steps**
+## **Algorithmic Steps**
 
-- Input acquisition: read ciphertext.
+The algorithm used for automatic decryption follows these steps:
 
-- Sanitize text: keep uppercase letters A–Z only.
+### 1. **Input acquisition**  
 
-- Compute observed frequencies: count each letter, normalize to percentages.
+  - Read the ciphertext provided by the user, or automatically generate it from the plaintext using a fixed shift of **+3**.
 
-- For each possible shift (0–25):
+### 2. **Preprocessing and sanitization**
 
-  - Rotate frequency vector by k.
+  - Keep only uppercase letters **A–Z** for frequency analysis, removing all other characters.
+
+### 3. **Frequency computation**
+
+  - Count the occurrences of each letter and compute the **percentage frequency** of every letter in the ciphertext.
+
+### 4. **Chi-squared evaluation**
+
+  - For each possible shift value \( k = 0, 1, ..., 25 \):  
+
+    - Rotate the observed frequency vector by **+k** positions.
+
+    - Compute the chi-squared statistic by comparing the rotated frequencies with the expected English letter frequencies.
+
+### 5. **Key estimation**  
+
+  - Identify the shift that produces the **smallest chi-squared value**.  
+
+    - This represents the **estimated shift** that best matches English letter statistics.
+
+### 6. **Decryption**
+
+  - Apply `caesarDecode(str, shift)` to recover the plaintext.
+
+### 7. **Visualization and output**  
+   
+  - Display results through:  
   
-  - Compute χ²(k) using English expected frequencies.
+    - A popup listing **all brute-force candidates (1–25)**.
 
-- Find minimum χ²: the corresponding k is the most probable key.
+    - A second popup showing the **auto-decoded** result and estimated shift.  
 
-- Decrypt: apply shift −k to recover plaintext.
+    - An on-page **results panel** and **bar charts** showing the letter distributions.
+
+
 
 ## **Overview of the Implementation**
 The system is implemented in HTML + JavaScript, fully client-side, without external libraries.
-The JavaScript program implements both brute-force decryption and statistical detection using English frequency analysis. <br><br>
+The JavaScript program implements both:
+
+- Brute-force decryption over all Caesar shifts (1..25)
+
+- Statistical key detection via a chi-squared fit to English letter frequencies.
+
+The UI features live encryption (default shift +3), optional manual ciphertext input, a two-step analysis flow (brute-force → auto-decode), a results panel, and two bar charts depicting absolute letter counts for Plain and Cipher texts.
+<br><br>
 
 ![Code](/assets/images/code.png)
 <br>
 
 ### **1. Interface Overview**
 
-- Text area: for user input (plaintext or ciphertext).
+- **Plain text:** free-form input area.
 
-- Encrypt button: applies a Caesar shift of +3.
+- **Cipher text:** auto-filled with a +3 Caesar shift while you type in Plain text.
 
-- Decrypt button: launches both the brute-force and the frequency-based decoding.
+- **Enable manual ciphertext input:** when checked, you can edit the ciphertext manually (auto-fill is disabled).
 
-- Popup system: displays results dynamically without reloading the page.
+- **Analyze:** runs brute-force over all shifts (1..25) and automatic decoding via the chi-squared method; shows two popups in sequence and writes the result into the on-page results panel.
+
+- **Reset:** clears fields, disables manual mode, and restores defaults.
+
+- **Charts:** two canvases render letter distributions (absolute counts) for Plain and Cipher; HiDPI-safe rendering, no external libraries.
 <br><br>
 
 ### **2. Caesar Encoder/Decoder**
 
 ```js
 function caesarEncode(str, shift) {
-  return str.split('').map(c => {
-    if (/[A-Z]/i.test(c)) {
+  let out = '';
+  for (const c of str){
+    if (/[A-Za-z]/.test(c)){
       const base = (c === c.toUpperCase()) ? 65 : 97;
-      return String.fromCharCode(((c.charCodeAt(0) - base + shift + 26) % 26) + base);
-    }
-    return c;
-  }).join('');
+      const code = c.charCodeAt(0) - base;
+      out += String.fromCharCode(mod(code + shift, 26) + base);
+    } else out += c;
+  }
+  return out;
+}
+
+function caesarDecode(str, shift){
+  return caesarEncode(str, -shift);
 }
 ```
-This function shifts each letter by shift positions, preserving case and non-alphabetic characters.
+The Caesar encoder is responsible for applying a uniform cyclic shift to each alphabetic character in the input string. It supports both uppercase and lowercase letters while leaving non-alphabetic symbols (such as punctuation and spaces) unchanged. The function relies on modular arithmetic to wrap character codes within the 26-letter Latin alphabet.
 
+**Explanation:**
+
+
+#### **1. Character filtering.**
+
+- The regular expression **/[A-Za-z]/** ensures that only alphabetic characters are shifted; all other characters are appended unchanged, preserving spacing and punctuation.
+
+#### **2. Case preservation.**
+
+- The variable base stores the ASCII code of either 'A' (65) or 'a' (97), allowing the algorithm to maintain case by computing offsets relative to the correct alphabet segment.
+
+#### **3. Modular wrap-around.**
+
+- The expression **((code + shift + 26) % 26)** ensures cyclic behavior. For instance, shifting 'Z' by +1 produces 'A'. Adding 26 before the modulo prevents negative results during decoding.
+
+#### **4. Symmetric decoding.**
+
+- The decoder simply calls the encoder with a negated shift, guaranteeing functional symmetry:
+  `decode(encode(x, k), k) = x.`
+  This design centralizes all transformation logic in one function, minimizing redundancy and potential inconsistencies.
+
+#### **5. Integration in the interface.**
+
+- Within the application, this encoder is invoked in real time whenever the user types in the Plain text field, automatically producing the Cipher text using a default shift of +3. When “manual ciphertext input” is enabled, this
+automatic behavior is temporarily disabled, allowing the user to input arbitrary encrypted data.
 
 ### **3. Brute-Force Decryption**
 
-The function bruteForceDecode() systematically tries all 25 possible shifts.
-It outputs every candidate plaintext (Shift 1 → Shift 25), allowing manual comparison by the user.
-This illustrates how simple substitution ciphers are vulnerable to exhaustive search attacks.
+Brute-force decryption is implemented to demonstrate the inherent weakness of the Caesar cipher against exhaustive key search. Since the cipher’s key space contains only 25 non-trivial shifts (from 1 to 25), every possible transformation can be generated and displayed almost instantaneously.
 <br>
 
 ```js
 function bruteForceDecode(text){
   const results = [];
   for (let shift = 1; shift < 26; shift++){
-    results.push({ shift, text: caesarEncode(text, -shift) });
+    results.push({ shift, text: caesarDecode(text, shift) });
   }
   return results;
 }
@@ -716,29 +785,71 @@ function bruteForceDecode(text){
 ### **4. Frequency Count and Normalization**
 
 ```js
+function onlyLetters(s){ return (s||'').toUpperCase().replace(/[^A-Z]/g,''); }
+
 function letterCounts(s){
   const counts = Array(26).fill(0);
-  const clean = s.toUpperCase().replace(/[^A-Z]/g, '');
+  const clean = onlyLetters(s);
   for (const ch of clean) counts[ch.charCodeAt(0) - 65]++;
   return { counts, total: clean.length };
 }
+
+function toPercent(counts, total){
+  return counts.map(c => total ? (c * 100 / total) : 0);
+}
 ```
 
+### **5. Chi-Squared Fit**
+
+```js
+const freqEn = {
+  A:8.17,B:1.49,C:2.78,D:4.25,E:12.70,F:2.23,G:2.02,H:6.09,I:6.97,J:0.15,K:0.77,L:4.03,M:2.41,
+  N:6.75,O:7.51,P:1.93,Q:0.10,R:5.99,S:6.33,T:9.06,U:2.76,V:0.98,W:2.36,X:0.15,Y:1.97,Z:0.07
+};
+
+function chiSquared(obsPerc, expectedPerc){
+  let chi = 0;
+  for (let i = 0; i < 26; i++){
+    const O = obsPerc[i], E = expectedPerc[i];
+    if (E > 0) chi += ((O - E) * (O - E)) / E;
+  }
+  return chi;
+}
+```
+### **6. Automatic Decoding via Frequency Rotation**
+
+```js
+function autoDecode(text){
+  const { counts, total } = letterCounts(text);
+  if (total === 0) return { text: '', shift: 0, chi: Infinity };
+
+  const obsPerc = toPercent(counts, total);
+  const expectedArr = Object.keys(freqEn).map(k => freqEn[k]);
+
+  let bestShift = 0, bestChi = Infinity;
+
+  for (let shift = 0; shift < 26; shift++){
+    const rotated = obsPerc.map((_, i) => obsPerc[mod(i + shift, 26)]);
+    const chi = chiSquared(rotated, expectedArr);
+    if (chi < bestChi){ bestChi = chi; bestShift = shift; }
+  }
+  return { text: caesarDecode(text, bestShift), shift: bestShift, chi: bestChi };
+}
+```
 This extracts the relevant data for statistical analysis, the frequency of each letter.
 
 ### **5. User Interface and Interaction Flow**
 
-**When “Encrypt” is pressed:**
+- **Typing:** as you type in Plain text, Cipher text updates in real time with shift +3 (unless manual mode is enabled).
 
-- The text is shifted by +3 and displayed in both the text area and a popup.
+- **Analyze:**
+  1. A **Brute-force** popup lists all candidate plaintexts (Shift 1 → 25).
 
-**When “Decrypt” is pressed:**
+  2. An **Auto-decode** popup shows the **estimated shift** and **decoded text** via the chi-squared fit.
 
-- A first popup lists all possible plaintexts (shifts 1–25).
+  3. The auto-decode result is also written to the results panel below the charts.
 
-- A second popup shows the auto-detected plaintext and estimated shift from χ² analysis.
-
-This two-step process allows students to visualize both deterministic and probabilistic decryption
+- **Reset:** clears inputs and charts, disables manual mode, and focuses *Plain text*.
  
 ## **Conclusion**
 The Caesar Cipher Demo illustrates the fundamental principles of symmetric encryption and classical cryptanalysis.

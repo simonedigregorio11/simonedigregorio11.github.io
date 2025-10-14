@@ -289,7 +289,7 @@ D(x) = (x−k) mod 26
 
 <hr />
 
-<h1 id="caeser-cipher-demo"><strong>Caeser Cipher Demo</strong></h1>
+<h1 id="caesar-cipher-demo"><strong>Caesar Cipher Demo</strong></h1>
 
 <html lang="en">
 <head>
@@ -750,49 +750,110 @@ D(x) = (x−k) mod 26
 
 <p>where:<br /></p>
 <ul>
-  <li>O<sub>i</sub>(k) = observed frequency of the i-th letter after applying shift k<br /></li>
-  <li>E<sub>i</sub> = expected frequency from English distribution</li>
+  <li>
+    <p>O<sub>i</sub>(k) = observed frequency of the i-th letter after applying shift k<br /></p>
+  </li>
+  <li>
+    <p>E<sub>i</sub> = expected frequency from English distribution</p>
+  </li>
 </ul>
 
 <p>The smallest χ² indicates the best statistical match.
 Degrees of freedom ≈ 25 (26 letters − 1).
 This test is used here as a ranking score, not a formal hypothesis test.</p>
 
-<h2 id="algorihmic-steps"><strong>Algorihmic Steps</strong></h2>
+<h2 id="algorithmic-steps"><strong>Algorithmic Steps</strong></h2>
+
+<p>The algorithm used for automatic decryption follows these steps:</p>
+
+<h3 id="1-input-acquisition">1. <strong>Input acquisition</strong></h3>
+
+<ul>
+  <li>Read the ciphertext provided by the user, or automatically generate it from the plaintext using a fixed shift of <strong>+3</strong>.</li>
+</ul>
+
+<h3 id="2-preprocessing-and-sanitization">2. <strong>Preprocessing and sanitization</strong></h3>
+
+<ul>
+  <li>Keep only uppercase letters <strong>A–Z</strong> for frequency analysis, removing all other characters.</li>
+</ul>
+
+<h3 id="3-frequency-computation">3. <strong>Frequency computation</strong></h3>
+
+<ul>
+  <li>Count the occurrences of each letter and compute the <strong>percentage frequency</strong> of every letter in the ciphertext.</li>
+</ul>
+
+<h3 id="4-chi-squared-evaluation">4. <strong>Chi-squared evaluation</strong></h3>
 
 <ul>
   <li>
-    <p>Input acquisition: read ciphertext.</p>
-  </li>
-  <li>
-    <p>Sanitize text: keep uppercase letters A–Z only.</p>
-  </li>
-  <li>
-    <p>Compute observed frequencies: count each letter, normalize to percentages.</p>
-  </li>
-  <li>
-    <p>For each possible shift (0–25):</p>
+    <p>For each possible shift value ( k = 0, 1, …, 25 ):</p>
 
     <ul>
       <li>
-        <p>Rotate frequency vector by k.</p>
+        <p>Rotate the observed frequency vector by <strong>+k</strong> positions.</p>
       </li>
       <li>
-        <p>Compute χ²(k) using English expected frequencies.</p>
+        <p>Compute the chi-squared statistic by comparing the rotated frequencies with the expected English letter frequencies.</p>
       </li>
     </ul>
   </li>
+</ul>
+
+<h3 id="5-key-estimation">5. <strong>Key estimation</strong></h3>
+
+<ul>
   <li>
-    <p>Find minimum χ²: the corresponding k is the most probable key.</p>
+    <p>Identify the shift that produces the <strong>smallest chi-squared value</strong>.</p>
+
+    <ul>
+      <li>This represents the <strong>estimated shift</strong> that best matches English letter statistics.</li>
+    </ul>
   </li>
+</ul>
+
+<h3 id="6-decryption">6. <strong>Decryption</strong></h3>
+
+<ul>
+  <li>Apply <code class="language-plaintext highlighter-rouge">caesarDecode(str, shift)</code> to recover the plaintext.</li>
+</ul>
+
+<h3 id="7-visualization-and-output">7. <strong>Visualization and output</strong></h3>
+
+<ul>
   <li>
-    <p>Decrypt: apply shift −k to recover plaintext.</p>
+    <p>Display results through:</p>
+
+    <ul>
+      <li>
+        <p>A popup listing <strong>all brute-force candidates (1–25)</strong>.</p>
+      </li>
+      <li>
+        <p>A second popup showing the <strong>auto-decoded</strong> result and estimated shift.</p>
+      </li>
+      <li>
+        <p>An on-page <strong>results panel</strong> and <strong>bar charts</strong> showing the letter distributions.</p>
+      </li>
+    </ul>
   </li>
 </ul>
 
 <h2 id="overview-of-the-implementation"><strong>Overview of the Implementation</strong></h2>
 <p>The system is implemented in HTML + JavaScript, fully client-side, without external libraries.
-The JavaScript program implements both brute-force decryption and statistical detection using English frequency analysis. <br /><br /></p>
+The JavaScript program implements both:</p>
+
+<ul>
+  <li>
+    <p>Brute-force decryption over all Caesar shifts (1..25)</p>
+  </li>
+  <li>
+    <p>Statistical key detection via a chi-squared fit to English letter frequencies.</p>
+  </li>
+</ul>
+
+<p>The UI features live encryption (default shift +3), optional manual ciphertext input, a two-step analysis flow (brute-force → auto-decode), a results panel, and two bar charts depicting absolute letter counts for Plain and Cipher texts.
+<br /><br /></p>
 
 <p><img src="/assets/images/code.png" alt="Code" />
 <br /></p>
@@ -801,16 +862,22 @@ The JavaScript program implements both brute-force decryption and statistical de
 
 <ul>
   <li>
-    <p>Text area: for user input (plaintext or ciphertext).</p>
+    <p><strong>Plain text:</strong> free-form input area.</p>
   </li>
   <li>
-    <p>Encrypt button: applies a Caesar shift of +3.</p>
+    <p><strong>Cipher text:</strong> auto-filled with a +3 Caesar shift while you type in Plain text.</p>
   </li>
   <li>
-    <p>Decrypt button: launches both the brute-force and the frequency-based decoding.</p>
+    <p><strong>Enable manual ciphertext input:</strong> when checked, you can edit the ciphertext manually (auto-fill is disabled).</p>
   </li>
   <li>
-    <p>Popup system: displays results dynamically without reloading the page.
+    <p><strong>Analyze:</strong> runs brute-force over all shifts (1..25) and automatic decoding via the chi-squared method; shows two popups in sequence and writes the result into the on-page results panel.</p>
+  </li>
+  <li>
+    <p><strong>Reset:</strong> clears fields, disables manual mode, and restores defaults.</p>
+  </li>
+  <li>
+    <p><strong>Charts:</strong> two canvases render letter distributions (absolute counts) for Plain and Cipher; HiDPI-safe rendering, no external libraries.
 <br /><br /></p>
   </li>
 </ul>
@@ -818,28 +885,67 @@ The JavaScript program implements both brute-force decryption and statistical de
 <h3 id="2-caesar-encoderdecoder"><strong>2. Caesar Encoder/Decoder</strong></h3>
 
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">caesarEncode</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">shift</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">''</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">c</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="sr">/</span><span class="se">[</span><span class="sr">A-Z</span><span class="se">]</span><span class="sr">/i</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">c</span><span class="p">))</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">out</span> <span class="o">=</span> <span class="dl">''</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">c</span> <span class="k">of</span> <span class="nx">str</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="sr">/</span><span class="se">[</span><span class="sr">A-Za-z</span><span class="se">]</span><span class="sr">/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">c</span><span class="p">)){</span>
       <span class="kd">const</span> <span class="nx">base</span> <span class="o">=</span> <span class="p">(</span><span class="nx">c</span> <span class="o">===</span> <span class="nx">c</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">())</span> <span class="p">?</span> <span class="mi">65</span> <span class="p">:</span> <span class="mi">97</span><span class="p">;</span>
-      <span class="k">return</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(((</span><span class="nx">c</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="nx">base</span> <span class="o">+</span> <span class="nx">shift</span> <span class="o">+</span> <span class="mi">26</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span><span class="p">)</span> <span class="o">+</span> <span class="nx">base</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">c</span><span class="p">;</span>
-  <span class="p">}).</span><span class="nx">join</span><span class="p">(</span><span class="dl">''</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="nx">base</span><span class="p">;</span>
+      <span class="nx">out</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="nx">mod</span><span class="p">(</span><span class="nx">code</span> <span class="o">+</span> <span class="nx">shift</span><span class="p">,</span> <span class="mi">26</span><span class="p">)</span> <span class="o">+</span> <span class="nx">base</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="nx">out</span> <span class="o">+=</span> <span class="nx">c</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">out</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">caesarDecode</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">shift</span><span class="p">){</span>
+  <span class="k">return</span> <span class="nx">caesarEncode</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="o">-</span><span class="nx">shift</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>This function shifts each letter by shift positions, preserving case and non-alphabetic characters.</p>
+<p>The Caesar encoder is responsible for applying a uniform cyclic shift to each alphabetic character in the input string. It supports both uppercase and lowercase letters while leaving non-alphabetic symbols (such as punctuation and spaces) unchanged. The function relies on modular arithmetic to wrap character codes within the 26-letter Latin alphabet.</p>
+
+<p><strong>Explanation:</strong></p>
+
+<h4 id="1-character-filtering"><strong>1. Character filtering.</strong></h4>
+
+<ul>
+  <li>The regular expression <strong>/[A-Za-z]/</strong> ensures that only alphabetic characters are shifted; all other characters are appended unchanged, preserving spacing and punctuation.</li>
+</ul>
+
+<h4 id="2-case-preservation"><strong>2. Case preservation.</strong></h4>
+
+<ul>
+  <li>The variable base stores the ASCII code of either ‘A’ (65) or ‘a’ (97), allowing the algorithm to maintain case by computing offsets relative to the correct alphabet segment.</li>
+</ul>
+
+<h4 id="3-modular-wrap-around"><strong>3. Modular wrap-around.</strong></h4>
+
+<ul>
+  <li>The expression <strong>((code + shift + 26) % 26)</strong> ensures cyclic behavior. For instance, shifting ‘Z’ by +1 produces ‘A’. Adding 26 before the modulo prevents negative results during decoding.</li>
+</ul>
+
+<h4 id="4-symmetric-decoding"><strong>4. Symmetric decoding.</strong></h4>
+
+<ul>
+  <li>The decoder simply calls the encoder with a negated shift, guaranteeing functional symmetry:
+<code class="language-plaintext highlighter-rouge">decode(encode(x, k), k) = x.</code>
+This design centralizes all transformation logic in one function, minimizing redundancy and potential inconsistencies.</li>
+</ul>
+
+<h4 id="5-integration-in-the-interface"><strong>5. Integration in the interface.</strong></h4>
+
+<ul>
+  <li>Within the application, this encoder is invoked in real time whenever the user types in the Plain text field, automatically producing the Cipher text using a default shift of +3. When “manual ciphertext input” is enabled, this
+automatic behavior is temporarily disabled, allowing the user to input arbitrary encrypted data.</li>
+</ul>
 
 <h3 id="3-brute-force-decryption"><strong>3. Brute-Force Decryption</strong></h3>
 
-<p>The function bruteForceDecode() systematically tries all 25 possible shifts.
-It outputs every candidate plaintext (Shift 1 → Shift 25), allowing manual comparison by the user.
-This illustrates how simple substitution ciphers are vulnerable to exhaustive search attacks.
+<p>Brute-force decryption is implemented to demonstrate the inherent weakness of the Caesar cipher against exhaustive key search. Since the cipher’s key space contains only 25 non-trivial shifts (from 1 to 25), every possible transformation can be generated and displayed almost instantaneously.
 <br /></p>
 
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">bruteForceDecode</span><span class="p">(</span><span class="nx">text</span><span class="p">){</span>
   <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="p">[];</span>
   <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">shift</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">shift</span> <span class="o">&lt;</span> <span class="mi">26</span><span class="p">;</span> <span class="nx">shift</span><span class="o">++</span><span class="p">){</span>
-    <span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span> <span class="nx">shift</span><span class="p">,</span> <span class="na">text</span><span class="p">:</span> <span class="nx">caesarEncode</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="o">-</span><span class="nx">shift</span><span class="p">)</span> <span class="p">});</span>
+    <span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span> <span class="nx">shift</span><span class="p">,</span> <span class="na">text</span><span class="p">:</span> <span class="nx">caesarDecode</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">shift</span><span class="p">)</span> <span class="p">});</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">results</span><span class="p">;</span>
 <span class="p">}</span>
@@ -847,36 +953,78 @@ This illustrates how simple substitution ciphers are vulnerable to exhaustive se
 
 <h3 id="4-frequency-count-and-normalization"><strong>4. Frequency Count and Normalization</strong></h3>
 
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">letterCounts</span><span class="p">(</span><span class="nx">s</span><span class="p">){</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">onlyLetters</span><span class="p">(</span><span class="nx">s</span><span class="p">){</span> <span class="k">return</span> <span class="p">(</span><span class="nx">s</span><span class="o">||</span><span class="dl">''</span><span class="p">).</span><span class="nx">toUpperCase</span><span class="p">().</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">[^</span><span class="sr">A-Z</span><span class="se">]</span><span class="sr">/g</span><span class="p">,</span><span class="dl">''</span><span class="p">);</span> <span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">letterCounts</span><span class="p">(</span><span class="nx">s</span><span class="p">){</span>
   <span class="kd">const</span> <span class="nx">counts</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">26</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-  <span class="kd">const</span> <span class="nx">clean</span> <span class="o">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">().</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">[^</span><span class="sr">A-Z</span><span class="se">]</span><span class="sr">/g</span><span class="p">,</span> <span class="dl">''</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">clean</span> <span class="o">=</span> <span class="nx">onlyLetters</span><span class="p">(</span><span class="nx">s</span><span class="p">);</span>
   <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">ch</span> <span class="k">of</span> <span class="nx">clean</span><span class="p">)</span> <span class="nx">counts</span><span class="p">[</span><span class="nx">ch</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
   <span class="k">return</span> <span class="p">{</span> <span class="nx">counts</span><span class="p">,</span> <span class="na">total</span><span class="p">:</span> <span class="nx">clean</span><span class="p">.</span><span class="nx">length</span> <span class="p">};</span>
 <span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">toPercent</span><span class="p">(</span><span class="nx">counts</span><span class="p">,</span> <span class="nx">total</span><span class="p">){</span>
+  <span class="k">return</span> <span class="nx">counts</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">c</span> <span class="o">=&gt;</span> <span class="nx">total</span> <span class="p">?</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="nx">total</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
+<h3 id="5-chi-squared-fit"><strong>5. Chi-Squared Fit</strong></h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">freqEn</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">A</span><span class="p">:</span><span class="mf">8.17</span><span class="p">,</span><span class="na">B</span><span class="p">:</span><span class="mf">1.49</span><span class="p">,</span><span class="na">C</span><span class="p">:</span><span class="mf">2.78</span><span class="p">,</span><span class="na">D</span><span class="p">:</span><span class="mf">4.25</span><span class="p">,</span><span class="na">E</span><span class="p">:</span><span class="mf">12.70</span><span class="p">,</span><span class="na">F</span><span class="p">:</span><span class="mf">2.23</span><span class="p">,</span><span class="na">G</span><span class="p">:</span><span class="mf">2.02</span><span class="p">,</span><span class="na">H</span><span class="p">:</span><span class="mf">6.09</span><span class="p">,</span><span class="na">I</span><span class="p">:</span><span class="mf">6.97</span><span class="p">,</span><span class="na">J</span><span class="p">:</span><span class="mf">0.15</span><span class="p">,</span><span class="na">K</span><span class="p">:</span><span class="mf">0.77</span><span class="p">,</span><span class="na">L</span><span class="p">:</span><span class="mf">4.03</span><span class="p">,</span><span class="na">M</span><span class="p">:</span><span class="mf">2.41</span><span class="p">,</span>
+  <span class="na">N</span><span class="p">:</span><span class="mf">6.75</span><span class="p">,</span><span class="na">O</span><span class="p">:</span><span class="mf">7.51</span><span class="p">,</span><span class="na">P</span><span class="p">:</span><span class="mf">1.93</span><span class="p">,</span><span class="na">Q</span><span class="p">:</span><span class="mf">0.10</span><span class="p">,</span><span class="na">R</span><span class="p">:</span><span class="mf">5.99</span><span class="p">,</span><span class="na">S</span><span class="p">:</span><span class="mf">6.33</span><span class="p">,</span><span class="na">T</span><span class="p">:</span><span class="mf">9.06</span><span class="p">,</span><span class="na">U</span><span class="p">:</span><span class="mf">2.76</span><span class="p">,</span><span class="na">V</span><span class="p">:</span><span class="mf">0.98</span><span class="p">,</span><span class="na">W</span><span class="p">:</span><span class="mf">2.36</span><span class="p">,</span><span class="na">X</span><span class="p">:</span><span class="mf">0.15</span><span class="p">,</span><span class="na">Y</span><span class="p">:</span><span class="mf">1.97</span><span class="p">,</span><span class="na">Z</span><span class="p">:</span><span class="mf">0.07</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">chiSquared</span><span class="p">(</span><span class="nx">obsPerc</span><span class="p">,</span> <span class="nx">expectedPerc</span><span class="p">){</span>
+  <span class="kd">let</span> <span class="nx">chi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">26</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="kd">const</span> <span class="nx">O</span> <span class="o">=</span> <span class="nx">obsPerc</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">E</span> <span class="o">=</span> <span class="nx">expectedPerc</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">E</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">chi</span> <span class="o">+=</span> <span class="p">((</span><span class="nx">O</span> <span class="o">-</span> <span class="nx">E</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nx">O</span> <span class="o">-</span> <span class="nx">E</span><span class="p">))</span> <span class="o">/</span> <span class="nx">E</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">chi</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="6-automatic-decoding-via-frequency-rotation"><strong>6. Automatic Decoding via Frequency Rotation</strong></h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">autoDecode</span><span class="p">(</span><span class="nx">text</span><span class="p">){</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">counts</span><span class="p">,</span> <span class="nx">total</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">letterCounts</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">total</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span> <span class="na">text</span><span class="p">:</span> <span class="dl">''</span><span class="p">,</span> <span class="na">shift</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">chi</span><span class="p">:</span> <span class="kc">Infinity</span> <span class="p">};</span>
+
+  <span class="kd">const</span> <span class="nx">obsPerc</span> <span class="o">=</span> <span class="nx">toPercent</span><span class="p">(</span><span class="nx">counts</span><span class="p">,</span> <span class="nx">total</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">expectedArr</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">freqEn</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">k</span> <span class="o">=&gt;</span> <span class="nx">freqEn</span><span class="p">[</span><span class="nx">k</span><span class="p">]);</span>
+
+  <span class="kd">let</span> <span class="nx">bestShift</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">bestChi</span> <span class="o">=</span> <span class="kc">Infinity</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">shift</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">shift</span> <span class="o">&lt;</span> <span class="mi">26</span><span class="p">;</span> <span class="nx">shift</span><span class="o">++</span><span class="p">){</span>
+    <span class="kd">const</span> <span class="nx">rotated</span> <span class="o">=</span> <span class="nx">obsPerc</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">_</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">obsPerc</span><span class="p">[</span><span class="nx">mod</span><span class="p">(</span><span class="nx">i</span> <span class="o">+</span> <span class="nx">shift</span><span class="p">,</span> <span class="mi">26</span><span class="p">)]);</span>
+    <span class="kd">const</span> <span class="nx">chi</span> <span class="o">=</span> <span class="nx">chiSquared</span><span class="p">(</span><span class="nx">rotated</span><span class="p">,</span> <span class="nx">expectedArr</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">chi</span> <span class="o">&lt;</span> <span class="nx">bestChi</span><span class="p">){</span> <span class="nx">bestChi</span> <span class="o">=</span> <span class="nx">chi</span><span class="p">;</span> <span class="nx">bestShift</span> <span class="o">=</span> <span class="nx">shift</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="p">{</span> <span class="na">text</span><span class="p">:</span> <span class="nx">caesarDecode</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">bestShift</span><span class="p">),</span> <span class="na">shift</span><span class="p">:</span> <span class="nx">bestShift</span><span class="p">,</span> <span class="na">chi</span><span class="p">:</span> <span class="nx">bestChi</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
 <p>This extracts the relevant data for statistical analysis, the frequency of each letter.</p>
 
 <h3 id="5-user-interface-and-interaction-flow"><strong>5. User Interface and Interaction Flow</strong></h3>
 
-<p><strong>When “Encrypt” is pressed:</strong></p>
-
-<ul>
-  <li>The text is shifted by +3 and displayed in both the text area and a popup.</li>
-</ul>
-
-<p><strong>When “Decrypt” is pressed:</strong></p>
-
 <ul>
   <li>
-    <p>A first popup lists all possible plaintexts (shifts 1–25).</p>
+    <p><strong>Typing:</strong> as you type in Plain text, Cipher text updates in real time with shift +3 (unless manual mode is enabled).</p>
   </li>
-  <li>
-    <p>A second popup shows the auto-detected plaintext and estimated shift from χ² analysis.</p>
+  <li><strong>Analyze:</strong>
+    <ol>
+      <li>
+        <p>A <strong>Brute-force</strong> popup lists all candidate plaintexts (Shift 1 → 25).</p>
+      </li>
+      <li>
+        <p>An <strong>Auto-decode</strong> popup shows the <strong>estimated shift</strong> and <strong>decoded text</strong> via the chi-squared fit.</p>
+      </li>
+      <li>
+        <p>The auto-decode result is also written to the results panel below the charts.</p>
+      </li>
+    </ol>
   </li>
+  <li><strong>Reset:</strong> clears inputs and charts, disables manual mode, and focuses <em>Plain text</em>.</li>
 </ul>
-
-<p>This two-step process allows students to visualize both deterministic and probabilistic decryption</p>
 
 <h2 id="conclusion"><strong>Conclusion</strong></h2>
 <p>The Caesar Cipher Demo illustrates the fundamental principles of symmetric encryption and classical cryptanalysis.
