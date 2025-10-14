@@ -201,7 +201,8 @@ h1 {
 
 .formula-box {
   text-align: center;
-  font-size: 90%;
+  
+  font-size: clamp(0.6rem, 2vw, 1rem);
   width: 63%;
   margin: 1em auto;
   background-color: black;
@@ -230,8 +231,8 @@ h1 {
 .text-box {
 border: 1px solid #b5e853;
 padding: 10px; 
-margin: 0 30px 20px 30px; 
-background-color: #151515; 
+margin: 0 0 20px 10px; 
+background-color: black; 
 border-radius: 5px;
 text-align: left;
 }
@@ -306,6 +307,9 @@ text-align: left;
   opacity: 1;
 }
 
+strong{
+color: #b5e853;
+}
 
 /* Buttons */
 .btn {
@@ -388,6 +392,11 @@ a { color: #63c0f5; text-shadow: 0 0 5px rgba(104, 182, 255, 0.5); }
 
 @media (max-width: 480px) {
   .buttons { flex-direction: column; }
+}
+
+button.danger{
+  color:white;
+  background-color:darkred;
 }
 
 .c-popup-backdrop {

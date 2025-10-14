@@ -10,15 +10,15 @@ permalink: /homework2/
 
 # **Datasets and Distributions**
 
-## **Introduction**
+# **Introduction**
 
-In statistical science and data analysis, two fundamental concepts underpin almost every empirical and theoretical study: the dataset and the distribution.
+In statistical science and data analysis, two fundamental concepts underpin almost every empirical and theoretical study: the **dataset** and the **distribution**.
 While a dataset represents the organized collection of observed data, a distribution expresses the probabilistic or empirical structure underlying that data.
 Understanding these concepts is essential for correctly designing experiments, modeling phenomena, and interpreting results.
 
 ## **The Concept of a Dataset**
 
-A dataset is a structured collection of data, typically organized in a tabular or hierarchical format, representing measurements or observations about one or more variables.
+A dataset is a structured collection of data, typically organized in a tabular or hierarchical format, representing measurements or observations about one or more **variables**.
 
 Formally, a dataset D can be defined as:
 
@@ -30,11 +30,11 @@ where each x<sub>i</sub> represents the observed value of variable X<sub>i</sub>
 
 ## **Structure and Organization**
 
-Datasets are often represented as tables (matrices), where:
+Datasets are often represented as **tables (matrices)**, where:
 
-- Rows correspond to observations or instances (e.g., individual people, experiments, time points).
+- Rows correspond to **observations** or instances (e.g., individual people, experiments, time points).
 
-- Columns correspond to variables or features (e.g., age, height, temperature).
+- Columns correspond to **variables** or features (e.g., age, height, temperature).
 
 An example of a simple dataset:
 
@@ -67,11 +67,11 @@ An example of a simple dataset:
 Datasets can be classified according to different criteria, depending on their structure and the type of information they contain.
 Two of the most common distinctions are based on structure and measurement type.
 
-### **a. Based on Structure**
+### **1. Based on Structure**
 
 This classification refers to the way data are organized and stored.
 
-- Structured datasets
+- **Structured datasets**
 
 <div class="text-box">
 Data are organized in predefined formats such as rows and columns, following a consistent schema.
@@ -79,7 +79,7 @@ This structure facilitates easy access, querying, and statistical analysis.
 Examples: Student grade tables, customer databases, sales records.
 </div>
 
-- Unstructured datasets
+- **Unstructured datasets**
 
 <div class="text-box">
 Data lack a fixed organizational model or tabular format.
@@ -87,7 +87,7 @@ They are often textual, visual, or multimedia, and require preprocessing before 
 Examples: Text documents, emails, images, videos, audio recordings.
 </div>
 
-- Semi-structured datasets
+- **Semi-structured datasets**
 
 <div class="text-box">
 Data contain some elements of organization but do not adhere to a rigid table structure.
@@ -95,31 +95,31 @@ They often use tags or key-value pairs to provide partial structure.
 Examples: JSON files, XML data, web server logs.
 </div>
 
-### **b. Based on Measurement Type**
+### **2. Based on Measurement Type**
 
 This classification considers the nature of the variables in the dataset — whether they represent numerical quantities or descriptive categories.
 
-- Quantitative datasets
+- **Quantitative datasets**
 
 <div class="text-box">
   Variables are numerical and express measurable quantities.<br><br>
   They can be:
   <ul>
-    <li>Continuous: values can take any point within a range (e.g., height, temperature).</li><br>
-    <li>Discrete: values are countable (e.g., number of siblings, daily sales).<br>
+    <li><strong>Continuous:</strong> values can take any point within a range (e.g., height, temperature).</li><br>
+    <li><strong>Discrete:</strong> values are countable (e.g., number of siblings, daily sales).<br>
     Examples: Students exam scores, daily rainfall, monthly income.
   </li>
   </ul>
 </div>
 
-- Qualitative datasets
+- **Qualitative datasets**
 
 <div class="text-box">
   Variables are categorical and describe attributes or characteristics rather than numbers.<br><br>
   They can be:
   <ul>
-    <li>Nominal: unordered categories (e.g., gender, nationality).</li><br>
-    <li>Ordinal: ordered categories (e.g., satisfaction level, education rank).<br>
+    <li><strong>Nominal:</strong> unordered categories (e.g., gender, nationality).</li><br>
+    <li><strong>Ordinal:</strong> ordered categories (e.g., satisfaction level, education rank).<br>
     Examples: Favorite colors, job titles, survey responses.
   </li>
   </ul>
@@ -127,37 +127,37 @@ This classification considers the nature of the variables in the dataset — whe
 
 # **Caesar Cipher Demonstration and Implementation**
 
-## **Introduction**
-Cryptography and statistics, though seemingly distinct, share a deep mathematical connection. The Caesar cipher, one of the oldest encryption schemes, replaces each letter with another a fixed number of positions down the alphabet. While trivial from a modern cryptographic perspective, it offers an excellent framework to demonstrate how statistical distribution analysis can be applied to cryptanalysis.
-This work presents a statistical method for decrypting the classical Caesar cipher by exploiting the frequency distribution of English letters. Using a combination of brute-force search and chi-squared goodness-of-fit testing, the encryption key (shift) is automatically inferred. The project illustrates how simple statistical inference and frequency analysis can transform a deterministic decryption task into a probabilistic inference problem.
+# **Introduction**
+Cryptography and statistics, though seemingly distinct, share a deep mathematical connection. The **Caesar cipher**, one of the oldest encryption schemes, replaces each letter with another a fixed number of positions down the alphabet. While trivial from a modern cryptographic perspective, it offers an excellent framework to demonstrate how statistical distribution analysis can be applied to cryptanalysis.
+This work presents a statistical method for decrypting the classical Caesar cipher by exploiting the **frequency distribution** of English letters. Using a combination of brute-force search and chi-squared goodness-of-fit testing, the encryption key (shift) is automatically inferred. The project illustrates how simple statistical inference and frequency analysis can transform a deterministic decryption task into a probabilistic inference problem.
 An HTML/JavaScript implementation provides an interactive demonstration designed for educational use in statistics and cryptography courses.
 
 
 ## **Goals of the Implementation**
 The primary goals of this project are:
 
-- To demonstrate how statistical inference can be used to decrypt a substitution cipher.
+- To **demonstrate** how statistical inference can be used to decrypt a substitution cipher.
 
-- To compare observed letter frequencies in a ciphertext with expected English frequencies.
+- To **compare** observed letter frequencies in a ciphertext with expected English frequencies.
 
-- To identify the shift parameter that minimizes the chi-squared distance between distributions.
+- To **identify** the shift parameter that minimizes the chi-squared distance between distributions.
 
-- To implement and visualize the method using JavaScript in an interactive web interface.
+- To **implement** and visualize the method using JavaScript in an interactive web interface.
 <br><br>
 
 ## **Example of the Caesar Cipher**
 
-A Caesar cipher with a shift of +3 transforms the alphabet as follows:
+A Caesar cipher with a shift of **+3** transforms the alphabet as follows:
 
 <div class="example-box">
-Plaintext Alphabet:&nbsp;	A	B	C	D	E	F	G	H	I	J	K	L	M	N	O	P	Q	R	S	T	U	V	W	X	Y	Z<br>
-Ciphertext Alphabet:	D	E	F	G	H	I	J	K	L	M	N	O	P	Q	R	S	T	U	V	W	X	Y	Z	A	B	C
+<strong>Plaintext Alphabet:</strong>&nbsp;	A	B	C	D	E	F	G	H	I	J	K	L	M	N	O	P	Q	R	S	T	U	V	W	X	Y	Z<br>
+<strong>Ciphertext Alphabet:</strong>	D	E	F	G	H	I	J	K	L	M	N	O	P	Q	R	S	T	U	V	W	X	Y	Z	A	B	C
 </div>
 
 Example:<br>
 
-Plaintext: HELLO WORLD<br>
-Ciphertext (shift +3): KHOOR ZRUOG<br>
+<strong>Plaintext:</strong> HELLO WORLD<br>
+<strong>Ciphertext (shift +3):</strong> KHOOR ZRUOG<br>
 
 The encryption rule can be expressed mathematically as:<br>
 
@@ -175,7 +175,7 @@ where k is the shift amount and x represents the alphabetical index (A=0, …, Z
 
 ---
 
-# **Caesar Cipher Demo**
+## **Caesar Cipher Demo**
 
 <html lang="en">
 <head>
@@ -641,7 +641,7 @@ where:<br>
 
 - E<sub>i</sub> = expected frequency from English distribution
 
-The smallest χ² indicates the best statistical match.
+The smallest **χ²** indicates the **best statistical match**.
 Degrees of freedom ≈ 25 (26 letters − 1).
 This test is used here as a ranking score, not a formal hypothesis test.
 
@@ -651,48 +651,46 @@ The algorithm used for automatic decryption follows these steps:
 
 ### 1. **Input acquisition**  
 
-  - Read the ciphertext provided by the user, or automatically generate it from the plaintext using a fixed shift of **+3**.
+<div class="text-box">Read the <strong>ciphertext</strong> provided by the user, or automatically generate it from the plaintext using a fixed shift of <strong>+3.</strong></div>
 
 ### 2. **Preprocessing and sanitization**
 
-  - Keep only uppercase letters **A–Z** for frequency analysis, removing all other characters.
+<div class="text-box">Keep only uppercase letters <strong>A–Z</strong> for frequency analysis, removing all other characters.</div>
 
 ### 3. **Frequency computation**
 
-  - Count the occurrences of each letter and compute the **percentage frequency** of every letter in the ciphertext.
+<div class="text-box">Count the occurrences of each letter and compute the <strong>percentage frequency</strong> of every letter in the ciphertext.</div>
 
 ### 4. **Chi-squared evaluation**
 
-  - For each possible shift value \( k = 0, 1, ..., 25 \):  
+<div class="text-box">For each possible shift value <strong>( k = 0, 1, ..., 25 )</strong>:  
 
-    - Rotate the observed frequency vector by **+k** positions.
+  - Rotate the observed frequency vector by <strong>+k</strong> positions.
 
-    - Compute the chi-squared statistic by comparing the rotated frequencies with the expected English letter frequencies.
+  - Compute the chi-squared statistic by comparing the rotated frequencies with the expected English letter frequencies.</div>
 
 ### 5. **Key estimation**  
 
-  - Identify the shift that produces the **smallest chi-squared value**.  
+<div class="text-box">Identify the shift that produces the <strong>smallest chi-squared value</strong>.  
 
-    - This represents the **estimated shift** that best matches English letter statistics.
+  - This represents the <strong>estimated shift</strong> that best matches English letter statistics.</div>
 
 ### 6. **Decryption**
 
-  - Apply `caesarDecode(str, shift)` to recover the plaintext.
+<div class="text-box">Apply <strong style="color: #FFA500">caesarDecode(str, shift)</strong> to recover the plaintext.</div>
 
 ### 7. **Visualization and output**  
    
-  - Display results through:  
+<div class="text-box">Display results through:  
   
-    - A popup listing **all brute-force candidates (1–25)**.
+  - A popup listing <strong>all brute-force candidates (1–25)</strong>.
 
-    - A second popup showing the **auto-decoded** result and estimated shift.  
+  - A second popup showing the <strong>auto-decoded</strong> result and estimated shift.  
 
-    - An on-page **results panel** and **bar charts** showing the letter distributions.
-
-
+  - An on-page <strong>results panel</strong> and <strong>bar charts</strong> showing the letter distributions.</div>
 
 ## **Overview of the Implementation**
-The system is implemented in HTML + JavaScript, fully client-side, without external libraries.
+The system is implemented in **HTML + JavaScript**, fully client-side, without external libraries.
 The JavaScript program implements both:
 
 - Brute-force decryption over all Caesar shifts (1..25)
@@ -744,28 +742,28 @@ The Caesar encoder is responsible for applying a uniform cyclic shift to each al
 **Explanation:**
 
 
-#### **1. Character filtering.**
+- **Character filtering**
 
-- The regular expression **/[A-Za-z]/** ensures that only alphabetic characters are shifted; all other characters are appended unchanged, preserving spacing and punctuation.
+<div class= "text-box">The regular expression <strong>/[A-Za-z]/</strong> ensures that only alphabetic characters are shifted; all other characters are appended unchanged, preserving spacing and punctuation.</div>
 
-#### **2. Case preservation.**
+- **Case preservation**
 
-- The variable base stores the ASCII code of either 'A' (65) or 'a' (97), allowing the algorithm to maintain case by computing offsets relative to the correct alphabet segment.
+<div class="text-box">The variable base stores the ASCII code of either 'A' (65) or 'a' (97), allowing the algorithm to maintain case by computing offsets relative to the correct alphabet segment.</div>
 
-#### **3. Modular wrap-around.**
+- **Modular wrap-around**
 
-- The expression **((code + shift + 26) % 26)** ensures cyclic behavior. For instance, shifting 'Z' by +1 produces 'A'. Adding 26 before the modulo prevents negative results during decoding.
+<div class="text-box"> The expression <strong>((code + shift + 26) % 26)</strong> ensures cyclic behavior. For instance, shifting 'Z' by +1 produces 'A'. Adding 26 before the modulo prevents negative results during decoding.</div>
 
-#### **4. Symmetric decoding.**
+- **Symmetric decoding**
 
-- The decoder simply calls the encoder with a negated shift, guaranteeing functional symmetry:
-  `decode(encode(x, k), k) = x.`
-  This design centralizes all transformation logic in one function, minimizing redundancy and potential inconsistencies.
+<div class="text-box"> The decoder simply calls the encoder with a negated shift, guaranteeing functional symmetry:
+  <strong style="colore: #FFA500">decode(encode(x, k), k) = x.</strong>
+  This design centralizes all transformation logic in one function, minimizing redundancy and potential inconsistencies.</div>
 
-#### **5. Integration in the interface.**
+- **Integration in the interface**
 
-- Within the application, this encoder is invoked in real time whenever the user types in the Plain text field, automatically producing the Cipher text using a default shift of +3. When “manual ciphertext input” is enabled, this
-automatic behavior is temporarily disabled, allowing the user to input arbitrary encrypted data.
+<div class="text-box"> Within the application, this encoder is invoked in real time whenever the user types in the Plain text field, automatically producing the Cipher text using a default shift of +3. When “manual ciphertext input” is enabled, this
+automatic behavior is temporarily disabled, allowing the user to input arbitrary encrypted data.</div>
 
 ### **3. Brute-Force Decryption**
 
@@ -838,7 +836,7 @@ function autoDecode(text){
 ```
 This extracts the relevant data for statistical analysis, the frequency of each letter.
 
-### **5. User Interface and Interaction Flow**
+### **7. User Interface and Interaction Flow**
 
 - **Typing:** as you type in Plain text, Cipher text updates in real time with shift +3 (unless manual mode is enabled).
 
@@ -852,9 +850,9 @@ This extracts the relevant data for statistical analysis, the frequency of each 
 - **Reset:** clears inputs and charts, disables manual mode, and focuses *Plain text*.
  
 ## **Conclusion**
-The Caesar Cipher Demo illustrates the fundamental principles of symmetric encryption and classical cryptanalysis.
+**The Caesar Cipher Demo** illustrates the fundamental principles of **symmetric encryption** and **classical cryptanalysis**.
 Although insecure for real applications, it provides a valuable didactic tool for understanding how patterns in natural language can reveal hidden information.
-The integration of frequency analysis, implemented entirely in client-side JavaScript, demonstrates how computational methods can approximate linguistic inference, marking a clear link between cryptography, data analysis, and computer science education.
+The integration of frequency analysis, implemented entirely in client-side JavaScript, demonstrates how **computational methods** can approximate **linguistic inference**, marking a clear link between cryptography, data analysis, and computer science education.
 
 ---
 
