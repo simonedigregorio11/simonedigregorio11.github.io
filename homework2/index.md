@@ -125,6 +125,96 @@ This classification considers the nature of the variables in the dataset — whe
   </ul>
 </div>
 
+## **The Concept of a Distribution**
+
+A **distribution** describes how the values of a **variable** (or several variables) are spread across a **dataset**.
+It provides insight into how frequently different outcomes occur and is the foundation for understanding patterns, tendencies, and variability within data.
+In statistics, and especially in cybersecurity analytics, studying **data distributions** is crucial for detecting anomalies, understanding normal system behavior, and identifying unusual user activities.
+
+## **Types of Distributions**
+
+### **1. Distributions Based on the Number of Variables**
+
+Statistical distributions can also be classified according to the number of variables being analyzed.
+This criterion determines the dimensionality of the analysis, whether it involves one, two, or several variables simultaneously.
+
+- **Univariate distribution:** describes the characteristics of a single variable. It focuses on understanding how the values of that variable are distributed within a dataset. Typical descriptive measures include the mean, median, mode, variance, and standard deviation. Univariate analysis provides a simple yet essential view of data behavior.
+
+- **Bivariate distribution:** examines the relationship between two variables. It allows researchers to identify possible associations, correlations, or dependencies between them. For example, analyzing Age and Height together can reveal whether taller individuals tend to be older or younger on average. Visual representations such as scatter plots or two-way frequency tables are often used in this context.
+
+- **Multivariate distribution:** extends this concept to three or more variables. It investigates more complex interactions and dependencies, often using multidimensional approaches such as correlation matrices, principal component analysis, or multivariate regression models. This type of distribution is common in advanced data analysis and predictive modeling, where multiple factors influence an outcome simultaneously.
+
+Understanding the number of variables considered in a distribution is crucial for selecting the appropriate statistical tools and visualization techniques.
+
+### **2. Distributions Based on the Nature of the Distribution**
+
+Distributions can also be categorized according to the nature of the information they provide.
+In this sense, we distinguish among frequency distributions, probability distributions, and cumulative distributions.
+
+- **Frequency distribution:** shows how often each value or range of values appears in a dataset. It is descriptive in nature and provides a direct view of how data are spread across different categories or intervals. Frequency distributions are typically represented through tables, bar charts, or histograms, and they form the foundation of descriptive statistics.
+
+- **Probability distribution:** expresses the likelihood that each possible value of a random variable will occur. Unlike frequency distributions, which are based on observed data, probability distributions often represent theoretical models such as the normal, binomial, or Poisson distributions. In this case, the sum of all probabilities equals one. Probability distributions are essential for inferential statistics, hypothesis testing, and risk modeling.
+
+- **Cumulative distribution:** shows the running total of frequencies or probabilities up to a given value. It answers questions such as “What proportion of observations fall below or equal to a certain threshold?” and is often displayed as an increasing curve that approaches one (or 100%). Cumulative distributions are particularly useful for identifying percentiles and understanding the overall shape of data accumulation.
+
+In summary, frequency distributions describe what has been observed, probability distributions model what is likely to occur, and cumulative distributions show how values build up over a range. Together, these perspectives provide a comprehensive understanding of how data behave and how uncertainty can be modeled statistically.
+
+## **Example Dataset**
+
+The following dataset, named `Table`, will be used to demonstrate both univariate and bivariate analyses.
+The table includes three variables (Age, Height(cm), and Gender) representing a simplified sample of user data.
+
+![Table](/assets/images/Table.png)
+
+### **Example of Univariate Analysis**
+
+```sql
+SELECT
+    Height(cm),
+    COUNT (*) AS frequency
+FROM
+    Table
+GROUP BY
+    Height(cm)
+ORDER BY
+    Height(cm);
+```
+![Height frequency](/assets/images/Height%20frequency.png)
+
+
+```sql
+SELECT
+    Age,
+    COUNT (*) AS frequency
+FROM
+    Table
+GROUP BY
+    Age
+ORDER BY
+    Age;
+```
+![Age frequency](/assets/images/Age%20frequency.png)
+
+### **Example of Bivariate Analysis (Variables: Age and Gender)**
+
+```sql
+SELECT
+    Age,
+    Gender
+    COUNT (*) AS frequency
+FROM
+    Table
+GROUP BY
+    Age,
+    Gender
+ORDER BY
+    Age,
+    Gender;
+```
+![Age-Gender frequency](/assets/images/Age-Gender.png)
+
+---
+
 # **Caesar Cipher Demonstration and Implementation**
 
 # **Introduction**
