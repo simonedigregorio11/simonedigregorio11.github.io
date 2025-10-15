@@ -75,7 +75,7 @@ This classification refers to the way data are organized and stored.
 
 <div class="text-box">
 Data are organized in predefined formats such as rows and columns, following a consistent schema.
-This structure facilitates easy access, querying, and statistical analysis.
+This structure facilitates easy access, querying, and statistical analysis.<br><br>
 Examples: Student grade tables, customer databases, sales records.
 </div>
 
@@ -83,7 +83,7 @@ Examples: Student grade tables, customer databases, sales records.
 
 <div class="text-box">
 Data lack a fixed organizational model or tabular format.
-They are often textual, visual, or multimedia, and require preprocessing before analysis.
+They are often textual, visual, or multimedia, and require preprocessing before analysis.<br><br>
 Examples: Text documents, emails, images, videos, audio recordings.
 </div>
 
@@ -91,7 +91,7 @@ Examples: Text documents, emails, images, videos, audio recordings.
 
 <div class="text-box">
 Data contain some elements of organization but do not adhere to a rigid table structure.
-They often use tags or key-value pairs to provide partial structure.
+They often use tags or key-value pairs to provide partial structure.<br><br>
 Examples: JSON files, XML data, web server logs.
 </div>
 
@@ -106,10 +106,10 @@ This classification considers the nature of the variables in the dataset — whe
   They can be:
   <ul>
     <li><strong>Continuous:</strong> values can take any point within a range (e.g., height, temperature).</li><br>
-    <li><strong>Discrete:</strong> values are countable (e.g., number of siblings, daily sales).<br>
-    Examples: Students exam scores, daily rainfall, monthly income.
+    <li><strong>Discrete:</strong> values are countable (e.g., number of siblings, daily sales).
   </li>
   </ul>
+  Examples: Students exam scores, daily rainfall, monthly income.
 </div>
 
 - **Qualitative datasets**
@@ -119,10 +119,10 @@ This classification considers the nature of the variables in the dataset — whe
   They can be:
   <ul>
     <li><strong>Nominal:</strong> unordered categories (e.g., gender, nationality).</li><br>
-    <li><strong>Ordinal:</strong> ordered categories (e.g., satisfaction level, education rank).<br>
-    Examples: Favorite colors, job titles, survey responses.
+    <li><strong>Ordinal:</strong> ordered categories (e.g., satisfaction level, education rank).<br><br>
   </li>
   </ul>
+  Examples: Favorite colors, job titles, survey responses.
 </div>
 
 ## **The Concept of a Distribution**
@@ -181,6 +181,11 @@ ORDER BY
 ```
 ![Height frequency](/assets/images/Height%20frequency.png)
 
+This query analyzes the distribution of the variable Height (cm).
+By grouping all records according to height values and counting their occurrences, it calculates the frequency of each distinct height in the dataset.
+The resulting frequency table shows how many individuals share the same height.
+For example, a height of 165 cm appears twice, while most other heights occur only once.
+This allows us to visualize how height values are distributed across the sample and to detect any repeated or uncommon measurements.
 
 ```sql
 SELECT
@@ -194,6 +199,10 @@ ORDER BY
     Age;
 ```
 ![Age frequency](/assets/images/Age%20frequency.png)
+
+This query performs a similar analysis on the variable Age.
+It groups the data by age and counts how many individuals belong to each age group, producing a frequency distribution of ages.
+From the results, we can observe that certain ages (e.g., 19 and 20) occur more frequently, suggesting that the dataset contains a higher number of individuals within that age range.
 
 ### **Example of Bivariate Analysis (Variables: Age and Gender)**
 
@@ -212,6 +221,13 @@ ORDER BY
     Gender;
 ```
 ![Age-Gender frequency](/assets/images/Age-Gender.png)
+
+This query performs a bivariate analysis by examining the relationship between two variables: Age and Gender.
+By grouping the data according to both variables and counting the number of records for each pair, the query calculates the joint frequency distribution.
+The resulting table shows, for example, how many males and females correspond to each age value in the dataset.
+From the results, it can be observed that certain age groups (such as 19 and 20) have a higher frequency, and that the distribution between genders varies slightly within those ages.
+This analysis provides insight into how the two variables interact — revealing patterns such as age groups where one gender may be more represented than the other.
+Bivariate analysis is useful for identifying associations or differences between two variables and forms the basis for more advanced statistical studies, such as correlation or regression analysis.
 
 ---
 
@@ -356,6 +372,46 @@ where k is the shift amount and x represents the alphabetical index (A=0, …, Z
         if (E > 0) chi += ((O - E) * (O - E)) / E;
       }
       return chi;
+    }
+    function pad2(n){ return String(n).padStart(2,' '); }
+    function countsBlock(label, counts, total){
+      const parts = [];
+      for (let i=0;i<26;i++){
+        const ch = String.fromCharCode(65+i);
+        parts.push(`${ch}:${pad2(counts[i]||0)}`);
+      }
+      const line1 = parts.slice(0,13).join('  ');
+      const line2 = parts.slice(13).join('  ');
+      return `${label} — total letters: ${total}\n${line1}\n${line2}`;
+    }
+
+    function updateResultsPanel(){
+      const plainText  = (elPlain.value  || '');
+      const cipherText = (elCipher.value || '');
+
+      const { counts:c1, total:t1 } = letterCounts(plainText);
+      const { counts:c2, total:t2 } = letterCounts(cipherText);
+
+      let out = countsBlock('Plain',  c1, t1) + '\n\n' +
+                countsBlock('Cipher', c2, t2);
+
+      decodeOut.textContent = out;
+    }
+
+    function renderAutoDecodePanel(){
+      const cipherText = (elCipher.value || '').trim();
+      if (!cipherText.length){
+        decodeOut.textContent = '';
+        decodeOut.classList.remove('visible');
+        return;
+      }
+      const auto = autoDecode(cipherText);
+      const autoLine = `Auto-Decode (estimated shift: ${auto.shift})\n${auto.text}\n\n`;
+
+      const cleanedCounts = decodeOut.textContent.trimStart();
+
+      decodeOut.textContent = autoLine + cleanedCounts;
+      decodeOut.classList.add('visible');
     }
 
     // --- Caesar cipher ---
@@ -631,12 +687,20 @@ where k is the shift amount and x represents the alphabetical index (A=0, …, Z
     });
 
     elCipher.addEventListener('input', () => {
-      if (chkManual.checked) redrawCharts();
+      if (chkManual.checked) {
+        redrawCharts();
+      }
     });
 
     chkManual.addEventListener('change', () => {
       elCipher.readOnly = !chkManual.checked;
-      if (!chkManual.checked) updateCipherLive();
+
+      if (chkManual.checked){
+        elPlain.value = '';
+      } else {
+        updateCipherLive();
+      }
+
       redrawCharts();
     });
 
@@ -649,6 +713,8 @@ where k is the shift amount and x represents the alphabetical index (A=0, …, Z
       }
       redrawCharts();
 
+      updateResultsPanel();
+
       const all = bruteForceDecode(cipherText);
       const bruteOutput = all.map(r => `Shift ${r.shift}:\n${r.text}`).join('\n\n');
 
@@ -659,14 +725,14 @@ where k is the shift amount and x represents the alphabetical index (A=0, …, Z
         title: 'Brute-force: all shifts (1..25)',
         content: bruteOutput,
         nextLabel: 'Show auto-decode',
-        onNext: () => showPopup({
+        onNext: () => {
+          showPopup({
           title: 'Auto-decode via frequency analysis',
           content: autoMsg
-        })
+        });
+        renderAutoDecodePanel();
+      }
       });
-
-      decodeOut.innerHTML = autoMsg.replace(/\n/g, '<br>');
-      decodeOut.classList.add('visible');
     });
 
     // Reset button: clears fields, unchecks manual mode, restores readOnly
@@ -827,7 +893,7 @@ function caesarDecode(str, shift){
   return caesarEncode(str, -shift);
 }
 ```
-The Caesar encoder is responsible for applying a uniform cyclic shift to each alphabetic character in the input string. It supports both uppercase and lowercase letters while leaving non-alphabetic symbols (such as punctuation and spaces) unchanged. The function relies on modular arithmetic to wrap character codes within the 26-letter Latin alphabet.
+The **Caesar encoder** is responsible for applying a uniform cyclic shift to each alphabetic character in the input string. It supports both uppercase and lowercase letters while leaving non-alphabetic symbols (such as punctuation and spaces) unchanged. The function relies on modular arithmetic to wrap character codes within the 26-letter Latin alphabet.
 
 **Explanation:**
 
@@ -857,7 +923,7 @@ automatic behavior is temporarily disabled, allowing the user to input arbitrary
 
 ### **3. Brute-Force Decryption**
 
-Brute-force decryption is implemented to demonstrate the inherent weakness of the Caesar cipher against exhaustive key search. Since the cipher’s key space contains only 25 non-trivial shifts (from 1 to 25), every possible transformation can be generated and displayed almost instantaneously.
+**Brute-force decryption** is implemented to demonstrate the inherent weakness of the Caesar cipher against exhaustive key search. Since the cipher’s key space contains only 25 non-trivial shifts (from 1 to 25), every possible transformation can be generated and displayed almost instantaneously.
 <br>
 
 ```js
@@ -871,6 +937,11 @@ function bruteForceDecode(text){
 ```
 
 ### **4. Frequency Count and Normalization**
+
+This phase focuses on extracting the **statistical characteristics** of the text by analyzing how frequently each letter appears.
+All non-alphabetic characters are removed, and the remaining letters are converted into a uniform format to ensure consistency.
+The total occurrences of each letter are then transformed into percentages, allowing the **frequency distribution** of the text to be compared objectively with other samples, regardless of length or content.
+This normalization process is fundamental for the later statistical comparison used in decryption.
 
 ```js
 function onlyLetters(s){ return (s||'').toUpperCase().replace(/[^A-Z]/g,''); }
@@ -889,6 +960,11 @@ function toPercent(counts, total){
 
 ### **5. Chi-Squared Fit**
 
+In this phase, the observed **frequency distribution** of letters in the **encrypted text** is statistically compared with the typical distribution of letters in English.
+The **Chi-squared** test quantifies the difference between these two distributions, producing a numerical value that expresses how closely the text resembles natural English.
+A lower Chi-squared value indicates a stronger match, suggesting that the applied shift aligns the ciphertext more accurately with standard linguistic patterns.
+This statistical fit is the foundation of the automatic key detection process.
+
 ```js
 const freqEn = {
   A:8.17,B:1.49,C:2.78,D:4.25,E:12.70,F:2.23,G:2.02,H:6.09,I:6.97,J:0.15,K:0.77,L:4.03,M:2.41,
@@ -905,6 +981,11 @@ function chiSquared(obsPerc, expectedPerc){
 }
 ```
 ### **6. Automatic Decoding via Frequency Rotation**
+
+The automatic decoding phase uses the **frequency data** and **Chi-squared** comparison to identify the most probable Caesar shift.
+It systematically rotates the frequency distribution across all **26** possible positions and calculates the Chi-squared score for each rotation.
+The shift that yields the smallest value is considered the best statistical match and is therefore used to reconstruct the likely plaintext.
+This approach allows the cipher to be **decrypted** without knowing the key in advance, relying purely on probabilistic and linguistic evidence.
 
 ```js
 function autoDecode(text){
@@ -924,7 +1005,6 @@ function autoDecode(text){
   return { text: caesarDecode(text, bestShift), shift: bestShift, chi: bestChi };
 }
 ```
-This extracts the relevant data for statistical analysis, the frequency of each letter.
 
 ### **7. User Interface and Interaction Flow**
 

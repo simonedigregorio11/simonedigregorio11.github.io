@@ -175,7 +175,7 @@ Two of the most common distinctions are based on structure and measurement type.
 
 <div class="text-box">
 Data are organized in predefined formats such as rows and columns, following a consistent schema.
-This structure facilitates easy access, querying, and statistical analysis.
+This structure facilitates easy access, querying, and statistical analysis.<br /><br />
 Examples: Student grade tables, customer databases, sales records.
 </div>
 
@@ -185,7 +185,7 @@ Examples: Student grade tables, customer databases, sales records.
 
 <div class="text-box">
 Data lack a fixed organizational model or tabular format.
-They are often textual, visual, or multimedia, and require preprocessing before analysis.
+They are often textual, visual, or multimedia, and require preprocessing before analysis.<br /><br />
 Examples: Text documents, emails, images, videos, audio recordings.
 </div>
 
@@ -195,7 +195,7 @@ Examples: Text documents, emails, images, videos, audio recordings.
 
 <div class="text-box">
 Data contain some elements of organization but do not adhere to a rigid table structure.
-They often use tags or key-value pairs to provide partial structure.
+They often use tags or key-value pairs to provide partial structure.<br /><br />
 Examples: JSON files, XML data, web server logs.
 </div>
 
@@ -212,10 +212,10 @@ Examples: JSON files, XML data, web server logs.
   They can be:
   <ul>
     <li><strong>Continuous:</strong> values can take any point within a range (e.g., height, temperature).</li><br />
-    <li><strong>Discrete:</strong> values are countable (e.g., number of siblings, daily sales).<br />
-    Examples: Students exam scores, daily rainfall, monthly income.
+    <li><strong>Discrete:</strong> values are countable (e.g., number of siblings, daily sales).
   </li>
   </ul>
+  Examples: Students exam scores, daily rainfall, monthly income.
 </div>
 
 <ul>
@@ -227,10 +227,10 @@ Examples: JSON files, XML data, web server logs.
   They can be:
   <ul>
     <li><strong>Nominal:</strong> unordered categories (e.g., gender, nationality).</li><br />
-    <li><strong>Ordinal:</strong> ordered categories (e.g., satisfaction level, education rank).<br />
-    Examples: Favorite colors, job titles, survey responses.
+    <li><strong>Ordinal:</strong> ordered categories (e.g., satisfaction level, education rank).<br /><br />
   </li>
   </ul>
+  Examples: Favorite colors, job titles, survey responses.
 </div>
 
 <h2 id="the-concept-of-a-distribution"><strong>The Concept of a Distribution</strong></h2>
@@ -300,6 +300,12 @@ The table includes three variables (Age, Height(cm), and Gender) representing a 
 </code></pre></div></div>
 <p><img src="/assets/images/Height%20frequency.png" alt="Height frequency" /></p>
 
+<p>This query analyzes the distribution of the variable Height (cm).
+By grouping all records according to height values and counting their occurrences, it calculates the frequency of each distinct height in the dataset.
+The resulting frequency table shows how many individuals share the same height.
+For example, a height of 165 cm appears twice, while most other heights occur only once.
+This allows us to visualize how height values are distributed across the sample and to detect any repeated or uncommon measurements.</p>
+
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span>
     <span class="n">Age</span><span class="p">,</span>
     <span class="k">COUNT</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">frequency</span>
@@ -311,6 +317,10 @@ The table includes three variables (Age, Height(cm), and Gender) representing a 
     <span class="n">Age</span><span class="p">;</span>
 </code></pre></div></div>
 <p><img src="/assets/images/Age%20frequency.png" alt="Age frequency" /></p>
+
+<p>This query performs a similar analysis on the variable Age.
+It groups the data by age and counts how many individuals belong to each age group, producing a frequency distribution of ages.
+From the results, we can observe that certain ages (e.g., 19 and 20) occur more frequently, suggesting that the dataset contains a higher number of individuals within that age range.</p>
 
 <h3 id="example-of-bivariate-analysis-variables-age-and-gender"><strong>Example of Bivariate Analysis (Variables: Age and Gender)</strong></h3>
 
@@ -328,6 +338,13 @@ The table includes three variables (Age, Height(cm), and Gender) representing a 
     <span class="n">Gender</span><span class="p">;</span>
 </code></pre></div></div>
 <p><img src="/assets/images/Age-Gender.png" alt="Age-Gender frequency" /></p>
+
+<p>This query performs a bivariate analysis by examining the relationship between two variables: Age and Gender.
+By grouping the data according to both variables and counting the number of records for each pair, the query calculates the joint frequency distribution.
+The resulting table shows, for example, how many males and females correspond to each age value in the dataset.
+From the results, it can be observed that certain age groups (such as 19 and 20) have a higher frequency, and that the distribution between genders varies slightly within those ages.
+This analysis provides insight into how the two variables interact — revealing patterns such as age groups where one gender may be more represented than the other.
+Bivariate analysis is useful for identifying associations or differences between two variables and forms the basis for more advanced statistical studies, such as correlation or regression analysis.</p>
 
 <hr />
 
@@ -478,6 +495,46 @@ D(x) = (x−k) mod 26
         if (E > 0) chi += ((O - E) * (O - E)) / E;
       }
       return chi;
+    }
+    function pad2(n){ return String(n).padStart(2,' '); }
+    function countsBlock(label, counts, total){
+      const parts = [];
+      for (let i=0;i<26;i++){
+        const ch = String.fromCharCode(65+i);
+        parts.push(`${ch}:${pad2(counts[i]||0)}`);
+      }
+      const line1 = parts.slice(0,13).join('  ');
+      const line2 = parts.slice(13).join('  ');
+      return `${label} — total letters: ${total}\n${line1}\n${line2}`;
+    }
+
+    function updateResultsPanel(){
+      const plainText  = (elPlain.value  || '');
+      const cipherText = (elCipher.value || '');
+
+      const { counts:c1, total:t1 } = letterCounts(plainText);
+      const { counts:c2, total:t2 } = letterCounts(cipherText);
+
+      let out = countsBlock('Plain',  c1, t1) + '\n\n' +
+                countsBlock('Cipher', c2, t2);
+
+      decodeOut.textContent = out;
+    }
+
+    function renderAutoDecodePanel(){
+      const cipherText = (elCipher.value || '').trim();
+      if (!cipherText.length){
+        decodeOut.textContent = '';
+        decodeOut.classList.remove('visible');
+        return;
+      }
+      const auto = autoDecode(cipherText);
+      const autoLine = `Auto-Decode (estimated shift: ${auto.shift})\n${auto.text}\n\n`;
+
+      const cleanedCounts = decodeOut.textContent.trimStart();
+
+      decodeOut.textContent = autoLine + cleanedCounts;
+      decodeOut.classList.add('visible');
     }
 
     // --- Caesar cipher ---
@@ -753,12 +810,20 @@ D(x) = (x−k) mod 26
     });
 
     elCipher.addEventListener('input', () => {
-      if (chkManual.checked) redrawCharts();
+      if (chkManual.checked) {
+        redrawCharts();
+      }
     });
 
     chkManual.addEventListener('change', () => {
       elCipher.readOnly = !chkManual.checked;
-      if (!chkManual.checked) updateCipherLive();
+
+      if (chkManual.checked){
+        elPlain.value = '';
+      } else {
+        updateCipherLive();
+      }
+
       redrawCharts();
     });
 
@@ -771,6 +836,8 @@ D(x) = (x−k) mod 26
       }
       redrawCharts();
 
+      updateResultsPanel();
+
       const all = bruteForceDecode(cipherText);
       const bruteOutput = all.map(r => `Shift ${r.shift}:\n${r.text}`).join('\n\n');
 
@@ -781,14 +848,14 @@ D(x) = (x−k) mod 26
         title: 'Brute-force: all shifts (1..25)',
         content: bruteOutput,
         nextLabel: 'Show auto-decode',
-        onNext: () => showPopup({
+        onNext: () => {
+          showPopup({
           title: 'Auto-decode via frequency analysis',
           content: autoMsg
-        })
+        });
+        renderAutoDecodePanel();
+      }
       });
-
-      decodeOut.innerHTML = autoMsg.replace(/\n/g, '<br>');
-      decodeOut.classList.add('visible');
     });
 
     // Reset button: clears fields, unchecks manual mode, restores readOnly
@@ -965,7 +1032,7 @@ The JavaScript program implements both:</p>
   <span class="k">return</span> <span class="nx">caesarEncode</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="o">-</span><span class="nx">shift</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>The Caesar encoder is responsible for applying a uniform cyclic shift to each alphabetic character in the input string. It supports both uppercase and lowercase letters while leaving non-alphabetic symbols (such as punctuation and spaces) unchanged. The function relies on modular arithmetic to wrap character codes within the 26-letter Latin alphabet.</p>
+<p>The <strong>Caesar encoder</strong> is responsible for applying a uniform cyclic shift to each alphabetic character in the input string. It supports both uppercase and lowercase letters while leaving non-alphabetic symbols (such as punctuation and spaces) unchanged. The function relies on modular arithmetic to wrap character codes within the 26-letter Latin alphabet.</p>
 
 <p><strong>Explanation:</strong></p>
 
@@ -1004,7 +1071,7 @@ automatic behavior is temporarily disabled, allowing the user to input arbitrary
 
 <h3 id="3-brute-force-decryption"><strong>3. Brute-Force Decryption</strong></h3>
 
-<p>Brute-force decryption is implemented to demonstrate the inherent weakness of the Caesar cipher against exhaustive key search. Since the cipher’s key space contains only 25 non-trivial shifts (from 1 to 25), every possible transformation can be generated and displayed almost instantaneously.
+<p><strong>Brute-force decryption</strong> is implemented to demonstrate the inherent weakness of the Caesar cipher against exhaustive key search. Since the cipher’s key space contains only 25 non-trivial shifts (from 1 to 25), every possible transformation can be generated and displayed almost instantaneously.
 <br /></p>
 
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">bruteForceDecode</span><span class="p">(</span><span class="nx">text</span><span class="p">){</span>
@@ -1017,6 +1084,11 @@ automatic behavior is temporarily disabled, allowing the user to input arbitrary
 </code></pre></div></div>
 
 <h3 id="4-frequency-count-and-normalization"><strong>4. Frequency Count and Normalization</strong></h3>
+
+<p>This phase focuses on extracting the <strong>statistical characteristics</strong> of the text by analyzing how frequently each letter appears.
+All non-alphabetic characters are removed, and the remaining letters are converted into a uniform format to ensure consistency.
+The total occurrences of each letter are then transformed into percentages, allowing the <strong>frequency distribution</strong> of the text to be compared objectively with other samples, regardless of length or content.
+This normalization process is fundamental for the later statistical comparison used in decryption.</p>
 
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">onlyLetters</span><span class="p">(</span><span class="nx">s</span><span class="p">){</span> <span class="k">return</span> <span class="p">(</span><span class="nx">s</span><span class="o">||</span><span class="dl">''</span><span class="p">).</span><span class="nx">toUpperCase</span><span class="p">().</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">[^</span><span class="sr">A-Z</span><span class="se">]</span><span class="sr">/g</span><span class="p">,</span><span class="dl">''</span><span class="p">);</span> <span class="p">}</span>
 
@@ -1034,6 +1106,11 @@ automatic behavior is temporarily disabled, allowing the user to input arbitrary
 
 <h3 id="5-chi-squared-fit"><strong>5. Chi-Squared Fit</strong></h3>
 
+<p>In this phase, the observed <strong>frequency distribution</strong> of letters in the <strong>encrypted text</strong> is statistically compared with the typical distribution of letters in English.
+The <strong>Chi-squared</strong> test quantifies the difference between these two distributions, producing a numerical value that expresses how closely the text resembles natural English.
+A lower Chi-squared value indicates a stronger match, suggesting that the applied shift aligns the ciphertext more accurately with standard linguistic patterns.
+This statistical fit is the foundation of the automatic key detection process.</p>
+
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">freqEn</span> <span class="o">=</span> <span class="p">{</span>
   <span class="na">A</span><span class="p">:</span><span class="mf">8.17</span><span class="p">,</span><span class="na">B</span><span class="p">:</span><span class="mf">1.49</span><span class="p">,</span><span class="na">C</span><span class="p">:</span><span class="mf">2.78</span><span class="p">,</span><span class="na">D</span><span class="p">:</span><span class="mf">4.25</span><span class="p">,</span><span class="na">E</span><span class="p">:</span><span class="mf">12.70</span><span class="p">,</span><span class="na">F</span><span class="p">:</span><span class="mf">2.23</span><span class="p">,</span><span class="na">G</span><span class="p">:</span><span class="mf">2.02</span><span class="p">,</span><span class="na">H</span><span class="p">:</span><span class="mf">6.09</span><span class="p">,</span><span class="na">I</span><span class="p">:</span><span class="mf">6.97</span><span class="p">,</span><span class="na">J</span><span class="p">:</span><span class="mf">0.15</span><span class="p">,</span><span class="na">K</span><span class="p">:</span><span class="mf">0.77</span><span class="p">,</span><span class="na">L</span><span class="p">:</span><span class="mf">4.03</span><span class="p">,</span><span class="na">M</span><span class="p">:</span><span class="mf">2.41</span><span class="p">,</span>
   <span class="na">N</span><span class="p">:</span><span class="mf">6.75</span><span class="p">,</span><span class="na">O</span><span class="p">:</span><span class="mf">7.51</span><span class="p">,</span><span class="na">P</span><span class="p">:</span><span class="mf">1.93</span><span class="p">,</span><span class="na">Q</span><span class="p">:</span><span class="mf">0.10</span><span class="p">,</span><span class="na">R</span><span class="p">:</span><span class="mf">5.99</span><span class="p">,</span><span class="na">S</span><span class="p">:</span><span class="mf">6.33</span><span class="p">,</span><span class="na">T</span><span class="p">:</span><span class="mf">9.06</span><span class="p">,</span><span class="na">U</span><span class="p">:</span><span class="mf">2.76</span><span class="p">,</span><span class="na">V</span><span class="p">:</span><span class="mf">0.98</span><span class="p">,</span><span class="na">W</span><span class="p">:</span><span class="mf">2.36</span><span class="p">,</span><span class="na">X</span><span class="p">:</span><span class="mf">0.15</span><span class="p">,</span><span class="na">Y</span><span class="p">:</span><span class="mf">1.97</span><span class="p">,</span><span class="na">Z</span><span class="p">:</span><span class="mf">0.07</span>
@@ -1049,6 +1126,11 @@ automatic behavior is temporarily disabled, allowing the user to input arbitrary
 <span class="p">}</span>
 </code></pre></div></div>
 <h3 id="6-automatic-decoding-via-frequency-rotation"><strong>6. Automatic Decoding via Frequency Rotation</strong></h3>
+
+<p>The automatic decoding phase uses the <strong>frequency data</strong> and <strong>Chi-squared</strong> comparison to identify the most probable Caesar shift.
+It systematically rotates the frequency distribution across all <strong>26</strong> possible positions and calculates the Chi-squared score for each rotation.
+The shift that yields the smallest value is considered the best statistical match and is therefore used to reconstruct the likely plaintext.
+This approach allows the cipher to be <strong>decrypted</strong> without knowing the key in advance, relying purely on probabilistic and linguistic evidence.</p>
 
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">autoDecode</span><span class="p">(</span><span class="nx">text</span><span class="p">){</span>
   <span class="kd">const</span> <span class="p">{</span> <span class="nx">counts</span><span class="p">,</span> <span class="nx">total</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">letterCounts</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
@@ -1067,7 +1149,6 @@ automatic behavior is temporarily disabled, allowing the user to input arbitrary
   <span class="k">return</span> <span class="p">{</span> <span class="na">text</span><span class="p">:</span> <span class="nx">caesarDecode</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">bestShift</span><span class="p">),</span> <span class="na">shift</span><span class="p">:</span> <span class="nx">bestShift</span><span class="p">,</span> <span class="na">chi</span><span class="p">:</span> <span class="nx">bestChi</span> <span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>This extracts the relevant data for statistical analysis, the frequency of each letter.</p>
 
 <h3 id="7-user-interface-and-interaction-flow"><strong>7. User Interface and Interaction Flow</strong></h3>
 
