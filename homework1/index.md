@@ -4,7 +4,7 @@ layout: default
 permalink: /homework1/
 ---
 
-[← Torna alla Home](/)
+[← Back to Home](/)
 
 ---
 
@@ -124,4 +124,4 @@ Monte Carlo simulations allow cybersecurity teams to model thousands of possible
 
 ---
 
-[← Torna alla Home](/)
+[← Back to Home](/)

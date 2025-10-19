@@ -20,5 +20,9 @@ Here you can find my work and assignments from the course.
 
 - [Homework 2](/homework2/)
 
+- [Homework 3](/homework3/)
+
+- [Homework 4](/homework4/)
+
 ---
 

@@ -1,0 +1,461 @@
+---
+title: "Homework 3"
+layout: default
+permalink: /homework3/
+---
+
+[← Back to Home](/)
+
+---
+
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>RSA (Encrypt/Decrypt)</title>
+</head>
+<body>
+<div class="cipher-container">
+  <h1>RSA</h1>
+
+  <!-- Keys (optional p, q to auto-compute n) -->
+  <div class="grid2">
+    <div class="field">
+      <h3>p (prime)</h3>
+      <div class="inputarea-container">
+        <input id="p" type="text" placeholder="e.g. 101" value="101" autocomplete="off"/>
+      </div>
+    </div>
+    <div class="field">
+      <h3>q (prime)</h3>
+      <div class="inputarea-container">
+        <input id="q" type="text" placeholder="e.g. 113" value="113" autocomplete="off"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <h3>e (public exponent)</h3>
+    <div class="inputarea-container">
+      <input id="e" type="text" placeholder="e.g. 65537" value="65537" autocomplete="off"/>
+    </div>
+  </div>
+
+  <div class="field">
+    <h3>n (modulus)</h3>
+    <div class="inputarea-container">
+      <input id="n" type="text" readonly autocomplete="off" placeholder="auto-calculated from p·q (optional)"/>
+    </div>
+  </div>
+
+  <div id="warn" class="note"></div>
+
+  <!-- Plaintext & Encrypt -->
+  <h3>Plaintext</h3>
+  <div class="textarea-container">
+    <textarea id="plain" placeholder="Type or paste your original text..."></textarea>
+  </div>
+
+  <div class="row">
+    <button id="encrypt">Encrypt</button>
+    <button id="reset" class="danger">Reset</button>
+  </div>
+
+  <br>
+
+  <!-- Cipher (numbers only) -->
+  <h3>Cipher</h3>
+  <div class="textarea-container">
+    <textarea id="cipher" placeholder="Will be populated by Encrypt, or paste your numeric blocks here (decimal, space/comma/newline-separated)"></textarea>
+  </div>
+
+  <hr/><br>
+
+  <!-- Decrypt params (ONLY these are used for decrypt) -->
+  <div class="grid2">
+    <div class="field">
+      <h3>e (for decrypt)</h3>
+      <div class="inputarea-container">
+        <input id="e2" type="text" placeholder="public exponent"/>
+      </div>
+    </div>
+    <div class="field">
+      <h3>n (for decrypt)</h3>
+      <div class="inputarea-container">
+        <input id="n2" type="text" placeholder="public modulus"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:10px;">
+    <!-- kept only the brute+chi² decrypt button, labeled 'Decrypt' for clarity -->
+    <button id="decryptBrute" class="warn">Decrypt</button>
+  </div>
+
+  <br><br>
+  <h3>Output</h3>
+  <pre id="output">---</pre>
+</div>
+
+<script>
+/* ---------- UI helpers ---------- */
+const el = id => document.getElementById(id);
+const out = msg => el("output").textContent = msg;
+const warn = msg => { const w = el("warn"); if (msg) { w.textContent = msg; w.style.display='block'; } else { w.style.display='none'; w.textContent=''; } };
+
+/* ---------- Validation / BigInt utils ---------- */
+function toBigIntStrict(v, label){
+  if (typeof v !== 'string') v = String(v ?? '');
+  v = v.trim();
+  if (v === '') throw new Error(`Empty value for ${label}`);
+  if (!/^[+-]?\d+$/.test(v)) throw new Error(`Invalid value for ${label}: "${v}"`);
+  return BigInt(v);
+}
+function egcd(a, b) {
+  a = BigInt(a); b = BigInt(b);
+  if (b === 0n) return { g: a, x: 1n, y: 0n };
+  const { g, x: x1, y: y1 } = egcd(b, a % b);
+  return { g, x: y1, y: x1 - (a / b) * y1 };
+}
+function gcd(a,b){ a=BigInt(a); b=BigInt(b); while (b!==0n){ [a,b]=[b,a%b]; } return a; }
+function modInv(a,m){ a=BigInt(a); m=BigInt(m);
+  const {g,x} = egcd(((a% m)+m)%m,m);
+  if(g!==1n) return null;
+  return (x%m+m)%m;
+}
+function modPow(base, exp, mod){
+  base = (BigInt(base) % BigInt(mod) + BigInt(mod)) % BigInt(mod);
+  exp = BigInt(exp);
+  mod = BigInt(mod);
+  let r=1n;
+  while(exp>0n){
+    if (exp & 1n) r = (r * base) % mod;
+    exp >>= 1n;
+    base = (base * base) % mod;
+  }
+  return r;
+}
+
+/* ---------- Bytes <-> BigInt ---------- */
+function textToBytesUTF8(s){ return new TextEncoder().encode(s); }
+function bytesToTextUTF8(u8){ return new TextDecoder('utf-8',{fatal:true}).decode(u8); }
+function bytesToBigInt(bytes){ let res=0n; for(let b of bytes){ res=(res<<8n)+BigInt(b); } return res; }
+function bigIntToBytesArray(n){
+  n=BigInt(n);
+  if(n===0n) return [0];
+  let a=[];
+  while(n>0n){ a.unshift(Number(n & 0xffn)); n >>= 8n; }
+  return a;
+}
+
+/* ---------- Chunking ---------- */
+function bitlen(x){ return BigInt(x).toString(2).length; }
+function chunkPlaintext(text, n){
+  const bytes = textToBytesUTF8(text);
+  const bs = Math.floor((Number(bitlen(n))-1)/8);
+  if (bs <= 0) throw new Error("n is too small to fit even 1 byte");
+  const chunks=[];
+  for(let i=0;i<bytes.length;i+=bs){
+    chunks.push(bytesToBigInt(bytes.slice(i,i+bs)));
+  }
+  return {chunks, bs, len: bytes.length};
+}
+function leftPadArray(arr, len){
+  if(arr.length>=len) return arr;
+  const out=new Array(len).fill(0);
+  out.splice(len-arr.length, arr.length, ...arr);
+  return out;
+}
+
+function setWarn(msgs){
+  if (!msgs || (Array.isArray(msgs) && msgs.length===0)) { warn(''); return; }
+  if (Array.isArray(msgs)) warn(msgs.join('\n'));
+  else warn(String(msgs));
+}
+
+function isProbablyPrime(n, k = 6){
+  n = BigInt(n);
+  if (n < 2n) return false;
+  const small = [2n,3n,5n,7n,11n,13n,17n,19n,23n,29n,31n,37n,41n,43n,47n];
+  for (const p of small){ if (n===p) return true; if (n%p===0n) return false; }
+  // n-1 = d*2^s
+  let d = n-1n, s = 0n;
+  while ((d & 1n) === 0n){ d >>= 1n; s++; }
+  const tryW = (a)=>{
+    let x = modPow(a, d, n);
+    if (x===1n || x===n-1n) return true;
+    for (let r=1n; r<s; r++){
+      x = (x*x) % n;
+      if (x===n-1n) return true;
+    }
+    return false;
+  };
+  for (let i=0;i<k;i++){
+    const a = BigInt(2 + Math.floor(Math.random()*Math.min(Number(n-2n), 0x7ffffffd)));
+    if (!tryW(a)) return false;
+  }
+  return true;
+}
+
+/* ---------- Auto-calc n (optional p,q) ---------- */
+function tryAutoUpdateKeys(){
+  const pVal = el('p').value.trim();
+  const qVal = el('q').value.trim();
+  const eVal = el('e').value.trim();
+
+  const msgs = [];
+  if (eVal === '') { setWarn('Enter e'); el('n').value=''; throw new Error('Enter e'); }
+  const E = toBigIntStrict(eVal,'e');
+
+  let P = null, Q = null;
+  if (pVal !== ''){
+    try {
+      P = toBigIntStrict(pVal,'p');
+      if (!isProbablyPrime(P)) msgs.push(`p (${P}) does not appear prime.`);
+    } catch (e){ msgs.push(e.message); }
+  }
+
+  if (qVal !== ''){
+    try {
+      Q = toBigIntStrict(qVal,'q');
+      if (!isProbablyPrime(Q)) msgs.push(`q (${Q}) does not appear prime.`);
+    } catch (e){ msgs.push(e.message); }
+  }
+
+  if (P !== null && Q !== null){
+    const n = P*Q;
+    const phi = (P-1n)*(Q-1n);
+    const g = gcd(E, phi);
+    if (g !== 1n) msgs.push(`e is not coprime with φ(n) = ${phi} (gcd=${g}). Choose a different e.`);
+    const d = modInv(E, phi);
+    if (d === null) msgs.push('Cannot compute d (no modular inverse).');
+
+    el('n').value = n.toString();
+    setWarn(msgs);
+    if (msgs.length) throw new Error(msgs.join('\n')); 
+    return {P,Q,E,n,phi,d};
+  } else {
+    el('n').value = '';
+    setWarn(msgs.length ? msgs : null);
+    return {P:null,Q:null,E:E,n:null,phi:null,d:null};
+  }
+}
+
+window.addEventListener('load', () => {
+  try { tryAutoUpdateKeys(); } catch(err){ warn(err.message); el('n').value=''; }
+});
+['p','q','e'].forEach(id => {
+  el(id).addEventListener('input', () => {
+    try { tryAutoUpdateKeys(); } catch (err) { warn(err.message); el('n').value=''; }
+  });
+});
+
+/* ---------- Cipher parsing (numbers only) ---------- */
+function parseCipherNumberListOrThrow(){
+  const txt = (el("cipher").value || "").trim();
+  if(!txt) throw new Error("Cipher is empty. Paste decimal blocks separated by space/comma/newline.");
+  const matches = txt.match(/-?\d+/g);
+  if(!matches || matches.length===0) throw new Error("No decimal numbers found in the cipher field.");
+  return matches.map(s => toBigIntStrict(s, 'c[i]'));
+}
+function fmtBig(n){ return BigInt(n).toString(10); }
+function fmtBlocks(arr, maxShow=24){
+  const all = arr.map(x=>x.toString(10));
+  if(all.length <= maxShow) return all.join(' ');
+  return all.slice(0, maxShow).join(' ') + ` … [${all.length - maxShow} more]`;
+}
+
+/* ---------- Pollard Rho + fallback trial division ---------- */
+function randBetween(n) {
+  const max = BigInt(n);
+  if (max <= 3n) return 2n;
+  const bits = Number(bitlen(max));
+  let r;
+  do {
+    let s = "0b";
+    const chunks = Math.ceil(bits/30);
+    for (let i=0;i<chunks;i++){
+      const v = Math.floor(Math.random() * (1<<30));
+      let b = v.toString(2).padStart(30,'0');
+      s += b;
+    }
+    r = BigInt(s);
+    r = 2n + (r % (max - 3n)); // [2, n-2]
+  } while (r < 2n || r > max-2n);
+  return r;
+}
+function absBig(a){ return a >= 0n ? a : -a; }
+function pollardsRho(n, iterationsLimit=500000){
+  n = BigInt(n);
+  if (n % 2n === 0n) return 2n;
+  if (n % 3n === 0n) return 3n;
+  for (let attempt=0; attempt<6; attempt++){
+    let x = randBetween(n);
+    let y = x;
+    let c = randBetween(n);
+    let d = 1n;
+    let iter = 0;
+    while (d === 1n && iter < iterationsLimit){
+      x = (modPow(x, 2n, n) + c) % n;
+      y = (modPow(y, 2n, n) + c) % n;
+      y = (modPow(y, 2n, n) + c) % n;
+      d = gcd(absBig(x - y), n);
+      if (d === n) break;
+      iter++;
+    }
+    if (d > 1n && d < n) return d;
+  }
+  return null;
+}
+function trialDivisionFactor(n, limit=1000000){
+  n = BigInt(n);
+  if (n % 2n === 0n) return 2n;
+  const max = BigInt(limit);
+  for (let i=3n; i*i<=n && i<=max; i+=2n){
+    if (n % i === 0n) return i;
+  }
+  return null;
+}
+
+/* ---------- Encrypt ---------- */
+el('encrypt').onclick = ()=>{
+  try{
+    const {P,Q,E,n,phi,d} = tryAutoUpdateKeys();
+    const plaintext = (el('plain').value || '').trim();
+    if (!plaintext){ out("Encrypt error: Plaintext is empty."); return; }
+    if (!n) throw new Error("To encrypt you need either p & q (to auto-compute n) or provide n.");
+    const {chunks, bs, len} = chunkPlaintext(plaintext, n);
+    const cblocks = chunks.map(m => modPow(m, E, n));
+    el("cipher").value = cblocks.map(b=>b.toString(10)).join(' ');
+    // convenience: mirror public key to decrypt fields
+    el('e2').value = E.toString();
+    el('n2').value = n.toString();
+
+    const edmod = (E * d) % phi;
+    out(
+`[ENCRYPT]
+
+p=${fmtBig(P)}  q=${fmtBig(Q)}
+n=${fmtBig(n)}
+phi(n)=${fmtBig(phi)}
+e=${fmtBig(E)}
+gcd(e,phi)=${fmtBig(gcd(E,phi))}
+d=${fmtBig(d)}
+
+(e*d) mod phi(n)=${fmtBig(edmod)} ${edmod===1n ? '✅' : '❌'}
+
+blockSize=${bs} bytes, totalBytes=${len}, blocks=${cblocks.length}
+
+cipher (decimal blocks):
+${fmtBlocks(cblocks)}
+
+Cipher box updated.`);
+  }catch(err){ out("Encrypt error: "+err.message); }
+};
+
+/* ---------- Decrypt brute+chi handler (kept as the only decrypt) ---------- */
+el('decryptBrute').onclick = ()=>{(async ()=>{try{
+    const E2 = toBigIntStrict(el('e2').value || '', 'e (for decrypt)');
+    const N2 = toBigIntStrict(el('n2').value || '', 'n (for decrypt)');
+    const cblocks = parseCipherNumberListOrThrow();
+
+    // factor n (or use p/q if provided)
+    let P = null, Q = null;
+    try { const pv = el('p').value.trim(), qv = el('q').value.trim(); if (pv !== '' && qv !== ''){ const Ptmp = toBigIntStrict(pv,'p'); const Qtmp = toBigIntStrict(qv,'q'); if (Ptmp * Qtmp === N2){ P = Ptmp; Q = Qtmp; } }} catch(e){}
+    if (P === null){ out("Decrypt (brute+χ²): factoring n (Pollard-Rho) — please wait..."); let factor = pollardsRho(N2, 200000); if (!factor) factor = trialDivisionFactor(N2, 2000000); if (!factor) throw new Error("Factoring failed with quick methods. Provide p/q or use stronger tools."); P = factor; Q = N2 / factor; }
+    if (P > Q){ const tmp = P; P = Q; Q = tmp; }
+
+    const phi = (P-1n)*(Q-1n);
+    const g = gcd(E2, phi);
+    if (g !== 1n) throw new Error(`e is not coprime with φ(n) = ${phi} (gcd=${g}).`);
+    const d = modInv(E2, phi);
+    if (d === null) throw new Error("Cannot compute d.");
+
+    // decrypt numeric mblocks
+    const mblocks = cblocks.map(c => modPow(c, d, N2));
+    const bsEst = Math.floor((Number(bitlen(N2))-1)/8);
+
+    // prepare chi-squared reference (English)
+    const EN_FREQ = {'a':0.08167,'b':0.01492,'c':0.02782,'d':0.04253,'e':0.12702,'f':0.02228,'g':0.02015,'h':0.06094,'i':0.06966,'j':0.00153,'k':0.00772,'l':0.04025,'m':0.02406,'n':0.06749,'o':0.07507,'p':0.01929,'q':0.00095,'r':0.05987,'s':0.06327,'t':0.09056,'u':0.02758,'v':0.00978,'w':0.02360,'x':0.00150,'y':0.01974,'z':0.00074};
+    function chiSquared(text, freq){ const counts = {}; let total=0; for (let ch of text.toLowerCase()){ if (ch >= 'a' && ch <= 'z'){ counts[ch] = (counts[ch] || 0) + 1; total++; }} if (total===0) return Infinity; let chi=0; for (let c=97;c<=122;c++){ const ch = String.fromCharCode(c); const obs = counts[ch]||0; const exp = (freq[ch]||0)*total; const diff = obs - exp; chi += (diff*diff)/(exp||1e-9);} return chi; }
+
+    // generate candidates by varying block-size, trimming and byte-order
+    const candidates = [];
+    const bsRange = [];
+    for (let b = Math.max(1, bsEst-2); b <= bsEst+2; b++) bsRange.push(b);
+    for (const bs of bsRange){
+      const bytesNormal = [];
+      const bytesReversed = [];
+      for (const m of mblocks){
+        const arr = bigIntToBytesArray(m);
+        const blk = leftPadArray(arr, bs);
+        bytesNormal.push(...blk);
+        const rev = blk.slice().reverse(); bytesReversed.push(...rev);
+      }
+      const tries = [bytesNormal, bytesReversed];
+      for (const tbytes of tries){
+        // try two variants: trimmed trailing zeros, and untrimmed
+        let copy = tbytes.slice();
+        let trimmed = copy.slice(); while (trimmed.length>0 && trimmed[trimmed.length-1]===0) trimmed.pop();
+        const variants = [trimmed, copy];
+        for (const v of variants){
+          let plain = ""; let utfOk = true; try { plain = bytesToTextUTF8(new Uint8Array(v)); } catch(e){ utfOk = false; plain = "(UTF-8 decode failed)"; }
+          const score = utfOk ? chiSquared(plain, EN_FREQ) : Infinity;
+          candidates.push({bs, order: (tbytes===bytesNormal? 'normal':'rev'), trimmed: (v===trimmed), score, plain});
+        }
+      }
+    }
+
+    // sort candidates by chi2
+    candidates.sort((a,b)=> (a.score===Infinity?1e18:a.score) - (b.score===Infinity?1e18:b.score));
+    const top = candidates.slice(0,5);
+
+    const best = top[0] || null;
+    let outText = `[DECRYPT (brute+χ²)]
+
+n=${fmtBig(N2)}
+factorized as p=${fmtBig(P)}, q=${fmtBig(Q)}
+phi=${fmtBig(phi)}
+e=${fmtBig(E2)} d=${fmtBig(d)}
+Estimated base block size = ${bsEst} bytes
+
+`;
+    if (best){
+      outText += `BEST -> bs=${best.bs} order=${best.order} trimmed=${best.trimmed} χ²=${best.score === Infinity ? 'N/A' : best.score}
+
+Plaintext:
+${best.plain}
+
+Top candidates:
+`;
+      top.forEach((c,idx)=>{ outText += `#${idx+1} bs=${c.bs} order=${c.order} trimmed=${c.trimmed} χ²=${c.score}
+${c.plain}
+---
+`; });
+    } else {
+      outText += 'No candidates generated.';
+    }
+    out(outText);
+  }catch(err){ out('Decrypt brute error: '+err.message); }})();};
+
+/* ---------- Reset ---------- */
+el('reset').onclick = ()=>{
+  el('p').value = '101';      
+  el('q').value = '113';        
+  el('e').value = '65537';
+  el('n').value = '';
+  el('plain').value = '';
+  el('cipher').value = '';
+  el('e2').value = '';
+  el('n2').value = '';
+  warn('');
+  out('---');
+
+  try { tryAutoUpdateKeys(); } catch(_) {}
+};
+
+</script>
+</body>
+</html>
+
+---
