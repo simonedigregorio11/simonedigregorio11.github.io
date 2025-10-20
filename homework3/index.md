@@ -16,8 +16,6 @@ permalink: /homework3/
 </head>
 <body>
 <div class="cipher-container">
-  <h1>RSA</h1>
-
   <!-- Keys (optional p, q to auto-compute n) -->
   <div class="grid2">
     <div class="field">
@@ -92,7 +90,7 @@ permalink: /homework3/
     <button id="decryptBrute" class="warn">Decrypt</button>
   </div>
 
-  <br><br>
+  <br>
   <h3>Output</h3>
   <pre id="output">---</pre>
 </div>

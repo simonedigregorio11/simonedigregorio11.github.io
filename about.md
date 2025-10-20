@@ -11,4 +11,4 @@ My name is Simone Di Gregorio. I am currently pursuing a Master’s degree in Cy
 
 ---
 
-[← Torna alla Home](/)
+[← Back to Home](/)
