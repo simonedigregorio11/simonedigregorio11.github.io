@@ -10,6 +10,7 @@ permalink: /homework3/
 
 ---
 
+# **RSA ecncode/decode using distributions**
 # **Introduction**
 This project presents a client-side **HTML/JavaScript** application that implements a simplified **RSA cryptosystem**
 combined with a **frequency-based decryption**.
