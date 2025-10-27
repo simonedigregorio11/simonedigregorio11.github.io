@@ -4,6 +4,8 @@ layout: default
 permalink: /homework4/
 ---
 
+<link rel="stylesheet" href="/assets/css/pages/homework4.css">
+
 [← Back to Home](/)
 
 ---

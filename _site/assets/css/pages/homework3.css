@@ -1,0 +1,457 @@
+/* --- Root color palette --- */
+:root {
+    --bg: #000000;
+    --bg2: #0e1526;
+    --bg-textarea: #000000;
+    --bg-button: url("/assets/images/bkg.png");
+    --muted: #ffffff;
+    --text: #e6ecff;
+    --danger: #ff6b6b;
+    --border: #b5e853;
+    --border-hover: #63c0f5;
+    --border-warn: #f4bf75;
+}
+
+/* --- Box sizing and layout reset --- */
+.hw3 * {
+    box-sizing: border-box;
+}
+
+/* --- Prevent global body override --- */
+.hw3 html,
+.hw3 body {
+    height: auto;
+}
+
+/* --- Base container --- */
+.hw3 {
+    background: linear-gradient(180deg, var(--bg), var(--bg2));
+    color: var(--text);
+}
+
+/* --- Generic container --- */
+.hw3 .container {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+
+/* --- Tokens number container --- */
+.hw3 .nTokens-container{
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 5px 0 10px 0;
+}
+
+/* ============================
+   BUTTONS
+   ============================ */
+.hw3 button {
+    background-color: var(--bg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: var(--border-hover);
+    border: 2px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.hw3 button:hover {
+    border-color: var(--border);
+    box-shadow: 0 0 6px var(--border);
+    transform: translateY(-1px);
+}
+
+/* --- Button Variants --- */
+
+.hw3 .btn.ghost {
+    background: transparent;
+}
+
+.hw3 .btn.outline {
+    background: transparent;
+    border-color: #2a3d70;
+}
+
+.hw3 button.reset {
+    color: white;
+    background-color: darkred;
+}
+
+
+/* ============================
+   GRID SYSTEM
+   ============================ */
+.hw3 .grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(3, minmax(120px, 220px));
+    margin-top: 8px;
+}
+
+.hw3 .grid2{
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2);
+    margin-top: 8px;
+}
+
+
+.hw3 .two {
+    grid-template-columns: 1fr;
+}
+
+@media (min-width:900px) {
+    .hw3 .two {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ============================
+   CARD COMPONENT
+   ============================ */
+.hw3 .card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin: 10px 0 10px 0;
+    margin-top: 16px;
+}
+
+.hw3 .card .card-h {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.hw3 .card .card-c {
+    padding: 14px 16px;
+}
+
+.hw3 .card h3 {
+    margin: 0;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+}
+
+/* ============================
+   FORMS & INPUTS
+   ============================ */
+.hw3 label {
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.hw3 input[type="number"],
+.hw3 input[type="text"] {
+    width: 100%;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+
+}
+
+.hw3 textarea {
+    background-color: var(--bg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.95rem;
+    resize: vertical;
+    box-sizing: border-box;
+    color: var(--text);
+    font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+}
+
+.hw3 input[type="number"]:focus,
+.hw3 input[type="text"]:focus,
+.hw3 textarea:focus {
+    border-color: var(--border);
+    outline: none;
+    box-shadow: 0 0 6px var(--border);
+}
+
+.hw3 textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.hw3 #maxD{
+    width: 120px;
+}
+
+
+/* ============================
+   UTILITIES
+   ============================ */
+.hw3 .row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top:8px;
+}
+
+.hw3 .muted {
+    color: var(--muted);
+    margin: 6px 0 8px 0;
+}
+
+.hw3 code {
+    background: none;
+    color: var(--text);
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.hw3 .chosen-container {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-top: 10px;
+    display: none;
+}
+
+.hw3 #maxDGrid{
+    margin-bottom: 15px;
+}
+
+.hw3 label{
+    margin-left: 5px;
+}
+
+.formula-box {
+  text-align: center;
+  font-size: clamp(0.6rem, 2vw, 1rem);
+  width: 63%;
+  margin: 1em auto;
+  background-color: var(--bg);
+  color: var(--text);
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+/* --- Inline KPI and pill components --- */
+.hw3 .kpi {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top:10px
+}
+
+.hw3 .pill {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+.hw3 .pill .mono {
+    margin-left: .4em;
+}
+
+/* ============================
+   MODAL
+   ============================ */
+.hw3 .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.hw3 .modal {
+    width: min(100%, 1000px);
+    max-height: 80vh;
+    overflow: auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.hw3 .modal-h {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hw3 .modal-c {
+    padding: 14px 16px;
+}
+
+/* --- Candidate grid (top decoding candidates) --- */
+.hw3 .cand-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+@media (min-width:900px) {
+    .hw3 .cand-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.hw3 .cand {
+    text-align: left;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg);
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+}
+
+.hw3 .cand:hover {
+    border-color: #3450a1;
+}
+
+.hw3 .show {
+    display: flex;
+}
+
+/* ============================
+   CHARTS
+   ============================ */
+.hw3 .charts {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+}
+
+.hw3 .chart-card {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg);
+}
+
+/* --- Canvas --- */
+.hw3 canvas {
+    width: 100% !important;
+    height: 300px !important;
+}
+
+/* --- Small text utility --- */
+.hw3 .small {
+    font-size: 12px;
+    margin: 8px 0 20px 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* ============================
+   CIPHER CONTAINER
+   ============================ */
+.hw3 .cipher-container {
+    border: 1px solid var(--border);
+    padding: 10px;
+    background: url('/assets/images/bkg.png');
+    border-radius: 5px;
+}
+
+.hw3 .cipher-container h3 {
+    margin-bottom: 6px;
+}
+
+.hw3 .cipher-container .field h3 {
+    margin: 0 0 6px 0;
+}
+
+
+/* Warns */
+.hw3 .note {
+  display: none;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.18);
+  color: #eaeaea;
+  padding: 10px 12px;
+  margin: 10px 0 14px 0;
+  border-radius: 6px;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.hw3 #warnPlain.note { border-color: var(--border-warn); color: var(--border-warn); background: rgba(244,191,117,0.08); display: none; }
+.hw3 #warnPlain.note::before { content: "⚠ "; font-weight: 600; margin-right: 2px; }
+.hw3 .note a { color: var(--border-hover); text-shadow: 0 0 5px rgba(104,182,255,0.5); }
+.hw3 .note code {
+  background: rgba(0,0,0,0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0 3px; margin: 0 -3px; color: #aa759f; border-radius: 2px;
+}
+@keyframes note-pop {
+  from { box-shadow: 0 0 0 rgba(244,191,117,0); }
+  to   { box-shadow: 0 0 14px rgba(244,191,117,0.25); }
+}
+.hw3 #warnPlain.note[style*="display: block"] { animation: note-pop 180ms ease-out; }
+.hw3 #warnCipher.note { border-color: var(--border-warn); color: var(--border-warn); background: rgba(244,191,117,0.08); display: none; }
+.hw3 #warnCipher.note::before { content: "⚠ "; font-weight: 600; margin-right: 2px; }
+.hw3 #warnCipher.note[style*="display: block"] { animation: note-pop 180ms ease-out; }
+
+
+ /* ============================
+              POPUP
+   ============================ */
+  .hw3 .modal .modal-c { overflow-x: hidden; }
+  .hw3 #candGrid { overflow-x: hidden; }
+
+  .hw3 .cand {
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    background: var(--bg);
+  }
+  .hw3 .cand .cand-text {
+    white-space: pre-wrap;         
+    word-break: break-word;       
+    overflow-wrap: anywhere;        
+    display: -webkit-box;          
+    -webkit-line-clamp: 3;          
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .hw3 .cand.expanded .cand-text {
+    -webkit-line-clamp: unset; 
+    overflow: visible;
+  }
+  .hw3 .cand .meta { font-size: 12px; opacity: .85; }
+  .hw3 .cand .actions {
+    margin-top: 6px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .hw3 .btn.tiny { padding: 6px 10px; font-size: 12px; }
+  .hw3 .cand:hover {
+    background: var(--bg);
+    border-color: var(--border-hover);
+  }

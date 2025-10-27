@@ -4,6 +4,8 @@ layout: default
 permalink: /homework2/
 ---
 
+<link rel="stylesheet" href="/assets/css/pages/homework2.css">
+
 [← Back to Home](/)
 
 ---
@@ -295,13 +297,13 @@ where k is the shift amount and x represents the alphabetical index (A=0, …, Z
       <div class="cipher-box">
         <!-- Plain text -->
         <div class="textarea-container">
-          <h3>Plain text</h3>
+          <h3>Plaintext</h3>
           <textarea id="plain" placeholder="Type or paste your original text..." spellcheck="false"></textarea>
         </div>
         <!-- Cipher text -->
         <div class="textarea-container">
           <div class="row-inline space-between">
-            <h3 class="m0">Cipher Text</h3>
+            <h3 class="m0">Ciphertext</h3>
           </div>
           <textarea id="cipher" placeholder="Auto-filled using Caesar Cipher +3" spellcheck="false" readonly></textarea>
           <label class="row-inline" title="Enable manual editing for the cipher box">
@@ -317,7 +319,7 @@ where k is the shift amount and x represents the alphabetical index (A=0, …, Z
         <!-- Charts -->
         <section class="chart-grid">
           <div class="chart-card">
-            <h3 class="chart-title">Letter distribution — Plain text</h3>
+            <h3 class="chart-title">Letter distribution — Plaintext</h3>
             <canvas id="chartPlain"></canvas>
           </div>
           <div class="chart-card">

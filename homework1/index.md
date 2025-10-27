@@ -8,9 +8,7 @@ permalink: /homework1/
 
 ---
 
-# **Homework 1**
-
-## **What is Statistics?**
+# **What is Statistics?**
 
 Statistics is the branch of mathematics concerned with collecting, organizing, analyzing, interpreting, and presenting data. It provides tools to deal with uncertainty, variability, and inference from samples to populations. It involves methods for:
 - **Descriptive statistics:** summarizing data using measures like mean, median, variance, histograms, frequency distributions.

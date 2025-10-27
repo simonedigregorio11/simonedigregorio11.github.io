@@ -99,457 +99,959 @@
               });
             });
           </script>
-        <p><a href="/">← Back to Home</a></p>
+        <link rel="stylesheet" href="/assets/css/pages/homework3.css" />
+
+<p><a href="/">← Back to Home</a></p>
 
 <hr />
 
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>RSA (Encrypt/Decrypt)</title>
-</head>
-<body>
-<div class="cipher-container">
-  <!-- Keys (optional p, q to auto-compute n) -->
-  <div class="grid2">
-    <div class="field">
-      <h3>p (prime)</h3>
-      <div class="inputarea-container">
-        <input id="p" type="text" placeholder="e.g. 101" value="101" autocomplete="off" />
+<h1 id="introduction"><strong>Introduction</strong></h1>
+<p>This project presents a client-side <strong>HTML/JavaScript</strong> application that implements a simplified <strong>RSA cryptosystem</strong>
+combined with a <strong>frequency-based decryption</strong>.
+The tool operates over a 27-symbol alphabet, representing letters A..Z plus the space character, and allows users to
+explore the main principles of RSA encryption, decryption, and statistical language analysis.</p>
+
+<h2 id="overview-and-objectives"><strong>Overview and Objectives</strong></h2>
+<p>The objective of this project is to create a small yet complete <strong>RSA demonstration tool</strong>.
+It enables users to generate RSA keys, encrypt plaintext, analyze the resulting ciphertext, and attempt decryption through an assisted <strong>frequency-based analysis</strong>.</p>
+
+<p>By integrating concepts from <strong>number theory</strong> and <strong>statistics</strong>, the app shows how <strong>language patterns</strong> can be exploited in <strong>cryptanalysis</strong>.
+The system is written in <strong>pure JavaScript</strong>, without any external dependencies.</p>
+
+<p>Two working modes are supported:</p>
+
+<ul>
+  <li>
+    <p><strong>pq-mode</strong>, where the user inputs the private key components (<strong>p</strong>, <strong>q</strong>, and <strong>e</strong>);</p>
+  </li>
+  <li>
+    <p><strong>public-key mode</strong>, where only <strong>n</strong> and <strong>e</strong> are known, and the system attempts decryption by scanning possible values of <strong>d</strong>.</p>
+  </li>
+</ul>
+
+<h2 id="core-structure-and-implementation"><strong>Core Structure and Implementation</strong></h2>
+<p>At its core, the system is based on the classic <strong>RSA formulas</strong>:
+each character is converted into a numeric value between <strong>0 and 26</strong>, corresponding respectively to <strong>A..Z</strong> and <strong>space</strong>.</p>
+
+<div class="formula-box">
+c = m<sup>e</sup> mod n
+</div>
+
+<p>and decryption applies:</p>
+
+<div class="formula-box">
+m = c<sup>d</sup> mod n
+</div>
+
+<p>In pq-mode, the user provides the prime numbers <strong>p</strong> and <strong>q</strong> and the public exponent <strong>e</strong>. The program computes <strong>n = p·q</strong>, the
+totient <strong>φ(n) = (p−1)(q−1)</strong>, and the private exponent <strong>d</strong> as the modular inverse of e modulo <strong>φ(n)</strong>.
+This mode displays all the computed parameters (n, φ(n), d) in the interface and allows direct encryption of plaintext.</p>
+
+<p>In public-key mode, instead, the user only enters <strong>n</strong> and <strong>e</strong>, and the ciphertext can be manually inserted.
+Since d is unknown, the system performs a brute-force search across a defined range of d values, attempting to find
+those that yield readable plaintext.</p>
+
+<h2 id="key-features-of-the-application"><strong>Key Features of the Application</strong></h2>
+<p>When users enter valid primes <strong>p</strong> and <strong>q</strong>, the system calculates the public and private parameters and shows them in KPI boxes (<strong>n</strong>, <strong>φ(n)</strong>, <strong>d</strong>).
+It immediately validates whether <strong>p</strong> and <strong>q</strong> are prime, whether <strong>e</strong> is coprime with <strong>φ(n)</strong>, and whether <strong>n</strong> is large enough to include all 27 symbols.</p>
+
+<p>The <strong>frequency analyzer</strong> computes the distribution of both plaintext symbols and ciphertext tokens and visualizes them through two <strong>canvas charts</strong>.
+During decryption, the application tests a range of <strong>d values</strong>, reconstructs possible plaintexts, and ranks them by a <strong>chi-squared score</strong> compared to expected English letter frequencies.
+The most plausible results are listed in a modal interface, allowing the user to select and inspect them.</p>
+
+<h2 id="user-interface-and-visualization"><strong>User Interface and Visualization</strong></h2>
+<p>The interface is designed to make the cryptographic process interactive and intuitive.
+The user can generate random key pairs, write a plaintext message, and instantly view its ciphertext representation. Two
+<strong>charts</strong>, rendered on HTML canvas elements, display the <strong>frequency distribution</strong> of plaintext letters and ciphertext tokens.
+Each computation step updates the interface dynamically.</p>
+
+<p>When decrypting, the user may choose a maximum limit for <strong>d</strong> values to test, balancing performance and accuracy.
+To help users understand key relationships, the values of n, φ(n), and d are displayed as KPI pills in the main section,
+while warnings guide the user in case of non-prime inputs or inconsistent parameters.</p>
+
+<h2 id="rsa-tool-with-frequency-based-cryptanalysis"><strong>RSA Tool with Frequency-Based Cryptanalysis</strong></h2>
+
+<div class="hw3">
+  <div class="cipher-container">
+
+    <div class="row">
+      <button class="load-example" id="btnExample">Load example</button>
+      <button class="reset" id="btnReset">Reset</button>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <h3>Plaintext</h3>
+      </div>
+      <div class="card-c">
+        <label for="plaintext">Input</label>
+        <textarea id="plaintext" placeholder="Letters A..Z and spaces only. Others will be dropped."></textarea>
+
+        <div class="grid" id="pqGrid">
+          <div>
+            <label for="p">Prime p</label>
+            <input type="text" id="p" value="43" />
+          </div>
+          <div>
+            <label for="q">Prime q</label>
+            <input type="text" id="q" value="47" />
+          </div>
+          <div>
+            <label for="e">Public exponent e</label>
+            <input type="text" id="e" value="5" />
+          </div>
+        </div>
+
+        <div class="kpi">
+          <div class="pill" id="nPill">n = <span class="mono" id="nOut">—</span></div>
+          <div class="pill" id="phiPill">φ(n) = <span class="mono" id="phiOut">—</span></div>
+          <div class="pill" id="dPill">d = <span class="mono" id="dOut">—</span></div>
+        </div>
+
+        <div class="grid2" id="genRow">
+          <div class="row">
+            <button class="button" id="btnGenPQ">Generate</button>
+            <button class="button" id="btnEncrypt">Encrypt →</button>
+          </div>
+        </div>
+
+        <!-- WARN PANEL PLAINTEXT-->
+        <div id="warnPlain" class="note"></div>
+
+        <div class="row small">
+          <span class="muted">Note: the space character is encoded as <code>26</code>.</span>
+        </div>
       </div>
     </div>
-    <div class="field">
-      <h3>q (prime)</h3>
-      <div class="inputarea-container">
-        <input id="q" type="text" placeholder="e.g. 113" value="113" autocomplete="off" />
+
+    <div class="card">
+      <div class="card-h">
+        <h3>Ciphertext</h3>
+      </div>
+      <div class="card-c">
+
+        <!-- Toggle key mode and locks -->
+        <label class="small">
+          <input type="checkbox" id="modeToggle" />
+          Manual ciphertext input
+        </label>
+
+        <label for="ciphertext">Output / Input</label>
+        <textarea id="ciphertext" placeholder="e.g., 123 5 77 26 8 ... (26 represents a space)"></textarea>
+
+        <div class="row small">
+          <div class="nTokens-container">
+            <span class="muted">Distinct tokens in ciphertext: <span class="mono" id="distinctTok">0</span></span>
+          </div>
+        </div>
+
+        <!-- n,e PUBLIC: ALWAYS VISIBLE -->
+        <div class="grid" id="neGrid">
+          <div>
+            <label for="nPublic">Modulus n (public)</label>
+            <input type="text" id="nPublic" value="2021" />
+          </div>
+          <div>
+            <label for="ePublic">Exponent e (public)</label>
+            <input type="text" id="ePublic" value="5" />
+          </div>
+        </div>
+
+        <div class="grid" id="maxDGrid">
+          <div>
+            <label for="maxD">Max d</label>
+            <input type="text" id="maxD" value="2000" min="1" />
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="button" id="btnDecrypt">Decrypt</button>
+        </div>
+
+        <!-- WARN PANEL CIPHERTEXT-->
+        <div id="warnCipher" class="note"></div>
+
+        <div class="chosen-container" id="chosenWrap">
+          <div class="muted">Selected Decrypt Preview</div>
+          <div class="preview mono" id="chosenText"></div>
+          <div class="muted" id="chosenScore"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <section class="card">
+      <div class="card-h">
+        <h3>Distributions</h3>
+      </div>
+      <div class="card-c">
+        <div class="charts">
+          <div class="chart-card">
+            <div class="muted">Plaintext frequency (A..Z + ␣)</div>
+            <canvas id="plaintextChart" aria-label="Plaintext symbol frequency chart" role="img"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="muted">Ciphertext frequency</div>
+            <canvas id="ciphertextChart" aria-label="Ciphertext token frequency chart" role="img"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal for top candidates -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <div class="modal-h">
+        <div><strong>Pick the best decoding (candidates)</strong></div>
+        <button class="btn ghost" id="btnCloseModal">✕</button>
+      </div>
+      <div class="modal-c">
+        <div class="cand-grid" id="candGrid"></div>
       </div>
     </div>
   </div>
-
-  <div class="field">
-    <h3>e (public exponent)</h3>
-    <div class="inputarea-container">
-      <input id="e" type="text" placeholder="e.g. 65537" value="65537" autocomplete="off" />
-    </div>
-  </div>
-
-  <div class="field">
-    <h3>n (modulus)</h3>
-    <div class="inputarea-container">
-      <input id="n" type="text" readonly="" autocomplete="off" placeholder="auto-calculated from p·q (optional)" />
-    </div>
-  </div>
-
-  <div id="warn" class="note"></div>
-
-  <!-- Plaintext & Encrypt -->
-  <h3>Plaintext</h3>
-  <div class="textarea-container">
-    <textarea id="plain" placeholder="Type or paste your original text..."></textarea>
-  </div>
-
-  <div class="row">
-    <button id="encrypt">Encrypt</button>
-    <button id="reset" class="danger">Reset</button>
-  </div>
-
-  <br />
-
-  <!-- Cipher (numbers only) -->
-  <h3>Cipher</h3>
-  <div class="textarea-container">
-    <textarea id="cipher" placeholder="Will be populated by Encrypt, or paste your numeric blocks here (decimal, space/comma/newline-separated)"></textarea>
-  </div>
-
-  <hr /><br />
-
-  <!-- Decrypt params (ONLY these are used for decrypt) -->
-  <div class="grid2">
-    <div class="field">
-      <h3>e (for decrypt)</h3>
-      <div class="inputarea-container">
-        <input id="e2" type="text" placeholder="public exponent" />
-      </div>
-    </div>
-    <div class="field">
-      <h3>n (for decrypt)</h3>
-      <div class="inputarea-container">
-        <input id="n2" type="text" placeholder="public modulus" />
-      </div>
-    </div>
-  </div>
-
-  <div class="row" style="margin-top:10px;">
-    <!-- kept only the brute+chi² decrypt button, labeled 'Decrypt' for clarity -->
-    <button id="decryptBrute" class="warn">Decrypt</button>
-  </div>
-
-  <br />
-  <h3>Output</h3>
-  <pre id="output">---</pre>
 </div>
 
 <script>
-/* ---------- UI helpers ---------- */
-const el = id => document.getElementById(id);
-const out = msg => el("output").textContent = msg;
-const warn = msg => { const w = el("warn"); if (msg) { w.textContent = msg; w.style.display='block'; } else { w.style.display='none'; w.textContent=''; } };
+  // =========================
+  //   RSA frequency tools
+  // =========================
 
-/* ---------- Validation / BigInt utils ---------- */
-function toBigIntStrict(v, label){
-  if (typeof v !== 'string') v = String(v ?? '');
-  v = v.trim();
-  if (v === '') throw new Error(`Empty value for ${label}`);
-  if (!/^[+-]?\d+$/.test(v)) throw new Error(`Invalid value for ${label}: "${v}"`);
-  return BigInt(v);
-}
-function egcd(a, b) {
-  a = BigInt(a); b = BigInt(b);
-  if (b === 0n) return { g: a, x: 1n, y: 0n };
-  const { g, x: x1, y: y1 } = egcd(b, a % b);
-  return { g, x: y1, y: x1 - (a / b) * y1 };
-}
-function gcd(a,b){ a=BigInt(a); b=BigInt(b); while (b!==0n){ [a,b]=[b,a%b]; } return a; }
-function modInv(a,m){ a=BigInt(a); m=BigInt(m);
-  const {g,x} = egcd(((a% m)+m)%m,m);
-  if(g!==1n) return null;
-  return (x%m+m)%m;
-}
-function modPow(base, exp, mod){
-  base = (BigInt(base) % BigInt(mod) + BigInt(mod)) % BigInt(mod);
-  exp = BigInt(exp);
-  mod = BigInt(mod);
-  let r=1n;
-  while(exp>0n){
-    if (exp & 1n) r = (r * base) % mod;
-    exp >>= 1n;
-    base = (base * base) % mod;
-  }
-  return r;
-}
-
-/* ---------- Bytes <-> BigInt ---------- */
-function textToBytesUTF8(s){ return new TextEncoder().encode(s); }
-function bytesToTextUTF8(u8){ return new TextDecoder('utf-8',{fatal:true}).decode(u8); }
-function bytesToBigInt(bytes){ let res=0n; for(let b of bytes){ res=(res<<8n)+BigInt(b); } return res; }
-function bigIntToBytesArray(n){
-  n=BigInt(n);
-  if(n===0n) return [0];
-  let a=[];
-  while(n>0n){ a.unshift(Number(n & 0xffn)); n >>= 8n; }
-  return a;
-}
-
-/* ---------- Chunking ---------- */
-function bitlen(x){ return BigInt(x).toString(2).length; }
-function chunkPlaintext(text, n){
-  const bytes = textToBytesUTF8(text);
-  const bs = Math.floor((Number(bitlen(n))-1)/8);
-  if (bs <= 0) throw new Error("n is too small to fit even 1 byte");
-  const chunks=[];
-  for(let i=0;i<bytes.length;i+=bs){
-    chunks.push(bytesToBigInt(bytes.slice(i,i+bs)));
-  }
-  return {chunks, bs, len: bytes.length};
-}
-function leftPadArray(arr, len){
-  if(arr.length>=len) return arr;
-  const out=new Array(len).fill(0);
-  out.splice(len-arr.length, arr.length, ...arr);
-  return out;
-}
-
-function setWarn(msgs){
-  if (!msgs || (Array.isArray(msgs) && msgs.length===0)) { warn(''); return; }
-  if (Array.isArray(msgs)) warn(msgs.join('\n'));
-  else warn(String(msgs));
-}
-
-function isProbablyPrime(n, k = 6){
-  n = BigInt(n);
-  if (n < 2n) return false;
-  const small = [2n,3n,5n,7n,11n,13n,17n,19n,23n,29n,31n,37n,41n,43n,47n];
-  for (const p of small){ if (n===p) return true; if (n%p===0n) return false; }
-  // n-1 = d*2^s
-  let d = n-1n, s = 0n;
-  while ((d & 1n) === 0n){ d >>= 1n; s++; }
-  const tryW = (a)=>{
-    let x = modPow(a, d, n);
-    if (x===1n || x===n-1n) return true;
-    for (let r=1n; r<s; r++){
-      x = (x*x) % n;
-      if (x===n-1n) return true;
+  // ---- WARN HELPERS ----
+  const $id = (s) => document.getElementById(s);
+  function setWarn(msgs) {
+    const w = $id('warnPlain');
+    if (!msgs || (Array.isArray(msgs) && msgs.length === 0)) {
+      w.style.display = 'none';
+      w.textContent = '';
+      return;
     }
-    return false;
-  };
-  for (let i=0;i<k;i++){
-    const a = BigInt(2 + Math.floor(Math.random()*Math.min(Number(n-2n), 0x7ffffffd)));
-    if (!tryW(a)) return false;
+    const txt = Array.isArray(msgs) ? msgs.join('\n') : String(msgs);
+    w.textContent = txt;
+    w.style.display = 'block';
   }
-  return true;
-}
+  const warn = (msg) => setWarn(msg);
 
-/* ---------- Auto-calc n (optional p,q) ---------- */
-function tryAutoUpdateKeys(){
-  const pVal = el('p').value.trim();
-  const qVal = el('q').value.trim();
-  const eVal = el('e').value.trim();
-
-  const msgs = [];
-  if (eVal === '') { setWarn('Enter e'); el('n').value=''; throw new Error('Enter e'); }
-  const E = toBigIntStrict(eVal,'e');
-
-  let P = null, Q = null;
-  if (pVal !== ''){
-    try {
-      P = toBigIntStrict(pVal,'p');
-      if (!isProbablyPrime(P)) msgs.push(`p (${P}) does not appear prime.`);
-    } catch (e){ msgs.push(e.message); }
-  }
-
-  if (qVal !== ''){
-    try {
-      Q = toBigIntStrict(qVal,'q');
-      if (!isProbablyPrime(Q)) msgs.push(`q (${Q}) does not appear prime.`);
-    } catch (e){ msgs.push(e.message); }
-  }
-
-  if (P !== null && Q !== null){
-    const n = P*Q;
-    const phi = (P-1n)*(Q-1n);
-    const g = gcd(E, phi);
-    if (g !== 1n) msgs.push(`e is not coprime with φ(n) = ${phi} (gcd=${g}). Choose a different e.`);
-    const d = modInv(E, phi);
-    if (d === null) msgs.push('Cannot compute d (no modular inverse).');
-
-    el('n').value = n.toString();
-    setWarn(msgs);
-    if (msgs.length) throw new Error(msgs.join('\n')); 
-    return {P,Q,E,n,phi,d};
-  } else {
-    el('n').value = '';
-    setWarn(msgs.length ? msgs : null);
-    return {P:null,Q:null,E:E,n:null,phi:null,d:null};
-  }
-}
-
-window.addEventListener('load', () => {
-  try { tryAutoUpdateKeys(); } catch(err){ warn(err.message); el('n').value=''; }
-});
-['p','q','e'].forEach(id => {
-  el(id).addEventListener('input', () => {
-    try { tryAutoUpdateKeys(); } catch (err) { warn(err.message); el('n').value=''; }
-  });
-});
-
-/* ---------- Cipher parsing (numbers only) ---------- */
-function parseCipherNumberListOrThrow(){
-  const txt = (el("cipher").value || "").trim();
-  if(!txt) throw new Error("Cipher is empty. Paste decimal blocks separated by space/comma/newline.");
-  const matches = txt.match(/-?\d+/g);
-  if(!matches || matches.length===0) throw new Error("No decimal numbers found in the cipher field.");
-  return matches.map(s => toBigIntStrict(s, 'c[i]'));
-}
-function fmtBig(n){ return BigInt(n).toString(10); }
-function fmtBlocks(arr, maxShow=24){
-  const all = arr.map(x=>x.toString(10));
-  if(all.length <= maxShow) return all.join(' ');
-  return all.slice(0, maxShow).join(' ') + ` … [${all.length - maxShow} more]`;
-}
-
-/* ---------- Pollard Rho + fallback trial division ---------- */
-function randBetween(n) {
-  const max = BigInt(n);
-  if (max <= 3n) return 2n;
-  const bits = Number(bitlen(max));
-  let r;
-  do {
-    let s = "0b";
-    const chunks = Math.ceil(bits/30);
-    for (let i=0;i<chunks;i++){
-      const v = Math.floor(Math.random() * (1<<30));
-      let b = v.toString(2).padStart(30,'0');
-      s += b;
+  // --- WARN Ciphertext ---
+  function setWarnCipher(msgs) {
+    const w = document.getElementById('warnCipher');
+    if (!w) return;
+    if (!msgs || (Array.isArray(msgs) && msgs.length === 0)) {
+      w.style.display = 'none';
+      w.textContent = '';
+      return;
     }
-    r = BigInt(s);
-    r = 2n + (r % (max - 3n)); // [2, n-2]
-  } while (r < 2n || r > max-2n);
-  return r;
-}
-function absBig(a){ return a >= 0n ? a : -a; }
-function pollardsRho(n, iterationsLimit=500000){
-  n = BigInt(n);
-  if (n % 2n === 0n) return 2n;
-  if (n % 3n === 0n) return 3n;
-  for (let attempt=0; attempt<6; attempt++){
-    let x = randBetween(n);
-    let y = x;
-    let c = randBetween(n);
-    let d = 1n;
-    let iter = 0;
-    while (d === 1n && iter < iterationsLimit){
-      x = (modPow(x, 2n, n) + c) % n;
-      y = (modPow(y, 2n, n) + c) % n;
-      y = (modPow(y, 2n, n) + c) % n;
-      d = gcd(absBig(x - y), n);
-      if (d === n) break;
-      iter++;
+    const txt = Array.isArray(msgs) ? msgs.join('\n') : String(msgs);
+    w.textContent = txt;
+    w.style.display = 'block';
+  }
+
+  const SPACE_CODE = 26;
+  const ACode = "A".charCodeAt(0);
+
+  // Extended Euclidean algorithm
+  function egcd(a, b) {
+    if (a === 0) return [b, 0, 1];
+    const r = egcd(b % a, a);
+    const g = r[0], y = r[1], x = r[2];
+    return [g, x - Math.floor(b / a) * y, y];
+  }
+  // Modular inverse a^{-1} mod m
+  function modInv(a, m) {
+    const r = egcd(a, m);
+    if (r[0] !== 1) return null;
+    let x = r[1] % m;
+    if (x < 0) x += m;
+    return x;
+  }
+  // Fast modular exponentiation
+  function modPow(base, exp, mod) {
+    let res = 1 % mod, b = base % mod, e = exp;
+    while (e > 0) {
+      if (e & 1) res = (res * b) % mod;
+      b = (b * b) % mod;
+      e >>= 1;
     }
-    if (d > 1n && d < n) return d;
+    return res;
   }
-  return null;
-}
-function trialDivisionFactor(n, limit=1000000){
-  n = BigInt(n);
-  if (n % 2n === 0n) return 2n;
-  const max = BigInt(limit);
-  for (let i=3n; i*i<=n && i<=max; i+=2n){
-    if (n % i === 0n) return i;
+  // Naïve primality test (sufficient for small toys)
+  function isPrime(n) {
+    if (n < 2) return false;
+    if (n % 2 === 0) return n === 2;
+    for (let i = 3; i * i <= n; i += 2) if (n % i === 0) return false;
+    return true;
   }
-  return null;
-}
+  // Greatest common divisor
+  function gcd(a, b) { while (b) { const t = a % b; a = b; b = t; } return Math.abs(a); }
 
-/* ---------- Encrypt ---------- */
-el('encrypt').onclick = ()=>{
-  try{
-    const {P,Q,E,n,phi,d} = tryAutoUpdateKeys();
-    const plaintext = (el('plain').value || '').trim();
-    if (!plaintext){ out("Encrypt error: Plaintext is empty."); return; }
-    if (!n) throw new Error("To encrypt you need either p & q (to auto-compute n) or provide n.");
-    const {chunks, bs, len} = chunkPlaintext(plaintext, n);
-    const cblocks = chunks.map(m => modPow(m, E, n));
-    el("cipher").value = cblocks.map(b=>b.toString(10)).join(' ');
-    // convenience: mirror public key to decrypt fields
-    el('e2').value = E.toString();
-    el('n2').value = n.toString();
+  // English letter frequency (A..Z) for chi-squared scoring
+  const EN_FREQ = { A: 8.167, B: 1.492, C: 2.782, D: 4.253, E: 12.702, F: 2.228, G: 2.015, H: 6.094, I: 6.966, J: 0.153, K: 0.772, L: 4.025, M: 2.406, N: 6.749, O: 7.507, P: 1.929, Q: 0.095, R: 5.987, S: 6.327, T: 9.056, U: 2.758, V: 0.978, W: 2.360, X: 0.150, Y: 1.974, Z: 0.074 };
 
-    const edmod = (E * d) % phi;
-    out(
-`[ENCRYPT]
+  // Sanitize plaintext: keep A..Z and single spaces
+  function sanitizePlaintext(s) { return s.toUpperCase().replace(/[^A-Z\s]/g, '').replace(/\s+/g, ' ').trim(); }
+  // Map letter → number (A=0..Z=25, space=26)
+  function letterToNum(ch) { if (ch === ' ') return SPACE_CODE; return ch.charCodeAt(0) - ACode; }
+  // Map number → letter (0..25→A..Z, 26→space)
+  function numToLetter(n) { if (n === SPACE_CODE) return ' '; return String.fromCharCode(ACode + n); }
+  // Keep only letters A..Z (used for chi-squared; spaces ignored)
+  function onlyLetters(text) { return (text || '').toUpperCase().replace(/[^A-Z]/g, ''); }
 
-p=${fmtBig(P)}  q=${fmtBig(Q)}
-n=${fmtBig(n)}
-phi(n)=${fmtBig(phi)}
-e=${fmtBig(E)}
-gcd(e,phi)=${fmtBig(gcd(E,phi))}
-d=${fmtBig(d)}
+  // Split ciphertext into integers (space or hyphen separated)
+  function tokenizeCiphertext(s) {
+    return s.trim().split(/[\s\-]+/).filter(Boolean).map(t => parseInt(t, 10)).filter(Number.isFinite);
+  }
+  function detokenizeCipher(nums) { return nums.join(' '); }
 
-(e*d) mod phi(n)=${fmtBig(edmod)} ${edmod===1n ? '✅' : '❌'}
+  // Chi-squared score (lower is better) comparing observed vs. English frequencies
+  function chiSquaredScore(text) {
+    const clean = onlyLetters(text);
+    if (!clean.length) return Number.POSITIVE_INFINITY;
+    const counts = {};
+    for (const ch of clean) counts[ch] = (counts[ch] || 0) + 1;
+    const n = clean.length;
+    let chi = 0;
+    for (const [ch, expPct] of Object.entries(EN_FREQ)) {
+      const obs = counts[ch] || 0;
+      const exp = (expPct / 100) * n;
+      if (exp > 0) chi += ((obs - exp) ** 2) / exp;
+    }
+    return chi;
+  }
 
-blockSize=${bs} bytes, totalBytes=${len}, blocks=${cblocks.length}
+  const $ = (s) => document.querySelector(s);
+  const plaintextEl = $('#plaintext');
+  const ciphertextEl = $('#ciphertext');
 
-cipher (decimal blocks):
-${fmtBlocks(cblocks)}
+  // SINGLE CHECKBOX (below ciphertext) controlling key mode and plaintext lock
+  const modeToggle = $('#modeToggle');
 
-Cipher box updated.`);
-  }catch(err){ out("Encrypt error: "+err.message); }
-};
+  // p,q,e inputs
+  const pEl = $('#p');
+  const qEl = $('#q');
+  const eEl = $('#e');
 
-/* ---------- Decrypt brute+chi handler (kept as the only decrypt) ---------- */
-el('decryptBrute').onclick = ()=>{(async ()=>{try{
-    const E2 = toBigIntStrict(el('e2').value || '', 'e (for decrypt)');
-    const N2 = toBigIntStrict(el('n2').value || '', 'n (for decrypt)');
-    const cblocks = parseCipherNumberListOrThrow();
+  // n,e (public) inputs
+  const nPublicEl = $('#nPublic');
+  const ePublicEl = $('#ePublic');
 
-    // factor n (or use p/q if provided)
-    let P = null, Q = null;
-    try { const pv = el('p').value.trim(), qv = el('q').value.trim(); if (pv !== '' && qv !== ''){ const Ptmp = toBigIntStrict(pv,'p'); const Qtmp = toBigIntStrict(qv,'q'); if (Ptmp * Qtmp === N2){ P = Ptmp; Q = Qtmp; } }} catch(e){}
-    if (P === null){ out("Decrypt (brute+χ²): factoring n (Pollard-Rho) — please wait..."); let factor = pollardsRho(N2, 200000); if (!factor) factor = trialDivisionFactor(N2, 2000000); if (!factor) throw new Error("Factoring failed with quick methods. Provide p/q or use stronger tools."); P = factor; Q = N2 / factor; }
-    if (P > Q){ const tmp = P; P = Q; Q = tmp; }
+  // UI blocks (grids/rows)
+  const pqGrid = $('#pqGrid');
+  const neGrid = $('#neGrid');
+  const genRow = $('#genRow');
+  const btnGenPQ = $('#btnGenPQ');
 
-    const phi = (P-1n)*(Q-1n);
-    const g = gcd(E2, phi);
-    if (g !== 1n) throw new Error(`e is not coprime with φ(n) = ${phi} (gcd=${g}).`);
-    const d = modInv(E2, phi);
-    if (d === null) throw new Error("Cannot compute d.");
+  // KPIs
+  const nOut = $('#nOut');
+  const phiPill = $('#phiPill');
+  const dPill = $('#dPill');
+  const phiOut = $('#phiOut');
+  const dOut = $('#dOut');
+  const nPill = $('#nPill');
 
-    // decrypt numeric mblocks
-    const mblocks = cblocks.map(c => modPow(c, d, N2));
-    const bsEst = Math.floor((Number(bitlen(N2))-1)/8);
+  // Decrypt preview UI
+  const chosenWrap = $('#chosenWrap');
+  const chosenText = $('#chosenText');
+  const chosenScore = $('#chosenScore');
 
-    // prepare chi-squared reference (English)
-    const EN_FREQ = {'a':0.08167,'b':0.01492,'c':0.02782,'d':0.04253,'e':0.12702,'f':0.02228,'g':0.02015,'h':0.06094,'i':0.06966,'j':0.00153,'k':0.00772,'l':0.04025,'m':0.02406,'n':0.06749,'o':0.07507,'p':0.01929,'q':0.00095,'r':0.05987,'s':0.06327,'t':0.09056,'u':0.02758,'v':0.00978,'w':0.02360,'x':0.00150,'y':0.01974,'z':0.00074};
-    function chiSquared(text, freq){ const counts = {}; let total=0; for (let ch of text.toLowerCase()){ if (ch >= 'a' && ch <= 'z'){ counts[ch] = (counts[ch] || 0) + 1; total++; }} if (total===0) return Infinity; let chi=0; for (let c=97;c<=122;c++){ const ch = String.fromCharCode(c); const obs = counts[ch]||0; const exp = (freq[ch]||0)*total; const diff = obs - exp; chi += (diff*diff)/(exp||1e-9);} return chi; }
+  const btnEncrypt = $('#btnEncrypt');
+  const btnReset = $('#btnReset');
+  const btnExample = $('#btnExample');
+  const btnDecrypt = $('#btnDecrypt');
+  const maxDInput = $('#maxD');
+  const distinctTok = $('#distinctTok');
 
-    // generate candidates by varying block-size, trimming and byte-order
-    const candidates = [];
-    const bsRange = [];
-    for (let b = Math.max(1, bsEst-2); b <= bsEst+2; b++) bsRange.push(b);
-    for (const bs of bsRange){
-      const bytesNormal = [];
-      const bytesReversed = [];
-      for (const m of mblocks){
-        const arr = bigIntToBytesArray(m);
-        const blk = leftPadArray(arr, bs);
-        bytesNormal.push(...blk);
-        const rev = blk.slice().reverse(); bytesReversed.push(...rev);
-      }
-      const tries = [bytesNormal, bytesReversed];
-      for (const tbytes of tries){
-        // try two variants: trimmed trailing zeros, and untrimmed
-        let copy = tbytes.slice();
-        let trimmed = copy.slice(); while (trimmed.length>0 && trimmed[trimmed.length-1]===0) trimmed.pop();
-        const variants = [trimmed, copy];
-        for (const v of variants){
-          let plain = ""; let utfOk = true; try { plain = bytesToTextUTF8(new Uint8Array(v)); } catch(e){ utfOk = false; plain = "(UTF-8 decode failed)"; }
-          const score = utfOk ? chiSquared(plain, EN_FREQ) : Infinity;
-          candidates.push({bs, order: (tbytes===bytesNormal? 'normal':'rev'), trimmed: (v===trimmed), score, plain});
-        }
+  const modal = $('#modal');
+  const btnCloseModal = $('#btnCloseModal');
+  const candGrid = $('#candGrid');
+
+  // Canvas helpers (HiDPI-aware; simple bespoke charts)
+  function setupHiDPI(canvas) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const cssW = Math.max(1, Math.round(rect.width));
+    const cssH = Math.max(1, Math.round(rect.height));
+    if (canvas.width !== Math.round(cssW * dpr) || canvas.height !== Math.round(cssH * dpr)) {
+      canvas.width = Math.round(cssW * dpr);
+      canvas.height = Math.round(cssH * dpr);
+    }
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, dpr, cssW, cssH };
+  }
+  // Draw axes and x-labels only (empty-state)
+  function drawAxesOnly(canvas, xLabels = []) {
+    const { ctx, dpr } = setupHiDPI(canvas);
+    const W = canvas.width / dpr, H = canvas.height / dpr;
+    ctx.clearRect(0, 0, W, H);
+    const pad = { top: 12, right: 10, bottom: 32, left: 40 };
+    const plotW = W - pad.left - pad.right;
+    const plotH = H - pad.top - pad.bottom;
+    const px = 0.5;
+    ctx.strokeStyle = '#63c0f5'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left + px, pad.top + px);
+    ctx.lineTo(pad.left + px, pad.top + plotH + px);
+    ctx.lineTo(pad.left + plotW + px, pad.top + plotH + px);
+    ctx.stroke();
+    if (xLabels.length) {
+      ctx.fillStyle = '#eaeaea'; ctx.font = '10px Monaco, Consolas, monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      const barGap = 2; const barW = Math.max(1, Math.floor(plotW / xLabels.length) - barGap);
+      for (let i = 0; i < xLabels.length; i++) {
+        const x = pad.left + i * (barW + barGap) + barW / 2 + 1;
+        ctx.fillText(xLabels[i], x, pad.top + plotH + 4);
       }
     }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#eaeaea';
+    for (let y = 0; y <= 10; y++) {
+      const yy = pad.top + plotH - ((y / 10) * (plotH - 10));
+      ctx.fillText(String(y), pad.left - 6, yy);
+    }
+  }
+  // Minimal bar chart (no libraries)
+  function drawBarChart(canvasId, labels, counts, title = '') {
+    const canvas = document.getElementById(canvasId);
+    const { ctx, dpr } = setupHiDPI(canvas);
+    const W = canvas.width / dpr, H = canvas.height / dpr;
+    ctx.clearRect(0, 0, W, H);
+    const pad = { top: 16, right: 10, bottom: 32, left: 40 };
+    const plotW = W - pad.left - pad.right;
+    const plotH = H - pad.top - pad.bottom;
+    const px = 0.5;
+    if (title) {
+      ctx.fillStyle = '#b5e853'; ctx.font = '13px Monaco, Consolas, monospace';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.fillText(title, pad.left + 2, pad.top - 4);
+    }
+    const maxCount = Math.max(10, ...(counts || [0]));
+    const yTop = maxCount;
+    ctx.strokeStyle = '#63c0f5'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left + px, pad.top + px);
+    ctx.lineTo(pad.left + px, pad.top + plotH + px);
+    ctx.lineTo(pad.left + plotW + px, pad.top + plotH + px);
+    ctx.stroke();
+    const N = Math.max(1, labels.length);
+    const barGap = 2; const barW = Math.max(1, Math.floor(plotW / N) - barGap);
+    ctx.fillStyle = '#b5e853';
+    for (let i = 0; i < N; i++) {
+      const v = counts[i] || 0;
+      const h = (v / yTop) * (plotH - 10);
+      const x = pad.left + i * (barW + barGap) + 1;
+      const y = pad.top + plotH - h;
+      ctx.fillRect(x, y, barW, h);
+    }
+    ctx.fillStyle = '#eaeaea'; ctx.font = '10px Monaco, Consolas, monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let i = 0; i < N; i++) {
+      const x = pad.left + i * (barW + barGap) + barW / 2 + 1;
+      ctx.fillText(labels[i], x, pad.top + plotH + 4);
+    }
+    // Y-axis ticks: choose a step based on max
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#eaeaea';
+    ctx.strokeStyle = 'rgba(99,192,245,0.25)';
+    ctx.lineWidth = 1;
 
-    // sort candidates by chi2
-    candidates.sort((a,b)=> (a.score===Infinity?1e18:a.score) - (b.score===Infinity?1e18:b.score));
-    const top = candidates.slice(0,5);
+    let step = 1;
+    if (yTop > 200) step = 100;
+    else if (yTop > 80) step = 50;
+    else if (yTop > 40) step = 10;
+    else if (yTop > 20) step = 5;
+    else step = 1;
 
-    const best = top[0] || null;
-    let outText = `[DECRYPT (brute+χ²)]
+    const maxTick = Math.ceil(yTop / step) * step;
 
-n=${fmtBig(N2)}
-factorized as p=${fmtBig(P)}, q=${fmtBig(Q)}
-phi=${fmtBig(phi)}
-e=${fmtBig(E2)} d=${fmtBig(d)}
-Estimated base block size = ${bsEst} bytes
+    for (let y = 0; y <= maxTick; y += step) {
+      const yy = pad.top + plotH - ((y / maxTick) * (plotH - 10));
+      ctx.beginPath();
+      ctx.moveTo(pad.left + px, yy + px);
+      ctx.lineTo(pad.left + plotW + px, yy + px);
+      ctx.stroke();
+      ctx.fillText(String(y), pad.left - 6, yy);
+    }
+  }
 
-`;
-    if (best){
-      outText += `BEST -> bs=${best.bs} order=${best.order} trimmed=${best.trimmed} χ²=${best.score === Infinity ? 'N/A' : best.score}
+  // Frequency of symbols in plaintext (A..Z + space)
+  function symbolFrequencies(text) {
+    const s = sanitizePlaintext(text || '');
+    const counts = new Array(SPACE_CODE + 1).fill(0);
+    for (const ch of s) { counts[letterToNum(ch)]++; }
+    return counts;
+  }
+  // Top token frequencies in ciphertext (and distinct count)
+  function tokenFrequencies(nums, topN = 20) {
+    const m = new Map();
+    nums.forEach(n => m.set(n, (m.get(n) || 0) + 1));
+    const arr = Array.from(m.entries()).sort((a, b) => b[1] - a[1]).slice(0, topN);
+    return { labels: arr.map(([t]) => String(t)), counts: arr.map(([_, c]) => c), distinct: m.size };
+  }
+  // Redraw both charts
+  function updateCharts() {
+    const pCanvas = document.getElementById('plaintextChart');
+    const labels27 = [...Array(26)].map((_, i) => String.fromCharCode(ACode + i)).concat('␣');
+    const counts27 = symbolFrequencies(plaintextEl.value || '');
+    if (!counts27.some(v => v > 0)) drawAxesOnly(pCanvas, labels27);
+    else drawBarChart('plaintextChart', labels27, counts27, '');
 
-Plaintext:
-${best.plain}
+    const cCanvas = document.getElementById('ciphertextChart');
+    const nums = tokenizeCiphertext(ciphertextEl.value || '');
+    if (nums.length === 0) { drawAxesOnly(cCanvas, []); distinctTok.textContent = '0'; return; }
+    const tf = tokenFrequencies(nums, 20);
+    drawBarChart('ciphertextChart', tf.labels, tf.counts, '');
+    distinctTok.textContent = String(tf.distinct);
+  }
 
-Top candidates:
-`;
-      top.forEach((c,idx)=>{ outText += `#${idx+1} bs=${c.bs} order=${c.order} trimmed=${c.trimmed} χ²=${c.score}
-${c.plain}
----
-`; });
+  // ======= Mode & locks =======
+  function currentMode() { return modeToggle.checked ? 'ne' : 'pq'; }
+
+  // *** UPDATED ***: hide/show the KPIs n, φ(n), d based on the checkbox
+  function updateKeyModeUI() {
+    // grids always visible
+    pqGrid.style.display = 'grid';
+    neGrid.style.display = 'grid';
+    btnGenPQ.style.display = 'flex';
+
+    const m = currentMode();
+
+    if (m === 'ne') {
+      // Public-key mode: lock plain and p,q,e — enable cipher, nPublic, ePublic
+      plaintextEl.readOnly = true;
+      pEl.readOnly = true; qEl.readOnly = true; eEl.readOnly = true;
+
+      ciphertextEl.readOnly = false;
+      nPublicEl.readOnly = false; ePublicEl.readOnly = false;
+
+      // HIDE KPIs
+      nPill.style.display = 'none';
+      phiPill.style.display = 'none';
+      dPill.style.display = 'none';
     } else {
-      outText += 'No candidates generated.';
+      // p,q,e mode: enable plain, p, q, e, nPublic, ePublic — lock cipher
+      plaintextEl.readOnly = false;
+      pEl.readOnly = false; qEl.readOnly = false; eEl.readOnly = false;
+
+      ciphertextEl.readOnly = true;
+      nPublicEl.readOnly = false; ePublicEl.readOnly = false;
+
+      // SHOW KPIs
+      nPill.style.display = 'inline-flex';
+      phiPill.style.display = 'inline-flex';
+      dPill.style.display = 'inline-flex';
     }
-    out(outText);
-  }catch(err){ out('Decrypt brute error: '+err.message); }})();};
 
-/* ---------- Reset ---------- */
-el('reset').onclick = ()=>{
-  el('p').value = '101';      
-  el('q').value = '113';        
-  el('e').value = '65537';
-  el('n').value = '';
-  el('plain').value = '';
-  el('cipher').value = '';
-  el('e2').value = '';
-  el('n2').value = '';
-  warn('');
-  out('---');
+    chosenWrap.style.display = 'none';
+    parseKeys(); // recompute KPIs (even if hidden)
+  }
 
-  try { tryAutoUpdateKeys(); } catch(_) {}
-};
+  // Parse keys + (in pq mode) auto-fill nPublic/ePublic
+  function parseKeys() {
+    const m = currentMode();
+    let n = NaN, phi = NaN, d = null, e = NaN, err = "";
+    const msgs = [];
 
+    if (m === 'pq') {
+      const p = Number(pEl.value || 0), q = Number(qEl.value || 0);
+      e = Number(eEl.value || 0);
+      n = p * q;
+      phi = (p - 1) * (q - 1);
+
+      if (!isPrime(p)) { err = 'p is not prime'; msgs.push(err); }
+      else if (!isPrime(q)) { err = 'q is not prime'; msgs.push(err); }
+      else if (p === q) { err = 'p and q must differ'; msgs.push(err); }
+      else if (n <= SPACE_CODE) { err = 'n must be > 26 (to include space)'; msgs.push(err); }
+      else if (phi <= 0) { err = 'Invalid φ(n)'; msgs.push(err); }
+      else if (!e || e <= 0) { err = 'invalid e'; msgs.push(err); }
+      else if (gcd(e, phi) !== 1) { err = 'e must be coprime with φ(n)'; msgs.push(err); }
+      else {
+        d = modInv(e, phi);
+        if (d == null) { err = 'No modular inverse for e mod φ(n)'; msgs.push(err); }
+      }
+
+      // Auto-fill nPublic/ePublic ONLY in pq mode
+      if (!err) {
+        if (String(nPublicEl.value) !== String(n)) nPublicEl.value = String(n);
+        if (String(ePublicEl.value) !== String(e)) ePublicEl.value = String(e);
+      }
+    } else {
+      // Public mode: use nPublic/ePublic directly (no back-sync)
+      n = Number(nPublicEl.value || 0);
+      e = Number(ePublicEl.value || 0);
+      if (!n || n <= SPACE_CODE) { err = 'n must be > 26 (to include space)'; msgs.push(err); }
+      if (!e || e <= 0) { const m2 = 'invalid e'; err = err || m2; msgs.push(m2); }
+      phi = NaN; d = null;
+    }
+
+    nOut.textContent = isFinite(n) ? String(n) : '—';
+    phiOut.textContent = isFinite(phi) ? String(phi) : '—';
+    dOut.textContent = d == null ? '—' : String(d);
+
+    if (err) {
+      if (m === 'ne') {
+        setWarnCipher(msgs);
+        setWarn('');
+      } else {
+        setWarn(msgs);
+        setWarnCipher('');
+      }
+    } else {
+      setWarn('');
+      setWarnCipher('');
+    }
+    return { mode: m, n, phi, d, e, err };
+  }
+
+  // Key generation for pq-mode (random small primes + valid e)
+  function randInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+  function randomPrime(min = 31, max = 173) {
+    while (true) {
+      let x = randInt(min, max);
+      if (x % 2 === 0) x++;
+      while (x <= max && !isPrime(x)) x += 2;
+      if (x <= max) return x;
+    }
+  }
+  function pickE(phi) {
+    const candidates = [3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47];
+    for (const c of candidates) if (c < phi && gcd(c, phi) === 1) return c;
+    for (let e = 53; e < Math.min(2000, phi); e += 2) if (gcd(e, phi) === 1) return e;
+    return null;
+  }
+  function generatePQ() {
+    for (let t = 0; t < 1000; t++) {
+      const p = randomPrime(31, 173);
+      let q = randomPrime(31, 173);
+      if (q === p) continue;
+      const n = p * q;
+      if (n <= SPACE_CODE) continue;
+      const phi = (p - 1) * (q - 1);
+      const e = pickE(phi);
+      if (!e) continue;
+      pEl.value = String(p);
+      qEl.value = String(q);
+      eEl.value = String(e);
+      parseKeys();
+      warn(`New random keys generated:\np=${p}  q=${q}\nn=${n}\nφ(n)=${phi}\ne=${e}`);
+      return;
+    }
+    warn('Could not generate a valid (p,q,e). Try again.');
+  }
+
+  // Encrypt / Decrypt
+  function encrypt() {
+    const K = parseKeys();
+    if (K.err) { warn('Cannot encrypt: invalid key parameters.'); return; }
+    if (K.mode === 'ne') { warn('Encrypt requires p,q,e (switch off manual ciphertext input).'); return; }
+    const clean = sanitizePlaintext(plaintextEl.value || '');
+    if (!clean) { ciphertextEl.value = ''; updateCharts(); warn('Plaintext is empty.'); return; }
+    const nums = Array.from(clean).map(ch => modPow(letterToNum(ch), K.e, K.n));
+    ciphertextEl.value = detokenizeCipher(nums);
+    chosenWrap.style.display = 'none';
+    updateCharts();
+    setWarn('');
+  }
+
+  // Basic HTML escaper for candidate previews
+  function escapeHtml(s) { return s.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch])); }
+
+  // Brute-force d: keep those with enough valid symbols and good chi-squared; optionally enforce distinctness
+  function bruteForceD(maxD = 2000, pctValidThreshold = 0.6) {
+    const nums = tokenizeCiphertext(ciphertextEl.value || '');
+    if (!nums.length) return [];
+    const K = parseKeys();
+    const n = Number(K.n);
+    if (!n || n <= 0) return [];
+    const distinctTokens = new Set(nums).size;
+    const enforceDistinct = distinctTokens >= 26;
+    const requiredDistinctLetters = Math.min(distinctTokens, 26);
+
+    const out = [];
+    const hardCap = Math.min(maxD, 200000);
+    for (let d = 1; d <= hardCap; d++) {
+      let valid = 0;
+      const letters = new Array(nums.length);
+      for (let i = 0; i < nums.length; i++) {
+        const m = modPow(nums[i], d, n);
+        if (m >= 0 && m <= 26) { valid++; letters[i] = numToLetter(m); }
+        else { letters[i] = null; }
+      }
+      const pctValid = valid / nums.length;
+      if (pctValid < pctValidThreshold) continue;
+      if (enforceDistinct) {
+        const uniq = new Set(letters.filter(x => x && x !== ' ')).size;
+        if (uniq < requiredDistinctLetters) continue;
+      }
+      const text = letters.map(v => v == null ? '?' : v).join('');
+      const chi = chiSquaredScore(text);
+      const uniqL = new Set(text.replace(/[^A-Z ]/g, '')).size; // info
+      out.push({ d, pctValid, chi, text, uniq: uniqL });
+    }
+    out.sort((a, b) => {
+      if (b.pctValid !== a.pctValid) return b.pctValid - a.pctValid;
+      if (a.chi !== b.chi) return a.chi - b.chi;
+      return b.uniq - a.uniq;
+    });
+    return out.slice(0, 20);
+  }
+
+  // Builds a candidate card with a 3-line preview + toggle
+  function decrypt() {
+    const m = Number(maxDInput.value) || 2000;
+    candGrid.innerHTML = '';
+    const nums = tokenizeCiphertext(ciphertextEl.value || '');
+    if (!nums.length) { setWarnCipher('Ciphertext is empty. Paste space-separated integers.'); return; }
+
+    const res = bruteForceD(m, 0.6);
+    if (!res.length) { setWarnCipher('No candidates found. Try increasing maxD or verify n/e.'); return; }
+
+    // Builds a candidate card with a 3-line preview + toggle
+    function buildCandCard(c, idx) {
+      const card = document.createElement('div');
+      card.className = 'cand';
+      card.innerHTML = `
+      <div class="meta muted">
+        #${idx + 1} • d=${c.d} • valid ${(c.pctValid * 100).toFixed(1)}% • chi-squared ${c.chi.toFixed(2)} • uniq ${c.uniq}
+      </div>
+      <div class="mono cand-text">${escapeHtml(c.text)}</div>
+      <div class="actions">
+        <button class="btn tiny btnToggle" type="button">Show more</button>
+        <button class="btn tiny btnSelect" type="button" title="Use this candidate">Select</button>
+      </div>
+    `;
+
+      const btnToggle = card.querySelector('.btnToggle');
+      const btnSelect = card.querySelector('.btnSelect');
+      const candText = card.querySelector('.cand-text');
+
+      // Show the toggle only if the text is "long"
+      const needsToggle = c.text.split('\n').length > 3 || c.text.length > 240;
+      if (!needsToggle) btnToggle.style.display = 'none';
+
+      btnToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const expanded = card.classList.toggle('expanded');
+        btnToggle.textContent = expanded ? 'Show less' : 'Show more';
+      });
+
+      // Select the candidate (as before: closes the modal and shows the preview below)
+      function selectCandidate() {
+        chosenText.textContent = c.text;
+        chosenScore.textContent =
+          'candidate d: ' + c.d +
+          ' • chi-squared: ' + c.chi.toFixed(2) +
+          ' • valid: ' + (c.pctValid * 100).toFixed(1) + '% • uniq: ' + c.uniq;
+        chosenWrap.style.display = 'block';
+        hideModal();
+        updateCharts();
+        setWarn('');
+        setWarnCipher('');
+      }
+
+      btnSelect.addEventListener('click', (e) => { e.stopPropagation(); selectCandidate(); });
+
+      return card;
+    }
+
+    setWarnCipher(`Found ${res.length} candidates. Pick one to preview.`);
+    res.forEach((c, idx) => candGrid.appendChild(buildCandCard(c, idx)));
+    showModal();
+  }
+
+
+  // Modal helpers
+  function showModal() { modal.classList.add('show'); }
+  function hideModal() { modal.classList.remove('show'); }
+
+  // Reset everything (back to pq-mode, clear fields, hide previews/warnings)
+  function resetAll() {
+    modeToggle.checked = false; // back to p,q,e
+    updateKeyModeUI();
+
+    plaintextEl.value = '';
+    ciphertextEl.value = '';
+    chosenWrap.style.display = 'none';
+    setWarn('');
+    setWarnCipher('');
+    updateCharts();
+  }
+
+  // Load a reproducible example (in pq-mode) and encrypt it
+  function loadExample() {
+    modeToggle.checked = false; // example in pq-mode
+    updateKeyModeUI();
+
+    pEl.value = 43; qEl.value = 47; eEl.value = 5;
+    parseKeys();
+    plaintextEl.value = 'Cybersecurity professionals rely on a variety of statistical tools and techniques to analyze data, identify patterns, and predict threats. These methods range from basic descriptive statistics to advanced probabilistic and inferential models. Each of them serves a specific purpose in detecting anomalies, assessing risks, and supporting decision-making.';
+    encrypt();
+    warn('Example loaded with p=43, q=47, e=5.');
+  }
+
+  // Draw empty axes on first load
+  function initEmptyCharts() {
+    const labels27 = [...Array(26)].map((_, i) => String.fromCharCode(ACode + i)).concat('␣');
+    drawAxesOnly(document.getElementById('plaintextChart'), labels27);
+    drawAxesOnly(document.getElementById('ciphertextChart'), []);
+  }
+
+  // Wire up all events
+  function attachEvents() {
+    btnEncrypt.addEventListener('click', encrypt);
+    btnReset.addEventListener('click', resetAll);
+    btnExample.addEventListener('click', loadExample);
+    btnCloseModal.addEventListener('click', hideModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
+
+    // MODE toggle (under ciphertext)
+    modeToggle.addEventListener('change', () => {
+      updateKeyModeUI();
+      setWarn('');
+      setWarnCipher('');
+    });
+
+    // inputs -> re-parse keys & messages
+    pEl.addEventListener('input', () => { parseKeys(); });
+    qEl.addEventListener('input', () => { parseKeys(); });
+    eEl.addEventListener('input', () => { parseKeys(); });
+    nPublicEl.addEventListener('input', () => { parseKeys(); });
+    ePublicEl.addEventListener('input', () => { parseKeys(); });
+
+    // generate (pq)
+    document.getElementById('btnGenPQ').addEventListener('click', generatePQ);
+
+    // decrypt & charts
+    btnDecrypt.addEventListener('click', decrypt);
+    ciphertextEl.addEventListener('input', () => { updateCharts(); setWarn(''); });
+    plaintextEl.addEventListener('input', () => { updateCharts(); setWarn(''); });
+
+    window.addEventListener('resize', updateCharts);
+  }
+
+  // Init
+  updateKeyModeUI();        // set visibility and locks
+  initEmptyCharts();
+  updateCharts();
+  parseKeys();
+  attachEvents();
 </script>
-</body>
-</html>
+
+<p><br /></p>
+
+<h2 id="key-mathematical-components"><strong>Key Mathematical Components</strong></h2>
+<p>The script implements all the fundamental algorithms of RSA from scratch:
+The Extended Euclidean Algorithm (EGCD) for computing the greatest common divisor and modular inverses.
+A modInv(a, m) function that returns the modular inverse of a modulo m, used to calculate the private key d.
+The modPow(base, exp, mod) function implementing fast modular exponentiation via the square-and-multiply method,
+ensuring efficiency even with many iterations of d.
+A simple primality test based on trial division, sufficient for small primes used in this didactic example.
+Each of these functions is deliberately implemented in a readable way rather than optimized, so that students can trace
+the logic step by step.</p>
+
+<h2 id="code-overview-screenshot"><strong>Code Overview Screenshot</strong></h2>
+
+<p><img src="/assets/images/code_2.png" alt="code" /></p>
+
+<h2 id="main-functions-explained"><strong>Main Functions Explained</strong></h2>
+<p>Below are the most significant functions in the project, showing how the mathematics of RSA and the frequency analysis are implemented in JavaScript.</p>
+
+<h3 id="41-modular-exponentiation--modpow"><strong>4.1 Modular Exponentiation — modPow()</strong></h3>
+<p>This function efficiently computes a<sup>b</sup> mod n using the <strong>square-and-multiply</strong> algorithm.
+It’s crucial for both encryption and decryption, as direct exponentiation would be computationally expensive.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">modPow</span><span class="p">(</span><span class="nx">base</span><span class="p">,</span> <span class="nx">exp</span><span class="p">,</span> <span class="nx">mod</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">res</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">%</span> <span class="nx">mod</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">base</span> <span class="o">%</span> <span class="nx">mod</span><span class="p">,</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">exp</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">e</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="nx">res</span> <span class="o">=</span> <span class="p">(</span><span class="nx">res</span> <span class="o">*</span> <span class="nx">b</span><span class="p">)</span> <span class="o">%</span> <span class="nx">mod</span><span class="p">;</span>
+    <span class="nx">b</span> <span class="o">=</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span> <span class="nx">b</span><span class="p">)</span> <span class="o">%</span> <span class="nx">mod</span><span class="p">;</span>
+    <span class="nx">e</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// divide exponent by 2</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">res</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>At each step, the function squares the base and multiplies it into the result when the current bit of the exponent is 1.
+This reduces the number of multiplications from <strong>O(exp)</strong> to <strong>O(log exp)</strong>, making RSA feasible even for large numbers.</p>
+
+<h3 id="42-modular-inverse--modinv"><strong>4.2 Modular Inverse — modInv()</strong></h3>
+<p>This function computes the inverse of a number modulo m, using the <strong>Extended Euclidean Algorithm (EGCD)</strong>.
+It is essential for calculating the private exponent <strong>d = e⁻¹ mod φ(n)</strong>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">modInv</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">egcd</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">m</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// no inverse exists</span>
+  <span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="nx">m</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">x</span> <span class="o">+=</span> <span class="nx">m</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It finds the coefficient x such that a⋅x ≡ 1 (mod m).
+If <strong>gcd(a,m) ≠ 1</strong>, the inverse doesn’t exist, and <strong>e</strong> cannot be used as a valid exponent.</p>
+
+<h3 id="43-chi-squared-scoring--chisquaredscore"><strong>4.3 Chi-Squared Scoring — chiSquaredScore()</strong></h3>
+<p>This function compares the letter distribution of a candidate plaintext with known English frequencies, providing a <strong>numerical score</strong> that estimates linguistic similarity.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">chiSquaredScore</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">clean</span> <span class="o">=</span> <span class="p">(</span><span class="nx">text</span> <span class="o">||</span> <span class="dl">''</span><span class="p">).</span><span class="nx">toUpperCase</span><span class="p">().</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">[^</span><span class="sr">A-Z</span><span class="se">]</span><span class="sr">/g</span><span class="p">,</span> <span class="dl">''</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">clean</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="kc">Infinity</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">counts</span> <span class="o">=</span> <span class="p">{};</span> <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">ch</span> <span class="k">of</span> <span class="nx">clean</span><span class="p">)</span> <span class="nx">counts</span><span class="p">[</span><span class="nx">ch</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nx">counts</span><span class="p">[</span><span class="nx">ch</span><span class="p">]</span> <span class="o">||</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">clean</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">chi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="p">[</span><span class="nx">ch</span><span class="p">,</span> <span class="nx">expPct</span><span class="p">]</span> <span class="k">of</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">entries</span><span class="p">(</span><span class="nx">EN_FREQ</span><span class="p">))</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">obs</span> <span class="o">=</span> <span class="nx">counts</span><span class="p">[</span><span class="nx">ch</span><span class="p">]</span> <span class="o">||</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">exp</span> <span class="o">=</span> <span class="p">(</span><span class="nx">expPct</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="nx">n</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">exp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">chi</span> <span class="o">+=</span> <span class="p">((</span><span class="nx">obs</span> <span class="o">-</span> <span class="nx">exp</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="nx">exp</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">chi</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A lower <strong>chi-squared value</strong> indicates that the text’s letter frequencies are close to natural English.
+This statistical test allows the system to automatically rank possible decryptions without requiring user intervention.</p>
+
+<h3 id="44-brute-force-decryption--bruteforced"><strong>4.4 Brute-Force Decryption — bruteForceD()</strong></h3>
+<p>This function iterates through potential values of <strong>d</strong>, decrypts the ciphertext, and evaluates each result.
+It filters candidates that contain at least 60% valid symbols and checks for distinct letter variety.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">bruteForceD</span><span class="p">(</span><span class="nx">maxD</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="nx">pctValidThreshold</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">nums</span> <span class="o">=</span> <span class="nx">tokenizeCiphertext</span><span class="p">(</span><span class="nx">ciphertextEl</span><span class="p">.</span><span class="nx">value</span> <span class="o">||</span> <span class="dl">''</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">nums</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="p">[];</span>
+  <span class="kd">const</span> <span class="nx">n</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">parseKeys</span><span class="p">().</span><span class="nx">n</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">n</span><span class="p">)</span> <span class="k">return</span> <span class="p">[];</span>
+  <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">d</span> <span class="o">&lt;=</span> <span class="nx">maxD</span><span class="p">;</span> <span class="nx">d</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">valid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">letters</span> <span class="o">=</span> <span class="nx">nums</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">num</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">m</span> <span class="o">=</span> <span class="nx">modPow</span><span class="p">(</span><span class="nx">num</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">n</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">m</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">m</span> <span class="o">&lt;=</span> <span class="mi">26</span><span class="p">)</span> <span class="p">{</span> <span class="nx">valid</span><span class="o">++</span><span class="p">;</span> <span class="k">return</span> <span class="nx">numToLetter</span><span class="p">(</span><span class="nx">m</span><span class="p">);</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="dl">'</span><span class="s1">?</span><span class="dl">'</span><span class="p">;</span>
+    <span class="p">});</span>
+    <span class="kd">const</span> <span class="nx">pctValid</span> <span class="o">=</span> <span class="nx">valid</span> <span class="o">/</span> <span class="nx">nums</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">pctValid</span> <span class="o">&gt;=</span> <span class="nx">pctValidThreshold</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">letters</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">''</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">chi</span> <span class="o">=</span> <span class="nx">chiSquaredScore</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+      <span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">pctValid</span><span class="p">,</span> <span class="nx">chi</span><span class="p">,</span> <span class="nx">text</span> <span class="p">});</span>
+    <span class="p">}</span> 
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">results</span><span class="p">.</span><span class="nx">sort</span><span class="p">((</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">chi</span> <span class="o">-</span> <span class="nx">b</span><span class="p">.</span><span class="nx">chi</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It tests every possible <strong>d</strong> value within a chosen range, using <strong>modPow()</strong> for decryption and <strong>chiSquaredScore()</strong> for ranking.
+The top 20 candidates are shown in the modal window, each with a statistical confidence score.</p>
+
+<h2 id="frequency-analysis-and-visualization"><strong>Frequency Analysis and Visualization</strong></h2>
+<p>Two dynamic <strong>canvas charts</strong> show the frequency distributions of plaintext letters and ciphertext tokens.
+They are automatically updated on every interaction, making the transformation between readable text and numerical ciphertext visually clear.
+This visualization helps users grasp how encryption randomizes letter patterns and why statistical techniques can still recover meaningful structure.</p>
+
+<h2 id="conclusion"><strong>Conclusion</strong></h2>
+<p>In conclusion, this project unites <strong>number theory</strong>, <strong>modular arithmetic</strong>, and <strong>statistical language modeling</strong> in a
+compact browser-based demonstrator.
+It provides an intuitive environment to understand how the RSA algorithm operates and how the statistical properties of
+natural language can assist in decryption when the key is unknown.</p>
 
 <hr />
 
