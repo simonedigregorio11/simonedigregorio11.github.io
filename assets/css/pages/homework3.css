@@ -1,4 +1,6 @@
-/* --- Root color palette --- */
+/* ============================
+   Global CSS Variables
+   ============================ */
 :root {
     --bg: #000000;
     --bg2: #0e1526;
@@ -12,32 +14,42 @@
     --border-warn: #f4bf75;
 }
 
-/* --- Box sizing and layout reset --- */
+/* ============================
+   Box sizing and layout reset
+   ============================ */
 .hw3 * {
     box-sizing: border-box;
 }
 
-/* --- Prevent global body override --- */
+/* ============================
+   Prevent global body override
+   ============================ */
 .hw3 html,
 .hw3 body {
     height: auto;
 }
 
-/* --- Base container --- */
+/* ============================
+   Base container
+   ============================ */
 .hw3 {
     background: linear-gradient(180deg, var(--bg), var(--bg2));
     color: var(--text);
 }
 
-/* --- Generic container --- */
+/* ============================
+   Generic container
+   ============================ */
 .hw3 .container {
     max-width: 1100px;
     margin: 24px auto;
     padding: 0 16px;
 }
 
-/* --- Tokens number container --- */
-.hw3 .nTokens-container{
+/* ============================
+   Tokens number container
+   ============================ */
+.hw3 .nTokens-container {
     border: 2px solid var(--border);
     border-radius: 8px;
     padding: 10px 14px;
@@ -45,7 +57,7 @@
 }
 
 /* ============================
-   BUTTONS
+   Buttons
    ============================ */
 .hw3 button {
     background-color: var(--bg);
@@ -65,8 +77,9 @@
     transform: translateY(-1px);
 }
 
-/* --- Button Variants --- */
-
+/* ============================
+   Button variants
+   ============================ */
 .hw3 .btn.ghost {
     background: transparent;
 }
@@ -81,21 +94,20 @@
     background-color: darkred;
 }
 
-
 /* ============================
-   GRID SYSTEM
+   Grid system
    ============================ */
 .hw3 .grid {
     display: grid;
     gap: 16px;
-    grid-template-columns: repeat(3, minmax(120px, 220px));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin-top: 8px;
 }
 
-.hw3 .grid2{
+.hw3 .grid2 {
     display: grid;
     gap: 16px;
-    grid-template-columns: repeat(2);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 8px;
 }
 
@@ -110,8 +122,26 @@
     }
 }
 
+.hw3 #pqGrid>div,
+.hw3 #neGrid>div,
+.hw3 .grid>* {
+    min-width: 0;
+}
+
+@media (max-width: 640px) {
+
+    #pqGrid,
+    #neGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .hw3 .grid2 {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ============================
-   CARD COMPONENT
+   Card component
    ============================ */
 .hw3 .card {
     border: 1px solid var(--border);
@@ -136,7 +166,7 @@
 }
 
 /* ============================
-   FORMS & INPUTS
+   Forms & inputs
    ============================ */
 .hw3 label {
     font-size: 12px;
@@ -155,6 +185,15 @@
     padding: 10px 12px;
     font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 
+}
+
+.hw3 input[type="text"],
+.hw3 input[type="number"],
+.hw3 textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .hw3 textarea {
@@ -186,20 +225,20 @@
     resize: vertical;
 }
 
-.hw3 #maxD{
+.hw3 #maxD {
     width: 120px;
 }
 
 
 /* ============================
-   UTILITIES
+   Utilities
    ============================ */
 .hw3 .row {
     display: flex;
     gap: 8px;
     align-items: center;
     flex-wrap: wrap;
-    margin-top:8px;
+    margin-top: 8px;
 }
 
 .hw3 .muted {
@@ -226,33 +265,35 @@
     display: none;
 }
 
-.hw3 #maxDGrid{
+.hw3 #maxDGrid {
     margin-bottom: 15px;
 }
 
-.hw3 label{
+.hw3 label {
     margin-left: 5px;
 }
 
 .formula-box {
-  text-align: center;
-  font-size: clamp(0.6rem, 2vw, 1rem);
-  width: 63%;
-  margin: 1em auto;
-  background-color: var(--bg);
-  color: var(--text);
-  padding: 8px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+    text-align: center;
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    width: 63%;
+    margin: 1em auto;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
 }
 
-/* --- Inline KPI and pill components --- */
+/* ============================
+   Inline KPI and pill components
+   ============================ */
 .hw3 .kpi {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
     align-items: center;
-    margin-top:10px
+    margin-top: 10px
 }
 
 .hw3 .pill {
@@ -268,7 +309,7 @@
 }
 
 /* ============================
-   MODAL
+   Modal
    ============================ */
 .hw3 .modal-backdrop {
     position: fixed;
@@ -302,7 +343,9 @@
     padding: 14px 16px;
 }
 
-/* --- Candidate grid (top decoding candidates) --- */
+/* ============================
+   Candidate grid
+   ============================ */
 .hw3 .cand-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -334,7 +377,7 @@
 }
 
 /* ============================
-   CHARTS
+   Charts
    ============================ */
 .hw3 .charts {
     display: grid;
@@ -349,13 +392,17 @@
     background: var(--bg);
 }
 
-/* --- Canvas --- */
+/* ============================
+   Canvas
+   ============================ */
 .hw3 canvas {
     width: 100% !important;
     height: 300px !important;
 }
 
-/* --- Small text utility --- */
+/* ============================
+   Small text utility
+   ============================ */
 .hw3 .small {
     font-size: 12px;
     margin: 8px 0 20px 0;
@@ -365,7 +412,7 @@
 }
 
 /* ============================
-   CIPHER CONTAINER
+   Cipher container
    ============================ */
 .hw3 .cipher-container {
     border: 1px solid var(--border);
@@ -382,76 +429,136 @@
     margin: 0 0 6px 0;
 }
 
-
-/* Warns */
-.hw3 .note {
-  display: none;
-  border: 1px solid var(--border);
-  background: rgba(0,0,0,0.18);
-  color: #eaeaea;
-  padding: 10px 12px;
-  margin: 10px 0 14px 0;
-  border-radius: 6px;
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  font-size: 0.95rem;
-  line-height: 1.35;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-.hw3 #warnPlain.note { border-color: var(--border-warn); color: var(--border-warn); background: rgba(244,191,117,0.08); display: none; }
-.hw3 #warnPlain.note::before { content: "⚠ "; font-weight: 600; margin-right: 2px; }
-.hw3 .note a { color: var(--border-hover); text-shadow: 0 0 5px rgba(104,182,255,0.5); }
-.hw3 .note code {
-  background: rgba(0,0,0,0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 0 3px; margin: 0 -3px; color: #aa759f; border-radius: 2px;
-}
-@keyframes note-pop {
-  from { box-shadow: 0 0 0 rgba(244,191,117,0); }
-  to   { box-shadow: 0 0 14px rgba(244,191,117,0.25); }
-}
-.hw3 #warnPlain.note[style*="display: block"] { animation: note-pop 180ms ease-out; }
-.hw3 #warnCipher.note { border-color: var(--border-warn); color: var(--border-warn); background: rgba(244,191,117,0.08); display: none; }
-.hw3 #warnCipher.note::before { content: "⚠ "; font-weight: 600; margin-right: 2px; }
-.hw3 #warnCipher.note[style*="display: block"] { animation: note-pop 180ms ease-out; }
-
-
- /* ============================
-              POPUP
+/* ============================
+   Warns
    ============================ */
-  .hw3 .modal .modal-c { overflow-x: hidden; }
-  .hw3 #candGrid { overflow-x: hidden; }
+.hw3 .note {
+    display: none;
+    border: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.18);
+    color: #eaeaea;
+    padding: 10px 12px;
+    margin: 10px 0 14px 0;
+    border-radius: 6px;
+    font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
 
-  .hw3 .cand {
+.hw3 #warnPlain.note {
+    border-color: var(--border-warn);
+    color: var(--border-warn);
+    background: rgba(244, 191, 117, 0.08);
+    display: none;
+}
+
+.hw3 #warnPlain.note::before {
+    content: "⚠ ";
+    font-weight: 600;
+    margin-right: 2px;
+}
+
+.hw3 .note a {
+    color: var(--border-hover);
+    text-shadow: 0 0 5px rgba(104, 182, 255, 0.5);
+}
+
+.hw3 .note code {
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0 3px;
+    margin: 0 -3px;
+    color: #aa759f;
+    border-radius: 2px;
+}
+
+@keyframes note-pop {
+    from {
+        box-shadow: 0 0 0 rgba(244, 191, 117, 0);
+    }
+
+    to {
+        box-shadow: 0 0 14px rgba(244, 191, 117, 0.25);
+    }
+}
+
+.hw3 #warnPlain.note[style*="display: block"] {
+    animation: note-pop 180ms ease-out;
+}
+
+.hw3 #warnCipher.note {
+    border-color: var(--border-warn);
+    color: var(--border-warn);
+    background: rgba(244, 191, 117, 0.08);
+    display: none;
+}
+
+.hw3 #warnCipher.note::before {
+    content: "⚠ ";
+    font-weight: 600;
+    margin-right: 2px;
+}
+
+.hw3 #warnCipher.note[style*="display: block"] {
+    animation: note-pop 180ms ease-out;
+}
+
+
+/* ============================
+    Popup
+   ============================ */
+.hw3 .modal .modal-c {
+    overflow-x: hidden;
+}
+
+.hw3 #candGrid {
+    overflow-x: hidden;
+}
+
+.hw3 .cand {
     text-align: left;
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 10px;
     background: var(--bg);
-  }
-  .hw3 .cand .cand-text {
-    white-space: pre-wrap;         
-    word-break: break-word;       
-    overflow-wrap: anywhere;        
-    display: -webkit-box;          
-    -webkit-line-clamp: 3;          
+}
+
+.hw3 .cand .cand-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-  .hw3 .cand.expanded .cand-text {
-    -webkit-line-clamp: unset; 
+}
+
+.hw3 .cand.expanded .cand-text {
+    -webkit-line-clamp: unset;
     overflow: visible;
-  }
-  .hw3 .cand .meta { font-size: 12px; opacity: .85; }
-  .hw3 .cand .actions {
+}
+
+.hw3 .cand .meta {
+    font-size: 12px;
+    opacity: .85;
+}
+
+.hw3 .cand .actions {
     margin-top: 6px;
     display: flex;
     gap: 8px;
     justify-content: flex-end;
-  }
-  .hw3 .btn.tiny { padding: 6px 10px; font-size: 12px; }
-  .hw3 .cand:hover {
+}
+
+.hw3 .btn.tiny {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.hw3 .cand:hover {
     background: var(--bg);
     border-color: var(--border-hover);
-  }
+}
