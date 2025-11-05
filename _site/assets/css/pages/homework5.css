@@ -1,0 +1,89 @@
+/* ===============================
+   Global CSS Variables
+   =============================== */
+:root {
+    --bg: #000000;
+    --border: #b5e853;
+    --text: #ffffff;
+    --accent: #b5e853;
+    --accent-ink: #052e16;
+    --border-hover: #63c0f5;
+
+}
+
+/* --- Boxes vari --- */
+.formula-box {
+    text-align: center;
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    width: 63%;
+    margin: 1em auto;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.formula-box_2 {
+    text-align: center;
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    width: 63%;
+    margin: 1em auto;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.table-box td,
+.table-box th {
+    text-align: center;
+}
+
+.table-box table {
+    margin: 0px;
+}
+
+.table_2-box {
+    border: 1px solid var(--border);
+    padding: 10px;
+    margin: 0 0 20px 0;
+    background-color: var(--bg);
+    border-radius: 5px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 10px;
+}
+
+table th,
+table td {
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table th {
+    background-color: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+}
+
+.example-box {
+  text-align: left;
+  font-size: 90%;
+  margin: 1em auto;
+  background-color: black;
+  color: white;
+  padding: 12px;
+  border: 1px solid #b5e853;
+  border-radius: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: block;
+}

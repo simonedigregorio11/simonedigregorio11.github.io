@@ -1,0 +1,225 @@
+/* ===============================
+   Global CSS Variables
+   =============================== */
+:root {
+    --bg: #000000;
+    --border: #b5e853;
+    --text: #ffffff;
+    --accent: #b5e853;
+    --accent-ink: #052e16;
+    --border-hover: #63c0f5;
+
+}
+
+/* --- Boxes vari --- */
+.formula-box {
+    text-align: center;
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    width: 63%;
+    margin: 1em auto;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.hw6 .panel {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    padding: 1.2rem;
+}
+
+.hw6 .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .6rem;
+    margin-bottom: 1rem;
+}
+
+.hw6 .tab-btn {
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: .7rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform .06s ease, background .2s ease, border-color .2s ease;
+}
+
+.hw6 .tab-btn:hover {
+    transform: translateY(-1px)
+}
+
+.hw6 .tab-btn[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: transparent;
+    box-shadow: 0 0 0 4px var(--ring);
+}
+
+.hw6 .row {
+    margin: .75rem 0
+}
+
+.hw6 label {
+    display: block;
+    margin-bottom: .35rem;
+    font-size: .925rem
+}
+
+.hw6 textarea,
+.hw6 input[type="number"] {
+    width: 100%;
+    padding: .8rem .9rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--ink);
+    outline: none;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+    font-size: 100%;
+}
+
+.hw6 textarea:focus,
+.hw6 input[type="number"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--ring);
+}
+
+.hw6 .grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+    .grid {
+        grid-template-columns: 1.2fr .8fr
+    }
+}
+
+.hw6 .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .9rem;
+}
+
+.hw6 .muted {
+    color: var(--muted)
+}
+
+.hw6 .mono {
+    font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+}
+
+.hw6 .data-line {
+    white-space: nowrap;
+    overflow: auto;
+    padding-bottom: .25rem
+}
+
+.hw6 .hidden {
+    display: none !important
+}
+
+.hw6 .statline {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: .35rem .75rem;
+    align-items: baseline;
+    font-size: 1.02rem;
+}
+
+.hw6 .pill {
+    display: inline-block;
+    padding: .15rem .5rem;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: .85rem;
+}
+
+.hw6 .foot {
+    margin-top: 1.2rem;
+    font-size: .9rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+.table-box td,
+.table-box th {
+    text-align: center;
+}
+
+.table-box table {
+    margin: 0px;
+}
+
+.table_2-box {
+    border: 1px solid var(--border);
+    padding: 10px;
+    margin: 0 0 20px 0;
+    background-color: var(--bg);
+    border-radius: 5px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 10px;
+}
+
+table th,
+table td {
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table th {
+    background-color: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+}
+
+/* ===============================
+   Buttons (base)
+   =============================== */
+.hw6 button {
+  background-color: var(--bg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: var(--border-hover);
+  border: 2px solid var(--border);
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* ===============================
+   Buttons (hover)
+   =============================== */
+.hw6 button:hover {
+  border-color: var(--border);
+  box-shadow: 0 0 6px var(--border);
+  transform: translateY(-1px);
+}
+
+/* ===============================
+   Buttons (danger variant)
+   =============================== */
+.hw6 #btn-clear-bulk,
+.hw6 #btn-reset {
+  color: white;
+  background-color: darkred;
+}

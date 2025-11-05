@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/assets/css/custom.css">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup theme-color -->
+<!-- start theme color meta headers -->
+<meta name="theme-color" content="#151515">
+<meta name="msapplication-navbutton-color" content="#151515">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- end theme color meta headers -->
+
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Homework 5 | Simone’s Statistics Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Homework 5" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/homework5/" />
+<meta property="og:url" content="http://localhost:4000/homework5/" />
+<meta property="og:site_name" content="Simone’s Statistics Blog" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Homework 5" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"Homework 5","url":"http://localhost:4000/homework5/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <a id="a-title" href="/">
+          <h1>Simone's Statistics Blog</h1>
+        </a>
+        <h2></h2>
+
+        <section id="downloads">
+          
+          <a href="https://github.com/simonedigregorio11/simonedigregorio11.github.io" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+          <nav style="background: url('/assets/images/bkg.png'); padding-bottom: 20px; font-family: sans-serif;">
+            <ul class="navbar" style="list-style: none; margin: 0; padding: 0; display: flex; align-items: center;">
+              <li><a href="/" style="color: #63c0f5; text-decoration: none; font-size: 25px;">Home</a></li>
+
+              <li style="position: relative;">
+                <a href="#" style="color: #63c0f5; text-decoration: none; font-size: 25px; ">Homework ▾</a>
+                <ul style="
+                  display: none;
+                  position: absolute;
+                  background-color: #333;
+                  list-style: none;
+                  padding: 10px;
+                  margin: 0;
+                  border-radius: 6px;
+                  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                ">
+                  <li><a href="/homework1/" style="color: #63c0f5; text-decoration: none; display: block; padding: 5px 10px; font-size: 18px;">Homework 1</a></li>
+                  <li><a href="/homework2/" style="color: #63c0f5; text-decoration: none; display: block; padding: 5px 10px; font-size: 18px">Homework 2</a></li>
+                  <li><a href="/homework3/" style="color: #63c0f5; text-decoration: none; display: block; padding: 5px 10px; font-size: 18px">Homework 3</a></li>
+                  <li><a href="/homework4/" style="color: #63c0f5; text-decoration: none; display: block; padding: 5px 10px; font-size: 18px">Homework 4</a></li>
+                  <li><a href="/homework5/" style="color: #63c0f5; text-decoration: none; display: block; padding: 5px 10px; font-size: 18px">Homework 5</a></li>
+                  <li><a href="/homework6/" style="color: #63c0f5; text-decoration: none; display: block; padding: 5px 10px; font-size: 18px">Homework 6</a></li>
+                </ul>
+              </li>
+
+              <li><a href="/about/" style="color: #63c0f5; text-decoration: none; font-size: 25px;">About</a></li>
+            </ul>
+          </nav>
+
+          <script>
+            document.querySelectorAll("nav li").forEach(li => {
+              li.addEventListener("mouseenter", () => {
+                const submenu = li.querySelector("ul");
+                if (submenu) submenu.style.display = "block";
+              });
+              li.addEventListener("mouseleave", () => {
+                const submenu = li.querySelector("ul");
+                if (submenu) submenu.style.display = "none";
+              });
+            });
+          </script>
+        <link rel="stylesheet" href="/assets/css/pages/homework5.css" />
+
+<p><a href="/">← Back to Home</a></p>
+
+<hr />
+
+<h1 id="introduction"><strong>Introduction</strong></h1>
+
+<p>In statistics, a <strong>measure of location</strong>, often called an <strong>average</strong> or <strong>measure of central tendency</strong>, is a single
+numerical value that represents the “typical” or “central” point of a dataset. Such measures are crucial for summarizing
+data, describing populations, and making comparisons across different samples. They condense complex sets of
+observations into a manageable and interpretable form, allowing researchers to communicate findings efficiently and to
+detect anomalies, trends, or asymmetries.</p>
+
+<p>However, not all data behave in the same way, and not all averages convey the same information. The choice of which
+<strong>measure of location</strong> to use depends on the <strong>nature of the variable</strong>, the <strong>presence of outliers</strong>, and the
+<strong>conceptual meaning</strong> of “central” within the given context. This essay discusses the main <strong>measures of location</strong>
+that have been proposed, explains <strong>how they are calculated</strong>, and clarifies <strong>when each of them is meaningful or
+useful</strong>.</p>
+
+<h2 id="the-arithmetic-mean"><strong>The Arithmetic Mean</strong></h2>
+
+<p>The <strong>arithmetic mean</strong> is the most familiar <strong>measure of location</strong>. It is calculated as the <strong>sum of all data values
+divided by the number of observations</strong>:</p>
+
+<div class="formula-box">
+    x&#772; = ∑<sub>i=1</sub><sup>n</sup> x<sub>i</sub> / n
+</div>
+<p>​</p>
+
+<p>It represents the point at which the dataset would balance if its values were weights placed on a scale. Because of its
+mathematical properties, it plays a central role in <strong>inferential statistics</strong>, <strong>estimation</strong>, and <strong>hypothesis
+testing</strong>.</p>
+
+<div class="example-box">
+<strong>Example</strong><br />
+Consider five exam scores: 60, 70, 80, 90, and 100.<br />
+The arithmetic mean is: 
+
+<div class="formula-box_2">
+(60 + 70 + 80 + 90 + 100) / 5 = 80
+</div>
+which indicates the “average” performance of the students.
+</div>
+
+<ul>
+  <li>
+    <p><strong>When useful</strong><br />
+The arithmetic mean works best when the distribution is <strong>symmetric</strong> and <strong>free of extreme outliers</strong>. In such cases,
+it captures the true <strong>central value</strong> and provides a meaningful basis for comparison. It is also appropriate when every
+observation contributes <strong>equally</strong> to the total — such as in physical measurements or laboratory data.</p>
+  </li>
+  <li>
+    <p><strong>When misleading</strong><br />
+If the data are <strong>skewed</strong>, the mean may be distorted by <strong>extreme values</strong>.<br />
+For example, in a dataset of annual incomes {20k, 22k, 25k, 30k, 200k}, the mean is 59.4k, which does not represent the
+majority.<br />
+In such situations, other measures like the <strong>median</strong> provide a more realistic picture.</p>
+  </li>
+</ul>
+
+<h2 id="the-median"><strong>The Median</strong></h2>
+
+<p>The <strong>median</strong> is the value that <strong>divides a dataset into two equal halves</strong> when ordered from smallest to largest. If
+the number of observations is odd, the median is the <strong>middle value</strong>; if even, it is the <strong>average of the two central
+values</strong>.</p>
+
+<div class="example-box">
+<strong>Example</strong><br />
+For the exam scores {60, 70, 80, 90, 100}, the median is <strong>80</strong>.<br />
+For the incomes {20k, 22k, 25k, 30k, 200k}, the median is <strong>25k</strong>, which accurately reflects the “typical” income for
+most individuals.
+</div>
+
+<ul>
+  <li>
+    <p><strong>When useful</strong><br />
+The median is a <strong>robust statistic</strong>: it is not influenced by extreme or erroneous values.<br />
+It is therefore appropriate for <strong>skewed</strong> or <strong>non-normal</strong> distributions, such as <strong>personal income</strong>, <strong>property
+prices</strong>, or <strong>waiting times</strong>.</p>
+  </li>
+  <li>
+    <p><strong>Interpretation</strong><br />
+While the mean provides an <strong>arithmetic balance point</strong>, the median represents a <strong>positional balance</strong>: 50% of the
+observations lie below it and 50% above.<br />
+This makes it more informative when the goal is to understand the <strong>distribution of outcomes</strong> rather than their
+numerical magnitude.</p>
+  </li>
+</ul>
+
+<h2 id="the-mode"><strong>The Mode</strong></h2>
+
+<p>The <strong>mode</strong> is the <strong>most frequently occurring value</strong> in a dataset.<br />
+Unlike the mean and median, the mode can be applied to both <strong>qualitative (categorical)</strong> and <strong>quantitative</strong> data.</p>
+
+<div class="example-box">
+<strong>Examples</strong><br />
+For shoe sizes among students {42, 42, 43, 44, 42, 43}, the mode is <strong>42</strong>.<br />
+For car colors in a parking lot {red, blue, blue, white, blue, black}, the mode is <strong>blue</strong>.
+</div>
+
+<ul>
+  <li>
+    <p><strong>When useful</strong><br />
+The mode is especially relevant when data are <strong>categorical</strong> or <strong>discrete</strong>, where arithmetic operations are
+meaningless.<br />
+It indicates the <strong>most common or popular category</strong>.<br />
+In continuous data, the mode corresponds to the <strong>peak of the probability density function</strong>, representing the <strong>most
+probable value</strong>.<br /></p>
+  </li>
+  <li>
+    <p><strong>Limitations</strong><br />
+A dataset may have <strong>no mode</strong> (if all values are unique), or <strong>several modes</strong> (bimodal or multimodal distributions).
+In such cases, the mode signals that the population might contain <strong>distinct subgroups</strong> — useful information in
+<strong>marketing</strong>, <strong>biology</strong>, or <strong>sociology</strong>.</p>
+  </li>
+</ul>
+
+<h2 id="the-geometric-mean"><strong>The Geometric Mean</strong></h2>
+
+<p>The <strong>geometric mean</strong> is defined as:</p>
+
+<div class="formula-box"> G = (∏<sub>i=1</sub><sup>n</sup> x<sub>i</sub>)<sup>1/n</sup> </div>
+
+<p>It is suitable for <strong>multiplicative</strong> or <strong>ratio-based</strong> data, such as <strong>growth rates</strong>, <strong>financial returns</strong>, or
+<strong>environmental concentrations</strong>.</p>
+
+<div class="example-box">
+<strong>Example</strong><br />
+Suppose an investment increases by 10%, 20%, and 30% in three consecutive years.<br />
+The arithmetic mean rate of 20% <strong>overstates</strong> the actual performance.<br />
+</div>
+
+<p>Using the geometric mean:<br /></p>
+
+<div class="formula-box">
+    (1.10 &times; 1.20 &times; 1.30)<sup>1&#8260;3</sup> − 1 = 0.192 (19.2%)
+</div>
+
+<p>This value correctly reflects the <strong>compound annual growth rate</strong>.<br /></p>
+
+<ul>
+  <li><strong>When useful</strong><br />
+The geometric mean is appropriate whenever the data are <strong>proportional</strong> or <strong>scale-dependent</strong>, and when changes occur
+in <strong>multiplicative</strong> rather than <strong>additive</strong> form, such as <strong>population growth</strong>, <strong>inflation</strong>, or <strong>interest
+accumulation</strong>.
+It ensures that equal percentage increases and decreases offset each other correctly.</li>
+</ul>
+
+<h2 id="the-harmonic-mean"><strong>The Harmonic Mean</strong></h2>
+
+<p>The <strong>harmonic mean</strong> is calculated as:</p>
+
+<div class="formula-box"> H = n &frasl; (∑<sub>i=1</sub><sup>n</sup> 1&frasl;x<sub>i</sub>) </div>
+
+<p>It gives <strong>greater weight to smaller values</strong> and is therefore useful when dealing with <strong>rates</strong> or <strong>ratios</strong>.</p>
+
+<div class="example-box">
+<strong>Example</strong><br />
+A car travels 60 km at 60 km/h and another 60 km at 120 km/h.<br />
+The average speed is not (60 + 120)/2 = 90 km/h, because the car spends more time at the slower speed.<br />
+The correct average speed is: <br />
+
+<div class="formula-box_2">H = 2 / ((1/60) + (1/120)) = 80 km/h</div>
+</div>
+
+<p>This reflects the <strong>true overall rate</strong>.</p>
+
+<ul>
+  <li><strong>When useful</strong><br />
+The harmonic mean is ideal for situations involving <strong>rates</strong> (speed, density, efficiency) or <strong>ratios</strong> (e.g., P/E
+ratios in finance), where the quantity being averaged is in the <strong>denominator</strong> of a relationship.</li>
+</ul>
+
+<h2 id="weighted-and-trimmed-means"><strong>Weighted and Trimmed Means</strong></h2>
+
+<p>A <strong>weighted mean</strong> assigns <strong>different levels of importance</strong> to each observation. It is calculated as:</p>
+
+<div class="formula-box"> x&#772;<sub>w</sub> = (∑ w<sub>i</sub>x<sub>i</sub>) &frasl; (∑ w<sub>i</sub>) </div>
+
+<p>where
+w<sub>i</sub> are the <strong>weights</strong>.</p>
+
+<div class="example-box">
+<strong>Example</strong><br />
+In a course where the midterm counts 40% and the final exam 60%, a student who scores 75 and 85 obtains:
+
+<div class="formula-box_2">
+(0.4×75) + (0.6×85) = 81
+</div>
+</div>
+
+<p>The weighted mean reflects the <strong>greater importance</strong> of the final exam.<br /></p>
+
+<p>A <strong>trimmed mean</strong> is computed after removing a fixed percentage of the <strong>smallest and largest observations</strong> (e.g., 5%
+or 10% on each side).<br />
+It combines the <strong>stability of the median</strong> with the <strong>efficiency of the mean</strong>, and is often used in <strong>official
+statistics</strong> (e.g., inflation measures) to <strong>mitigate the influence of outliers</strong>.</p>
+
+<h2 id="choosing-the-appropriate-measure"><strong>Choosing the Appropriate Measure</strong></h2>
+
+<p>The different <strong>measures of location</strong> are not interchangeable.
+Each responds differently to the <strong>shape of the distribution</strong>, the <strong>scale of measurement</strong>, and the <strong>purpose of the analysis</strong>.</p>
+
+<table class="table_2-box">
+    <thead>
+        <tr>
+            <th>Situation</th>
+            <th>Recommended measure</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Symmetric distribution, no outliers</td>
+            <td>Arithmetic mean</td>
+            <td>Reflects balance point and total magnitude</td>
+        </tr>
+        <tr>
+            <td>Skewed data, outliers present</td>
+            <td>Median</td>
+            <td>Resistant to extreme values</td>
+        </tr>
+        <tr>
+            <td>Categorical or nominal data</td>
+            <td>Mode</td>
+            <td>Identifies most frequent category</td>
+        </tr>
+        <tr>
+            <td>Multiplicative growth or percentages</td>
+            <td>Geometric mean</td>
+            <td>Captures compound proportional change</td>
+        </tr>
+        <tr>
+            <td>Rates, ratios, or speeds</td>
+            <td>Harmonic mean</td>
+            <td>Properly averages inverses</td>
+        </tr>
+        <tr>
+            <td>Outliers but roughly symmetric</td>
+            <td>Trimmed mean</td>
+            <td>Balance between robustness and efficiency</td>
+        </tr>
+        <tr>
+            <td>Different importance of observations</td>
+            <td>Weighted mean</td>
+            <td>Reflects relative significance</td>
+        </tr>
+    </tbody>
+</table>
+
+<h1 id="measures-of-dispersion"><strong>Measures of Dispersion</strong></h1>
+<p>While <strong>measures of location</strong> identify the <strong>central point</strong> of a dataset, they do not describe how widely the data are <strong>spread</strong> around that center.
+Two datasets can have the same <strong>mean</strong> but very different <strong>variability</strong>.<br />
+<strong>Measures of dispersion</strong> quantify this variability, providing essential information about the <strong>stability</strong>, <strong>consistency</strong>, and <strong>reliability</strong> of data.<br /></p>
+
+<p>Dispersion measures are crucial in <strong>descriptive statistics</strong>, <strong>quality control</strong>, <strong>risk analysis</strong>, and <strong>experimental design</strong>, as they reveal how <strong>concentrated</strong> or <strong>scattered</strong> the observations are.<br /></p>
+
+<h2 id="range"><strong>Range</strong></h2>
+
+<p>The <strong>range</strong> is the simplest <strong>measure of dispersion</strong>.<br />
+It is the difference between the <strong>maximum</strong> and <strong>minimum</strong> values in the dataset:</p>
+
+<div class="formula-box"> Range = max(x<sub>i</sub>) − min(x<sub>i</sub>) </div>
+
+<div class="example-box">
+<strong>Example</strong><br />
+For the dataset {10, 12, 13, 15, 20},<br />
+the range is 20 − 10 = <strong>10</strong>.<br />
+</div>
+
+<ul>
+  <li>
+    <p><strong>Advantages</strong></p>
+
+    <ul>
+      <li>Easy to compute and interpret.</li>
+      <li>Gives a quick sense of the total spread.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Limitations</strong></p>
+
+    <ul>
+      <li><strong>Extremely sensitive</strong> to outliers.</li>
+      <li>Does not reflect how the intermediate data are distributed.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="interquartile-range-iqr"><strong>Interquartile Range (IQR)</strong></h2>
+
+<p>The <strong>interquartile range (IQR)</strong> focuses on the <strong>middle 50%</strong> of the data and is defined as:</p>
+
+<div class="formula-box"> IQR = Q<sub>3</sub> − Q<sub>1</sub> </div>
+
+<p>where
+Q<sub>1</sub> = <strong>25th percentile (first quartile)</strong>
+Q<sub>3</sub> = <strong>75th percentile (third quartile)</strong></p>
+
+<div class="example-box">
+<strong>Example</strong><br />
+For {10, 12, 13, 15, 20},<br />
+Q<sub>1</sub> = 12, Q<sub>3</sub> = 15 → IQR = 15 − 12 = <strong>3</strong>.
+</div>
+
+<ul>
+  <li>
+    <p><strong>Advantages</strong></p>
+
+    <ul>
+      <li><strong>Robust</strong> against outliers.</li>
+      <li>Represents the typical spread of the <strong>central portion</strong> of data.</li>
+      <li>Used in <strong>boxplots</strong> and <strong>nonparametric summaries</strong>.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Limitations</strong></p>
+
+    <ul>
+      <li>Ignores the <strong>outer 50%</strong> of data.</li>
+      <li>Less efficient than <strong>variance</strong> for symmetric distributions.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="variance"><strong>Variance</strong></h2>
+
+<p>The <strong>variance</strong> measures the <strong>average squared deviation</strong> of observations from the <strong>mean</strong>:</p>
+
+<div class="formula-box"> s² = ∑(x<sub>i</sub> − x&#772;)² / (n − 1) </div>
+
+<p>Squaring the deviations ensures that both <strong>positive</strong> and <strong>negative</strong> differences contribute to the total variability.<br /></p>
+
+<div class="example-box">
+<strong>Example</strong><br />
+For {2, 4, 6, 8},<br />
+x̄ = 5 → Variance = [(2−5)² + (4−5)² + (6−5)² + (8−5)²]/3 = <strong>6.67</strong>
+</div>
+
+<ul>
+  <li>
+    <p><strong>Advantages</strong></p>
+
+    <ul>
+      <li>Fundamental for <strong>inferential statistics</strong> and <strong>ANOVA</strong>.</li>
+      <li>Used to derive <strong>standard deviation</strong> and many <strong>probabilistic models</strong>.</li>
+      <li>Sensitive to all data points.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Limitations</strong></p>
+
+    <ul>
+      <li>Expressed in <strong>squared units</strong> (e.g., m², €²), making interpretation less direct.</li>
+      <li><strong>Highly influenced</strong> by outliers.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="standard-deviation"><strong>Standard Deviation</strong></h2>
+
+<p>The <strong>standard deviation (s)</strong> is the <strong>square root</strong> of the variance, restoring the same units as the data:</p>
+
+<div class="formula-box"> s = √s² = √(∑(x<sub>i</sub> − x&#772;)² / (n − 1)) </div>
+
+<div class="example-box">
+<strong>Example</strong><br />
+Using the previous data: s = √6.67 = <strong>2.58</strong>.
+</div>
+
+<ul>
+  <li>
+    <p><strong>Advantages</strong></p>
+
+    <ul>
+      <li>Most widely used <strong>measure of dispersion</strong>.</li>
+      <li>Interpretable in the <strong>same units</strong> as the data.</li>
+      <li>Directly connected to the <strong>normal distribution</strong> (≈68% of data lie within ±1s of the mean).</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Limitations</strong></p>
+
+    <ul>
+      <li>Sensitive to <strong>extreme values</strong> and <strong>skewness</strong>.</li>
+      <li>Assumes that the <strong>mean</strong> is a meaningful central measure.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="coefficient-of-variation-cv"><strong>Coefficient of Variation (CV)</strong></h2>
+
+<p>The <strong>coefficient of variation</strong> expresses dispersion <strong>relative to the mean</strong>, as a percentage:</p>
+
+<div class="formula-box"> CV = (s / x&#772;) × 100% </div>
+
+<div class="example-box">
+<strong>Example</strong><br />
+If x̄ = 50 and s = 5 → CV = (5/50)×100 = <strong>10%</strong>.
+</div>
+
+<ul>
+  <li>
+    <p><strong>Advantages</strong></p>
+
+    <ul>
+      <li><strong>Unit-free</strong> measure, allowing comparison across variables with different scales.</li>
+      <li>Useful in <strong>finance</strong>, <strong>economics</strong>, and <strong>reliability analysis</strong>.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Limitations</strong></p>
+
+    <ul>
+      <li>Not meaningful when the <strong>mean</strong> is near zero.</li>
+      <li>Requires data on a <strong>ratio scale</strong>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="summary-table"><strong>Summary Table</strong></h2>
+
+<table class="table_2-box">
+  <thead>
+    <tr>
+      <th>Measure</th>
+      <th>Formula</th>
+      <th>Best for</th>
+      <th>Strengths</th>
+      <th>Limitations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Range</strong></td>
+      <td>max − min</td>
+      <td>Quick overview of spread</td>
+      <td>Simple, intuitive</td>
+      <td>Distorted by outliers</td>
+    </tr>
+    <tr>
+      <td><strong>IQR</strong></td>
+      <td>Q<sub>3</sub> − Q<sub>1</sub></td>
+      <td>Skewed or non-normal data</td>
+      <td>Robust, focuses on central data</td>
+      <td>Ignores tails of distribution</td>
+    </tr>
+    <tr>
+      <td><strong>Variance</strong></td>
+      <td>∑(x − x&#772;)² / (n − 1)</td>
+      <td>Analytical and inferential use</td>
+      <td>Mathematically powerful</td>
+      <td>In squared units, less intuitive</td>
+    </tr>
+    <tr>
+      <td><strong>Standard deviation</strong></td>
+      <td>√(∑(x − x&#772;)² / (n − 1))</td>
+      <td>Normal or near-normal data</td>
+      <td>Widely used, easy to interpret</td>
+      <td>Sensitive to outliers</td>
+    </tr>
+    <tr>
+      <td><strong>Coefficient of variation</strong></td>
+      <td>(s / x&#772;) × 100%</td>
+      <td>Comparing variability across scales</td>
+      <td>Unitless, versatile</td>
+      <td>Not meaningful when mean ≈ 0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="conclusion"><strong>Conclusion</strong></h2>
+<p>Together, <strong>measures of location</strong> and <strong>measures of dispersion</strong> provide a complete description of a dataset.<br />
+The <strong>measures of location</strong> (mean, median, mode, etc.) identify where the data tend to cluster, while the <strong>measures of dispersion</strong> (range, IQR, variance, standard deviation) indicate how tightly or loosely the data are spread around that center.<br /><br />
+A good statistical summary must always include <strong>both</strong>, since the same average can represent very different realities depending on the underlying variability.<br />
+Understanding their <strong>appropriate use</strong>, <strong>advantages</strong>, and <strong>limitations</strong> allows researchers to make accurate interpretations and reliable comparisons across different contexts and datasets.</p>
+
+<hr />
+
+        © 2025 Simone Di Gregorio — Statistics Course Blog
+      </section>
+    </div>
+  </body>
+</html>
