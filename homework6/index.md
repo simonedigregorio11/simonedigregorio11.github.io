@@ -10,6 +10,148 @@ permalink: /homework6/
 
 ---
 
+# **Online Computation of Mean and Variance**
+
+# **Introduction**
+
+In statistics, measures such as the **mean** and **variance** are fundamental descriptors of a dataset’s central
+tendency and dispersion.
+Beyond their theoretical importance, these quantities are also central to real-world data analysis, where observations
+often arrive **sequentially** rather than all at once.
+
+Traditional or “batch” methods compute the mean and variance using cumulative sums over the entire dataset.
+While conceptually simple, such approaches require storing all past observations and performing large arithmetic
+operations, which makes them **memory-intensive** and **numerically unstable**—especially when handling long data
+streams or large-scale computations.
+
+To overcome these limitations, **online (incremental) algorithms** update statistics as each new observation arrives.
+Instead of recomputing everything from scratch, they apply compact **recurrence relationships** that keep only a few
+running variables.
+Among these, **Welford’s method** is one of the most elegant and stable formulations, providing accurate results even in
+the presence of rounding errors.
+
+This assignment has two main goals:
+
+**1.** To **derive analytically** the recurrence formulas for the arithmetic mean and variance;
+
+**2.** To **implement and test** an **online algorithm** that updates these statistics incrementally as new data become
+available.
+
+An interactive demo is also provided to visualize how the mean and variance evolve in real time, illustrating the
+connection between mathematical derivation and computational implementation.
+
+## **Analytical Derivations: Recurrences for Mean and Variance**
+
+Let x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>n</sub> be the observations.
+Define the running mean
+
+<div class="formula-box">
+    μ<sub>k</sub> = (x<sub>1</sub> + ... + x<sub>k</sub>) / k.
+</div>
+
+Also define
+
+<div class="formula-box">
+    M2<sub>k</sub> = Σ<sub>i=1..k</sub>(x<sub>i</sub> − μ<sub>k</sub>)<sup>2</sup>,
+</div>
+
+the sum of squared deviations from the current mean.
+
+### **1. Recurrence for the arithmetic mean**
+
+<div class="formula-box">
+    μ<sub>n</sub> = (x<sub>1</sub> + ... + x<sub>n−1</sub> + x<sub>n</sub>) / n
+</div>
+
+Since **x<sub>1</sub> + ... + x<sub>n−1</sub> = (n−1)·μ<sub>n−1</sub>**, we obtain:
+
+<div class="formula-box">
+    μ<sub>n</sub> = [(n−1)·μ<sub>n−1</sub> + x<sub>n</sub>] / n = μ<sub>n−1</sub> + (x<sub>n</sub> − μ<sub>n−1</sub>) /
+    n
+</div>
+
+**Interpretation:**
+the new mean equals the old mean plus 1/n of the innovation (x<sub>n</sub> − μ<sub>n−1</sub>).
+
+### **2. Recurrence for variance via Welford’s M2**
+
+Let:
+<div class="formula-box">
+    δ = x<sub>n</sub> − μ<sub>n−1</sub>
+</div>
+
+and update:
+
+<div class="formula-box">
+    μ<sub>n</sub> = μ<sub>n−1</sub> + δ / n.
+</div>
+
+Let:
+
+<div class="formula-box">
+    δ′ = x<sub>n</sub> − μ<sub>n</sub> (note δ′ = δ·(1 − 1/n)).
+</div>
+
+Then:
+
+<div class="formula-box">
+    M2<sub>n</sub> = M2<sub>n−1</sub> + δ · δ′
+</div>
+
+**Proof sketch:**
+
+<div class="formula-box">
+
+    M2<sub>n</sub> = Σ<sub>i=1..n</sub>(x<sub>i</sub> − μ<sub>n</sub>)<sup>2</sup>
+    = Σ<sub>i=1..n−1</sub>(x<sub>i</sub> − μ<sub>n</sub>)<sup>2</sup> + (x<sub>n</sub> − μ<sub>n</sub>)<sup>2</sup>
+</div>
+
+Using:
+
+<div class="formula-box">
+    (x<sub>i</sub> − μ<sub>n</sub>) = (x<sub>i</sub> − μ<sub>n−1</sub>) − (μ<sub>n</sub> − μ<sub>n−1</sub>)
+</div>
+
+and μ<sub>n</sub> − μ<sub>n−1</sub> = δ / n, the cross term vanishes because:
+
+<div class="formula-box">
+    Σ<sub>i=1..n−1</sub>(x<sub>i</sub> − μ<sub>n−1</sub>) = 0.
+</div>
+
+Simplifying yields:
+
+<div class="formula-box">
+    δ · (x<sub>n</sub> − μ<sub>n</sub>) = δ · δ′.
+</div>
+
+<div style="text-align:right; margin-right: 150px">
+    □
+</div>
+
+### **3. Sample and population variance from M2**
+
+Population variance:
+
+<div class="formula-box">
+    σ<sup>2</sup><sub>n</sub> = M2<sub>n</sub> / n
+</div>
+
+Sample variance (unbiased):
+
+<div class="formula-box">
+    s<sup>2</sup><sub>n</sub> = M2<sub>n</sub> / (n − 1)
+</div>
+
+**Meaning of x<sub>n</sub>:** x<sub>n</sub> denotes the n-th observation (the newly arrived data point).<br><br><br>
+
+We purposefully avoid the batch formula
+
+<div class="formula-box">
+    Var = (Σx² − (Σx)²/n)/(n−1)
+</div>
+
+due to catastrophic cancellation in floating-point arithmetic.
+
 # **Mean and Variance Calculator Demo**
 
 <div class="hw6">
@@ -125,12 +267,14 @@ permalink: /homework6/
                 return;
             }
             el.innerHTML = `
-      <div class="statline"><span>Data (n)</span><span>${stats.count}</span></div>
-      <div class="statline"><span>Values</span><span class="mono">[${displayArr.join(', ')}]</span></div>
-      <div class="statline"><span>Mean</span><span>${format4(stats.mean)}</span></div>
-      <div class="statline"><span>Variance</span><span>${format4(stats.varianceSample)}</span></div>
-    `;
+    <div class="statline"><span>Data (n)</span><span>${stats.count}</span></div>
+    <div class="statline"><span>Values</span><span class="mono">[${displayArr.join(', ')}]</span></div>
+    <div class="statline"><span>Mean (μ)</span><span>${format4(stats.mean)}</span></div>
+    <div class="statline"><span>Sample variance (s²)</span><span>${format4(stats.varianceSample)}</span></div>
+    <div class="statline"><span class="muted">Population variance (σ²)</span><span class="muted">${format4(stats.variancePopulation)}</span></div>
+  `;
         }
+
 
         function setTab(mode /* 'bulk' | 'step' */) {
             const bulkTab = byId('tab-bulk');
@@ -221,24 +365,194 @@ permalink: /homework6/
 
 ## **Code of the demo and explanation**
 
+The implementation consists of a compact JavaScript module that demonstrates the **online computation of mean and
+variance** through **Welford’s recurrence relations**.<br>
+The code is organized into logically separated blocks for clarity, modularity, and maintainability.<br>
+
 ![code](/assets/images/code_4.png)
 
+### **1. OnlineStats Class — Core Algorithm**
+
+```js
+class OnlineStats {
+constructor() { this.reset(); }
+reset() { this.n = 0; this.mean = 0; this.M2 = 0; }
+add(x) { ... } // incremental update
+get varianceSample() { ... }
+get variancePopulation() { ... }
+}
+```
+
+- Purpose: encapsulates the online (incremental) update logic.
+
+- Variables maintained:
+
+- n: number of observations.
+
+- mean: running mean <sub>μ</sub>.
+
+- M2: cumulative sum of squared deviations ∑(x<sub>i</sub> − μ<sub>n</sub>)<sup>2</sup>.
+
+- Key formulae implemented:
+
+<div class="formula-box">
+    μ<sub>n</sub> = μ<sub>n−1</sub> + (x<sub>n</sub>-μ<sub>n-1</sub>) / n , M2<sub>n</sub> = M2<sub>n−1</sub> +
+    (x<sub>n</sub> - μ<sub>n-1</sub>)(x<sub>n</sub> - μ<sub>n</sub>)
+</div>
+
+- Advantages:
+
+- No need to store previous data (constant O(1) space).
+
+- Resistant to catastrophic cancellation and floating-point overflow.
+
+### **2. State Management**
+
+```js
+const state = {
+data: [],
+stats: new OnlineStats(),
+lastDisplay: []
+};
+```
+
+- Centralizes the live data, current statistics, and last computed vector.
+
+- Enables **two input modes** (“Paste Full Vector” vs. “Add One by One”) to share the same computational backend.
+
+### **3. Input Parsing and Validation**
+
+```js
+function parseNumbers(text) {
+if (!text) return [];
+return text.split(/[\s,;]+/g)
+.map(s => parseFloat(s))
+.filter(n => Number.isFinite(n));
+}
+```
+
+- Accepts flexible delimiters (commas, spaces, newlines, semicolons).
+
+- Filters out invalid or non-numeric inputs.
+
+- Keeps the interface robust against formatting inconsistencies.<br>
+
+(A localized version can optionally normalize commas as decimal points, e.g. “3,14 → 3.14”.)
+
+### **4. Rendering of Results**
+
+```js
+function renderResults(displayArr, stats) { ... }
+```
+- Dynamically updates the HTML view each time new data are processed.
+
+- Displays:
+
+- sample size n,
+
+- full data vector,
+
+- mean (μ),
+
+- sample variance (s²) and population variance (σ²).
+
+- Values are formatted to four decimals for readability.<br>
+
+This function connects the mathematical computation with an **interactive visual output**, reinforcing conceptual
+understanding.
+
+### **5. Event Wiring and Interaction Logic**
+
+```js
+function init() {
+// tab selection, bulk mode, step-by-step mode, reset handlers
+...
+init();
+}
+```
+
+- Manages user interaction across both input modes.
+
+- “Paste Full Vector”: parses and processes all numbers at once.
+
+- “Add One by One”: updates statistics in real time as new data arrive.
+
+- Includes keyboard shortcuts (Enter to add quickly) and ARIA roles for accessibility.
+
+This architecture mimics how streaming data are processed in modern analytics systems.
+
+### **6. User Interface Components**
+
+- Tabs toggle between batch (bulk) and streaming (step) input modes.
+
+- Result panel shows the current summary statistics.
+
+- Footer note reminds that the variance computed is the sample variance (n−1).
+
+The HTML and CSS structure ensure semantic clarity and responsiveness while focusing on the statistical content rather
+than layout aesthetics.
+
+### **7. Summary**
+The code exemplifies how theoretical recurrences for the **mean and variance** can be implemented in a concise, stable,
+and efficient form.<br>
+By combining mathematical rigor with clean software design, the demo provides both an analytical and computational
+understanding of **online statistics** — bridging the gap between formula derivation and real-time application.
+
+## **Quick Implementation Tests**
+
+Use the **Paste Full Vector** tab and verify that the results match the expected values below
+(using the sample variance with denominator n − 1).
+
+<table class="table_2-box">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>n</th>
+            <th>Mean</th>
+            <th>Sample Variance (s<sup>2</sup>)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>[2]</td>
+            <td>1</td>
+            <td>2.0000</td>
+            <td>N/A</td>
+        </tr>
+        <tr>
+            <td>[1, 2]</td>
+            <td>2</td>
+            <td>1.5000</td>
+            <td>0.5000</td>
+        </tr>
+        <tr>
+            <td>[1, 2, 3, 4]</td>
+            <td>4</td>
+            <td>2.5000</td>
+            <td>1.6667</td>
+        </tr>
+        <tr>
+            <td>[10, 10, 10]</td>
+            <td>3</td>
+            <td>10.0000</td>
+            <td>0.0000</td>
+        </tr>
+        <tr>
+            <td>[−1, 0, 1]</td>
+            <td>3</td>
+            <td>0.0000</td>
+            <td>1.0000</td>
+        </tr>
+    </tbody>
+</table>
+
+Repeat the same in **Add One by One** mode and confirm identical final results.
+
 # **Conclusion**
-
-**Measures of location** are fundamental tools in statistics because they translate complex data into a single
-interpretable number.<br>
-Yet, the concept of **“average”** is **context-dependent**.<br>
-The **arithmetic mean** is powerful but **sensitive to outliers**; the **median** is **robust** but less responsive to
-small variations; the **mode** reveals **popularity** rather than balance.<br>
-The **geometric** and **harmonic means** adapt to **multiplicative** or **rate-based processes**, while **weighted** and
-**trimmed means** refine the analysis when data are **heterogeneous** or **contain anomalies**.<br>
-
-Ultimately, **no single measure is universally superior**.<br>
-A wise analyst first **examines the data distribution**, identifies its **characteristics**, and then selects the
-**measure** that most accurately represents the **central tendency** relevant to the research question.<br>
-Properly chosen, the **measure of location** not only summarizes the dataset but also **preserves its underlying meaning
-and structure**, ensuring that statistical conclusions remain both **valid** and **insightful**.
-
+This demo shows how the mean and variance can be updated online with **O(1)** memory and time per datum.
+Compared to batch formulas, **Welford’s** recurrences avoid catastrophic cancellation and reduce error propagation,
+while remaining simple and fast for real-time or streaming data.
+In short: online estimators are the practical default when data arrive sequentially or are too large to store.
 
 # **Numerical Stability and Computational Advantages of Online Algorithms**
 
@@ -263,7 +577,7 @@ This approach offers several key advantages:
 - **Memory efficiency**
 <div class="text-box">
     Only a few scalar variables (n, mean, M2) are maintained, so the memory requirement is
-    <strong>O(1)</strong>—constant and independent of the sample size.
+    <strong>O(1)</strong>, constant and independent of the sample size.
     Batch methods, in contrast, require <strong>O(n)</strong> memory to store all data.
 </div>
 

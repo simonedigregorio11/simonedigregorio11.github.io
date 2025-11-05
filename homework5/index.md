@@ -9,6 +9,7 @@ permalink: /homework5/
 [← Back to Home](/)
 
 ---
+# **Measures of Location and Dispersion**
 
 # **Introduction**
 
@@ -260,11 +261,13 @@ the range is 20 − 10 = <strong>10</strong>.<br>
 - **Advantages**
 
   - Easy to compute and interpret.
+
   - Gives a quick sense of the total spread.
 
 - **Limitations**
 
   - **Extremely sensitive** to outliers.
+
   - Does not reflect how the intermediate data are distributed.
 
 ## **Interquartile Range (IQR)**
@@ -286,12 +289,15 @@ Q<sub>1</sub> = 12, Q<sub>3</sub> = 15 → IQR = 15 − 12 = <strong>3</strong>.
 - **Advantages**
 
   - **Robust** against outliers.
+
   - Represents the typical spread of the **central portion** of data.
+
   - Used in **boxplots** and **nonparametric summaries**.
 
 - **Limitations**
 
   - Ignores the **outer 50%** of data.
+
   - Less efficient than **variance** for symmetric distributions.
 
 ## **Variance**
@@ -311,12 +317,15 @@ x̄ = 5 → Variance = [(2−5)² + (4−5)² + (6−5)² + (8−5)²]/3 = <stro
 - **Advantages**
 
   - Fundamental for **inferential statistics** and **ANOVA**.
+
   - Used to derive **standard deviation** and many **probabilistic models**.
+
   - Sensitive to all data points.
 
 - **Limitations**
 
   - Expressed in **squared units** (e.g., m², €²), making interpretation less direct.
+
   - **Highly influenced** by outliers.
 
 ## **Standard Deviation**
@@ -333,12 +342,15 @@ Using the previous data: s = √6.67 = <strong>2.58</strong>.
 - **Advantages**
 
   - Most widely used **measure of dispersion**.
+
   - Interpretable in the **same units** as the data.
+
   - Directly connected to the **normal distribution** (≈68% of data lie within ±1s of the mean).
 
 - **Limitations**
 
   - Sensitive to **extreme values** and **skewness**.
+
   - Assumes that the **mean** is a meaningful central measure.
 
 ## **Coefficient of Variation (CV)**
@@ -355,11 +367,13 @@ If x̄ = 50 and s = 5 → CV = (5/50)×100 = <strong>10%</strong>.
 - **Advantages**
 
   - **Unit-free** measure, allowing comparison across variables with different scales.
+
   - Useful in **finance**, **economics**, and **reliability analysis**.
 
 - **Limitations**
 
   - Not meaningful when the **mean** is near zero.
+
   - Requires data on a **ratio scale**.
 
 ## **Summary Table**
