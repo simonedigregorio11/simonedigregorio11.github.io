@@ -195,24 +195,24 @@ table th {
    Buttons (base)
    =============================== */
 .hw6 button {
-  background-color: var(--bg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  color: var(--border-hover);
-  border: 2px solid var(--border);
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 15px;
+    background-color: var(--bg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: var(--border-hover);
+    border: 2px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
 }
 
 /* ===============================
    Buttons (hover)
    =============================== */
 .hw6 button:hover {
-  border-color: var(--border);
-  box-shadow: 0 0 6px var(--border);
-  transform: translateY(-1px);
+    border-color: var(--border);
+    box-shadow: 0 0 6px var(--border);
+    transform: translateY(-1px);
 }
 
 /* ===============================
@@ -220,6 +220,6 @@ table th {
    =============================== */
 .hw6 #btn-clear-bulk,
 .hw6 #btn-reset {
-  color: white;
-  background-color: darkred;
+    color: white;
+    background-color: darkred;
 }

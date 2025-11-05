@@ -45,6 +45,7 @@
 }
 
 .table_2-box {
+    font-size: clamp(0.6rem, 2vw, 1rem);
     border: 1px solid var(--border);
     padding: 10px;
     margin: 0 0 20px 0;
@@ -75,15 +76,15 @@ table th {
 }
 
 .example-box {
-  text-align: left;
-  font-size: 90%;
-  margin: 1em auto;
-  background-color: black;
-  color: white;
-  padding: 12px;
-  border: 1px solid #b5e853;
-  border-radius: 6px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  display: block;
+    text-align: left;
+    font-size: 90%;
+    margin: 1em auto;
+    background-color: black;
+    color: white;
+    padding: 12px;
+    border: 1px solid #b5e853;
+    border-radius: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: block;
 }
