@@ -1,5 +1,5 @@
 /* ===============================
-   Global CSS Variables
+   GLOBAL VARIABLES
    =============================== */
 :root {
     --bg: #000000;
@@ -8,5 +8,67 @@
     --accent: #b5e853;
     --accent-ink: #052e16;
     --border-hover: #63c0f5;
+}
 
+/* ===============================
+   TABLE CONTAINERS
+   =============================== */
+.table-box {
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    border: 1px solid var(--border);
+    padding: 10px;
+    margin: 0 0 20px 0;
+    background-color: var(--bg);
+    border-radius: 5px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+/* ===============================
+   TABLE CELLS (TH & TD)
+   =============================== */
+table th,
+table td {
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* ===============================
+   TABLE HEADER STYLING
+   =============================== */
+table th {
+    background-color: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+}
+
+/* ===============================
+   FORMULA BOXES
+   =============================== */
+.formula-box {
+    text-align: center;
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    width: 63%;
+    margin: 1em auto;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+/* ===============================
+   PIECEWISE / CASES FORMATTING
+   =============================== */
+.cases {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.cases-row {
+    display: block;
+    padding-left: 0.5em;
 }
