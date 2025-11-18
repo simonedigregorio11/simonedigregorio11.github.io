@@ -31,5 +31,9 @@ Here you can find my work and assignments from the course.
 - ## [Homework 7](/homework7/)
 
 - ## [Homework 8](/homework8/)
+
+- ## [Homework 9](/homework9/)
+
+- ## [Homework 10](/homework10/)
 ---
 

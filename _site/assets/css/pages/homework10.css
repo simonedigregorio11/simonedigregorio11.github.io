@@ -1,0 +1,159 @@
+/* ===============================
+   GLOBAL VARIABLES
+   =============================== */
+:root {
+    --bg: #000000;
+    --border: #b5e853;
+    --text: #ffffff;
+    --accent: #b5e853;
+    --accent-ink: #052e16;
+    --border-hover: #63c0f5;
+}
+
+.hw10 .panel {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.hw10 .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.hw10 label {
+    font-size: 0.8rem;
+    color: var(--text);
+}
+
+.hw10 input,
+.hw10 select {
+    background: var(--bg);
+    color: var(--text);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    padding: 0.25rem 0.4rem;
+    font-size: 0.85rem;
+    max-width: 100px;
+}
+
+.hw10 input:focus,
+.hw10 select:focus {
+    outline: none;
+    border-color: var(--border);
+    box-shadow: 0 0 0 1px var(--border);
+}
+
+/* ============================================
+   BUTTONS — BASE, HOVER & VARIANTS
+   ============================================ */
+.hw10 .buttons {
+    margin: 10px 0 10px 0;
+}
+
+.hw10 button {
+    background-color: var(--bg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: var(--border-hover);
+    border: 2px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.hw10 button:hover {
+    border-color: var(--border);
+    box-shadow: 0 0 6px var(--border);
+    transform: translateY(-1px);
+}
+
+.hw10 button.danger {
+    color: white;
+    background-color: darkred;
+}
+
+.hw10 .canvases {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 1rem;
+}
+
+@media (max-width: 800px) {
+    .hw10 .canvases {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.hw10 .canvas-card {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 0.75rem;
+}
+
+.hw10 .canvas-title {
+    font-size: 0.9rem;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+.hw10 canvas {
+    width: 100%;
+    height: 260px;
+    display: block;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 2px solid var(--border);
+}
+
+.hw10 .stats {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.hw10 .stats code {
+    background: var(--bg);
+    border-radius: 4px;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.75rem;
+    border: 1px solid var(--border);
+}
+
+.hw10 .stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 0.35rem;
+}
+
+.hw10 .card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+/* ===============================
+   FORMULA BOXES
+   =============================== */
+.formula-box {
+    text-align: center;
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    width: 63%;
+    margin: 1em auto;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
