@@ -112,6 +112,239 @@
 
 <hr />
 
+<h1 id="interpretations-of-probability-the-axiomatic-framework-and-measure-theoretic-foundations"><strong>Interpretations of Probability, the Axiomatic Framework, and Measure-Theoretic Foundations</strong></h1>
+
+<h2 id="main-interpretations-of-probability"><strong>Main Interpretations of Probability</strong></h2>
+
+<p>The concept of probability has several classical interpretations. The most influential are the <strong>classical</strong>, <strong>frequentist</strong>, <strong>Bayesian</strong>, and <strong>geometric</strong> interpretations. Each captures a different meaning of uncertainty and motivates the need for an axiomatic foundation.</p>
+
+<h3 id="1-the-classical-interpretation"><strong>1. The Classical Interpretation</strong></h3>
+<p>The classical interpretation defines probability through <strong>symmetry and equiprobability</strong>.<br />
+If all outcomes are equally likely, then:</p>
+
+<div class="formula-box">
+P(A) = |A| / |Ω|
+</div>
+
+<p>This is suitable for games of chance but fails in cases with infinite or non-symmetric outcome spaces.</p>
+
+<h3 id="2-the-frequentist-interpretation"><strong>2. The Frequentist Interpretation</strong></h3>
+<p>The frequentist view defines probability as the <strong>long-run relative frequency</strong> of an event in repeated trials:</p>
+
+<div class="formula-box">
+P(A) = lim <sub>(n→∞)</sub> N<sub>n</sub>(A) / n
+</div>
+
+<p>Strengths: objective, grounded in empirical repetition.<br /> 
+Limitations: does not apply to <strong>non-repeatable events</strong>, and assumes independence without defining it.</p>
+
+<h3 id="3-the-bayesian-interpretation"><strong>3. The Bayesian Interpretation</strong></h3>
+
+<p>The Bayesian interpretation views probability as a <strong>degree of rational belief</strong>. <br />
+Beliefs are updated through <strong>Bayes’ theorem</strong>:</p>
+
+<div class="formula-box">
+P(H | E) = P(E | H) P(H) / P(E)
+</div>
+
+<p>It works for single events and is compatible with decision theory.<br /><br />
+Main criticism: dependence on subjective priors.</p>
+
+<h3 id="4-the-geometric-interpretation"><strong>4. The Geometric Interpretation</strong></h3>
+
+<p>This defines probability as a <strong>uniform continuous measure</strong> (length, area, volume).<br /> 
+For a point chosen uniformly from [a, b]:</p>
+
+<div class="formula-box">
+P(A) = length(A) / length([a,b])
+</div>
+
+<p>Although intuitive, it produces ambiguities (e.g., <strong>Bertrand’s paradox</strong>) unless formalized with measure theory.</p>
+
+<h3 id="5-need-for-a-unified-framework"><strong>5. Need for a Unified Framework</strong></h3>
+
+<p>The diverse interpretations highlight inconsistencies.<br />
+These are resolved by the <strong>axiomatic approach</strong>, which unifies all perspectives under a single rigorous system.</p>
+
+<hr />
+
+<h2 id="how-the-axiomatic-approach-resolves-inconsistencies"><strong>How the Axiomatic Approach Resolves Inconsistencies</strong></h2>
+
+<p>Kolmogorov (1933) defined a probability space as a triple:<br /></p>
+
+<div class="formula-box">
+(Ω, F, P)
+</div>
+
+<p>where:</p>
+
+<ul>
+  <li>Ω is the sample space,</li>
+  <li>F is a <strong>σ-algebra</strong>,</li>
+  <li>P is a <strong>probability measure</strong>.</li>
+</ul>
+
+<p>Kolmogorov’s axioms:</p>
+
+<ol>
+  <li><strong>Non-negativity:</strong> P(A) ≥ 0</li>
+  <li><strong>Normalization:</strong> P(Ω) = 1</li>
+  <li><strong>Countable additivity:</strong> for disjoint A<sub>i</sub>,</li>
+</ol>
+<div class="formula-box">
+   P(⋃ A<sub>i</sub>) = Σ P(A<sub>i</sub>)
+</div>
+
+<h3 id="why-this-solves-earlier-problems">Why this solves earlier problems</h3>
+
+<ul>
+  <li>
+    <p>The <strong>classical</strong> interpretation is recovered as probability with a <strong>uniform measure</strong> on a finite set.</p>
+  </li>
+  <li>
+    <p>The <strong>frequentist</strong> interpretation emerges from empirical frequencies converging to a measure satisfying the axioms (Law of Large Numbers).</p>
+  </li>
+  <li>
+    <p>The <strong>Bayesian</strong> interpretation becomes coherent as subjective probabilities must satisfy the axioms to avoid <strong>Dutch book</strong> inconsistencies.</p>
+  </li>
+  <li>
+    <p>The <strong>geometric</strong> interpretation is formalized through <strong>Lebesgue measure</strong>, eliminating paradoxes.</p>
+  </li>
+</ul>
+
+<p>Thus, the axiomatic approach <strong>unifies</strong> all interpretations.</p>
+
+<hr />
+
+<h2 id="3-probability-theory-and-measure-theory">3. <strong>Probability Theory and Measure Theory</strong></h2>
+
+<p>Modern probability is entirely based on <strong>measure theory</strong>.</p>
+
+<h3 id="1-σ-algebras"><strong>1. σ-Algebras</strong></h3>
+<p>A σ-algebra F satisfies:</p>
+
+<ol>
+  <li>Ω ∈ F</li>
+  <li>If A ∈ F, then A<sup>c</sup> ∈ F</li>
+  <li>If A<sub>n</sub> ∈ F, then ⋃ A<sub>n</sub> ∈ F</li>
+</ol>
+
+<p>A σ-algebra determines which subsets are legitimate <strong>events</strong>.</p>
+
+<h3 id="2-probability-as-a-measure"><strong>2. Probability as a Measure</strong></h3>
+
+<p>A probability measure P is a measure with P(Ω) = 1.<br /> 
+This ties probability to integration and mathematical analysis.</p>
+
+<h3 id="3-random-variables-as-measurable-functions"><strong>3. Random Variables as Measurable Functions</strong></h3>
+
+<p>A random variable is a <strong>measurable function</strong>:</p>
+
+<div class="formula-box">
+X : Ω → ℝ
+</div>
+
+<p>such that for every Borel set B,</p>
+
+<div class="formula-box">
+{ω : X(ω) ∈ B} ∈ F
+</div>
+
+<h3 id="4-probability-distributions"><strong>4. Probability Distributions</strong></h3>
+
+<p>The distribution of X is the <strong>pushforward measure</strong>:</p>
+
+<div class="formula-box">
+P<sub>X</sub>(B) = P(X ∈ B)
+</div>
+
+<p>This connects abstract probability spaces with concrete distributions.</p>
+
+<hr />
+
+<h2 id="consequences-of-the-axioms"><strong>Consequences of the Axioms</strong></h2>
+
+<h3 id="1-subadditivity"><strong>1. Subadditivity</strong></h3>
+
+<p>For any events A<sub>1</sub>, A<sub>2</sub>, …</p>
+
+<div class="formula-box">
+P(⋃ A<sub>i</sub>) ≤ Σ P(A<sub>i</sub>)
+</div>
+
+<p><strong>Proof:</strong><br />
+Define disjoint sets:</p>
+
+<p>B<sub>1</sub> = A<sub>1</sub><br />
+B<sub>2</sub> = A<sub>2</sub> \ A<sub>1</sub><br />
+B<sub>3</sub> = A<sub>3</sub> \ (A<sub>1</sub> ∪ A<sub>2</sub>)<br />
+…</p>
+
+<p>Then:</p>
+
+<div class="formula-box">
+⋃ A<sub>i</sub> = ⋃ B<sub>i</sub><br /><br /> 
+P(⋃ A<sub>i</sub>) = Σ P(B<sub>i</sub>)
+</div>
+
+<p>Since B<sub>i</sub> ⊆ A<sub>i</sub>, we have P(B<sub>i</sub>) ≤ P(A<sub>i</sub>).</p>
+
+<p>Thus:</p>
+
+<div class="formula-box">
+P(⋃ A<sub>i</sub>) ≤ Σ P(A<sub>i</sub>)
+</div>
+
+<hr />
+
+<h3 id="2-inclusionexclusion-principle"><strong>2. Inclusion–Exclusion Principle</strong></h3>
+
+<h3 id="for-two-events"><strong>For two events:</strong></h3>
+
+<div class="formula-box">
+P(A ∪ B) = P(A) + P(B) – P(A ∩ B)
+</div>
+
+<p><strong>Derivation:</strong></p>
+
+<div class="formula-box">
+A ∪ B = A ∪ (B \ A)  
+</div>
+
+<p>with disjoint sets. Thus,</p>
+
+<div class="formula-box">
+P(A ∪ B) = P(A) + P(B \ A)
+</div>
+
+<p>But</p>
+
+<div class="formula-box">
+P(B) = P(B \ A) + P(A ∩ B)
+</div>
+
+<p>so</p>
+
+<div class="formula-box">
+P(B \ A) = P(B) – P(A ∩ B)
+</div>
+
+<p>Substituting yields the formula.</p>
+
+<h3 id="for-three-events"><strong>For three events:</strong></h3>
+
+<div class="formula-box" id="threeEvents-formula">
+P(A ∪ B ∪ C) = P(A) + P(B) + P(C) – P(A ∩ B) – P(A ∩ C) – P(B ∩ C) + P(A ∩ B ∩ C)
+</div>
+
+<hr />
+
+<h2 id="conclusion"><strong>Conclusion</strong></h2>
+
+<p>The historical interpretations of probability capture different aspects of uncertainty but lack universal coherence. Kolmogorov’s <strong>axiomatic approach</strong> provides a rigorous and unified framework based on <strong>measure theory</strong>, where random variables are measurable functions and probability is a measure. Key results such as <strong>subadditivity</strong> and <strong>inclusion–exclusion</strong> follow naturally from the axioms.</p>
+
+<hr />
+
         © 2025 Simone Di Gregorio — Statistics Course Blog
       </section>
     </div>

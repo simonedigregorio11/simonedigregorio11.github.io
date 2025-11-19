@@ -1,0 +1,32 @@
+/* ===============================
+   GLOBAL VARIABLES
+   =============================== */
+:root {
+    --bg: #000000;
+    --border: #b5e853;
+    --text: #ffffff;
+    --accent: #b5e853;
+    --accent-ink: #052e16;
+    --border-hover: #63c0f5;
+}
+
+/* ===============================
+   FORMULA BOXES
+   =============================== */
+.formula-box {
+    text-align: center;
+    font-size: clamp(0.6rem, 2vw, 1rem);
+    width: 63%;
+    margin: 1em auto;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+div #threeEvents-formula{
+    min-width: fit-content;
+    padding: 12px;
+    
+}

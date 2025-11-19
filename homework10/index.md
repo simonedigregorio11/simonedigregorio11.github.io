@@ -41,7 +41,7 @@ The cumulative sum N<sub>n</sub>(t) then approximates a Poisson process. As **n*
         <div class="panel">
             <div class="row">
                 <label for="lambda">Rate λ (expected events on [0,1])</label>
-                <input id="lambda" type="number" min="0" step="0.5" value="5" />
+                <input id="lambda" type="number" min="0" step="0.5" value="16" />
 
                 <label for="n">Subintervals n</label>
                 <input id="n" type="number" min="10" max="50000" value="5000" />
@@ -325,17 +325,25 @@ The cumulative sum N<sub>n</sub>(t) then approximates a Poisson process. As **n*
                     ctx.fillText(Math.round(v), x0 - 18, y + 3);
                 });
 
-                // X-axis ticks for integer k values
+                // Limit how many x-axis labels we draw to avoid overlapping
                 const barWidth = (x1 - x0) / keys.length;
+                const maxXTicks = 15; // maximum number of x labels
+                const showEvery = Math.max(1, Math.ceil(keys.length / maxXTicks));
+
+                // X-axis ticks for integer k values
                 keys.forEach((k, idx) => {
                     const x = x0 + idx * barWidth + barWidth / 2;
 
+                    // Draw small tick for every bar
                     ctx.beginPath();
                     ctx.moveTo(x, y0 - 3);
                     ctx.lineTo(x, y0 + 3);
                     ctx.stroke();
 
-                    ctx.fillText(String(k), x - 4, y0 + 14);
+                    // Draw label only for some ticks
+                    if (idx % showEvery === 0) {
+                        ctx.fillText(String(k), x - 4, y0 + 14);
+                    }
                 });
 
                 // If there is no data yet, we stop here: only axes and ticks are shown
@@ -414,10 +422,15 @@ The cumulative sum N<sub>n</sub>(t) then approximates a Poisson process. As **n*
                 updateHistStats(counts, lambda);
             });
 
-            // Reset both plots and text
+            // Reset both plots, text, and input values
             btnReset.addEventListener("click", () => {
                 lastPath = null;
                 lastHist = null;
+
+                // Reset input fields to default values
+                lambdaInput.value = 16;
+                nInput.value = 5000;
+                RInput.value = 500;
 
                 pathStats.innerHTML = 'Click “Simulate one path” to generate a sample trajectory.';
                 histStats.innerHTML = 'Click “Simulate R paths” to estimate the distribution of the total count N(1).';
@@ -447,6 +460,7 @@ The cumulative sum N<sub>n</sub>(t) then approximates a Poisson process. As **n*
         })();
     </script>
 </div>
+
 
 ---
 

@@ -10,6 +10,9 @@
     --border-hover: #63c0f5;
 }
 
+/* ===============================
+   MAIN PANELS & CARDS
+   =============================== */
 .hw10 .panel {
     border-radius: 10px;
     border: 1px solid var(--border);
@@ -17,6 +20,15 @@
     margin-bottom: 1rem;
 }
 
+.hw10 .card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+/* ===============================
+   FORM ROWS & FORM CONTROLS
+   =============================== */
 .hw10 .row {
     display: grid;
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
@@ -49,9 +61,9 @@
     box-shadow: 0 0 0 1px var(--border);
 }
 
-/* ============================================
+/* ===============================
    BUTTONS — BASE, HOVER & VARIANTS
-   ============================================ */
+   =============================== */
 .hw10 .buttons {
     margin: 10px 0 10px 0;
 }
@@ -79,6 +91,9 @@
     background-color: darkred;
 }
 
+/* ===============================
+   CANVAS LAYOUT & APPEARANCE
+   =============================== */
 .hw10 .canvases {
     display: grid;
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
@@ -113,6 +128,9 @@
     border: 2px solid var(--border);
 }
 
+/* ===============================
+   STATS BOXES
+   =============================== */
 .hw10 .stats {
     margin-top: 0.5rem;
     font-size: 0.8rem;
@@ -135,12 +153,6 @@
     flex-direction: column;
     gap: 4px;
     margin-top: 0.35rem;
-}
-
-.hw10 .card {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
 }
 
 /* ===============================
