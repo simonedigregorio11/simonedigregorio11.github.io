@@ -31,7 +31,7 @@ permalink: /
             </div>
             <div class="hero-meta-box">
                 <span class="meta-label">Homeworks</span>
-                <span class="meta-value">1 – 10</span>
+                <span class="meta-value">1 – 11</span>
             </div>
         </div>
     </div>
@@ -135,6 +135,14 @@ permalink: /
                 <p>
                     Simulating a Poisson-like counting process on [0,1] and connecting
                     discrete models to continuous-time theory.
+                </p>
+            </a>
+
+            <a href="/homework11/" class="hw-card">
+                <div class="hw-tag">HOMEWORK 11</div>
+                <h3></h3>
+                <p>
+                    
                 </p>
             </a>
 

@@ -1,0 +1,11 @@
+/* ===============================
+   GLOBAL VARIABLES
+   =============================== */
+:root {
+    --bg: #000000;
+    --border: #b5e853;
+    --text: #ffffff;
+    --accent: #b5e853;
+    --accent-ink: #052e16;
+    --border-hover: #63c0f5;
+}
