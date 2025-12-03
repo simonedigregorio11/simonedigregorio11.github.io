@@ -1,6 +1,6 @@
-/* ===============================
+/* ==========================================================
    GLOBAL VARIABLES
-   =============================== */
+   ========================================================== */
 :root {
     --bg: #000000;
     --border: #b5e853;
@@ -8,4 +8,160 @@
     --accent: #b5e853;
     --accent-ink: #052e16;
     --border-hover: #63c0f5;
+}
+
+
+/* ==========================================================
+   MAIN WRAPPER AND CARD STYLING
+   ========================================================== */
+.hw11 .card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.hw11 {
+    max-width: auto;
+    margin: 1rem auto;
+    color: var(--text);
+}
+
+
+/* ==========================================================
+   INFO BOX
+   ========================================================== */
+.hw11 .info {
+    display: none;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 5px 5px 5px 12px;
+    background-color: var(--bg);
+}
+
+/* Class used to reveal the .info block */
+.info.visible {
+    display: block;
+}
+
+
+/* ==========================================================
+   TITLES AND PANELS
+   ========================================================== */
+.hw11 h1 {
+    margin-bottom: 0.5rem;
+    margin-left: 0.1rem;
+}
+
+.hw11 .panel {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+
+/* ==========================================================
+   FORM ROWS AND INPUTS
+   ========================================================== */
+.hw11 .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 0.5rem 0.75rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.hw11 label {
+    font-size: 0.85rem;
+}
+
+.hw11 input,
+.hw11 select {
+    background: var(--bg);
+    color: var(--text);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    padding: 0.25rem 0.4rem;
+    font-size: 0.85rem;
+}
+
+.hw11 input:focus,
+.hw11 select:focus {
+    outline: none;
+    border-color: var(--border);
+    box-shadow: 0 0 0 1px var(--border);
+}
+
+
+/* ==========================================================
+   BUTTONS — BASE STYLE, HOVER, AND VARIANTS
+   ========================================================== */
+.hw11 .buttons {
+    margin: 10px 0 10px 0;
+}
+
+.hw11 button {
+    background-color: var(--bg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: var(--border-hover);
+    border: 2px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.hw11 button:hover {
+    border-color: var(--border);
+    box-shadow: 0 0 6px var(--border);
+    transform: translateY(-1px);
+}
+
+/* Danger variant (used for reset/clear buttons) */
+.hw11 button.danger {
+    color: var(--text);
+    background-color: darkred;
+}
+
+
+/* ==========================================================
+   CANVAS
+   ========================================================== */
+.hw11 canvas {
+    width: 100%;
+    height: 400px;
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    display: block;
+}
+
+
+/* ==========================================================
+   VISIBILITY LOGIC FOR GENERAL SDE MODE
+   ========================================================== */
+.hw11 .general-only {
+    transition: opacity 0.2s;
+}
+
+.hw11 .general-only.disabled {
+    opacity: 0.3;
+}
+
+
+/* ==========================================================
+   FORMULA BOX
+   ========================================================== */
+.formula-box {
+  text-align: center;
+  font-size: clamp(0.6rem, 2vw, 1rem);
+  width: 63%;
+  margin: 1em auto;
+  background-color: black;
+  color: white;
+  padding: 8px;
+  border: 1px solid #b5e853;
+  border-radius: 6px;
 }

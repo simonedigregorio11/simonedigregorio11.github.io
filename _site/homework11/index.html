@@ -113,6 +113,776 @@
 
 <hr />
 
+<h1 id="stochastic-differential-equation-simulator"><strong>Stochastic Differential Equation Simulator</strong></h1>
+
+<h2 id="introduction"><strong>Introduction</strong></h2>
+
+<p>This project presents an interactive tool for the simulation of <strong>Stochastic Differential Equations (SDEs)</strong> using the <strong>Euler–Maruyama method</strong>.<br /><br />
+The simulator supports:</p>
+
+<ul>
+  <li>
+    <p>The <strong>Wiener process</strong> 𝑊<sub>𝑡</sub>, representing <strong>standard Brownian motion</strong>.</p>
+  </li>
+  <li>
+    <p>A general SDE</p>
+  </li>
+</ul>
+
+<div class="formula-box">
+dX<sub>t</sub> = a(X<sub>t</sub>,t)dt + b(X<sub>t</sub>,t) dW<sub>t</sub>
+</div>
+<p>where both the <strong>drift</strong> and <strong>diffusion</strong> are user-defined.</p>
+
+<hr />
+
+<h2 id="theoretical-background"><strong>Theoretical Background</strong></h2>
+
+<h3 id="1-the-wiener-process"><strong>1. The Wiener Process</strong></h3>
+
+<p>The <strong>Wiener process</strong>, also called <strong>standard Brownian motion</strong>, is the fundamental building block of modern stochastic calculus. It can be seen as the continuous-time limit of a symmetric random walk.</p>
+
+<p>A <strong>Wiener process</strong> W<sub>t</sub> has:</p>
+
+<p><strong>1.</strong> W₀ = 0<br />
+<strong>2.</strong> Independent increments<br />
+<strong>3.</strong> Gaussian increments:</p>
+
+<div class="formula-box">
+W<sub>t+h</sub> − W<sub>t</sub> ∼ N(0, h)
+</div>
+
+<p>This means that, over any interval of length h, the increment of the Wiener process is normally distributed with mean 0 and variance h.</p>
+
+<p><strong>4.</strong> Continuous paths</p>
+
+<p>It satisfies the SDE:</p>
+
+<div class="formula-box">
+dX<sub>t</sub> = dW<sub>t</sub>
+</div>
+
+<hr />
+
+<h3 id="2-general-stochastic-differential-equations"><strong>2. General Stochastic Differential Equations</strong></h3>
+
+<p>A general <strong>SDE</strong> is:</p>
+
+<div class="formula-box">
+dX<sub>t</sub> = a(X<sub>t</sub>,t) dt + b(X<sub>t</sub>,t) dW<sub>t</sub>
+</div>
+
+<p>Where:</p>
+
+<ul>
+  <li>
+    <p>a(x,t) = <strong>drift</strong>: deterministic direction of motion</p>
+  </li>
+  <li>
+    <p>b(x,t) = <strong>diffusion</strong>: magnitude of randomness</p>
+  </li>
+  <li>
+    <p>dW<sub>t</sub> = infinitesimal increment of the Wiener process</p>
+  </li>
+</ul>
+
+<p>SDEs model systems where uncertainty plays a structural role. Some classical examples include:</p>
+
+<ul>
+  <li><strong>Ornstein–Uhlenbeck process</strong> (mean reversion)</li>
+</ul>
+
+<div class="formula-box">
+dX<sub>t</sub> = 𝜃(𝜇 − X<sub>t</sub>) dt + 𝜎 dW<sub>t</sub>	​
+</div>
+
+<ul>
+  <li><strong>Geometric Brownian motion</strong> (finance)</li>
+</ul>
+
+<p>dX<sub>𝑡</sub> = 𝜇X<sub>t</sub> dt + 𝜎 X<sub>t</sub> dW<sub>t</sub></p>
+
+<ul>
+  <li><strong>Black–Scholes equation</strong> for option pricing</li>
+</ul>
+
+<p>These models illustrate how SDEs can encode growth, decay, oscillation, and noise simultaneously.</p>
+
+<hr />
+
+<h3 id="3-eulermaruyama-method"><strong>3. Euler–Maruyama Method</strong></h3>
+
+<p>Most SDEs do not admit closed-form solutions, making numerical approximation essential. The <strong>Euler–Maruyama method</strong> is the SDE analogue of the classical Euler method for ODEs.</p>
+
+<p>Given a time discretization:</p>
+
+<div class="formula-box"> t<sub>n</sub> = n Δt,\quad Δt = T/N </div>
+
+<p>we approximate the Wiener increments.
+In continuous time, dW<sub>t</sub> represents the infinitesimal change of the Wiener process.<br /><br />
+In discrete time this becomes:</p>
+
+<div class="formula-box">
+ΔW<sub>n</sub> = (Δt)<sup>1/2</sup> Z<sub>n</sub>, &nbsp; Z<sub>n</sub> ∼ N(0,1).
+</div>
+
+<p>This identity expresses the fact that a Wiener process has independent Gaussian increments with variance proportional to the length of the time step.</p>
+
+<p>Substituting this into the SDE gives the Euler–Maruyama update:</p>
+
+<div class="formula-box"> X<sub>n+1</sub> = X<sub>n</sub> + a(X<sub>n</sub>, t<sub>n</sub>)\, Δt + b(X<sub>n</sub>, t<sub>n</sub>)\, ΔW<sub>n</sub>. </div>
+
+<p>Using the explicit expression for ΔW<sub>n</sub>, this becomes:</p>
+
+<div class="formula-box">
+X<sub>n+1</sub> = X<sub>n</sub> + a(X<sub>n</sub>, t<sub>n</sub>) Δt + b(X<sub>n</sub>, t<sub>n</sub>)(Δt)<sup>1/2</sup> Z<sub>n</sub>
+</div>
+
+<p>with Z<sub>n</sub> ∼ N(0,1).</p>
+
+<p>The terms represent:</p>
+
+<p><strong>Deterministic drift contribution</strong>:</p>
+
+<div class="formula-box">
+a(X<sub>n</sub>, t<sub>n</sub>) Δt
+</div>
+
+<p><strong>Stochastic diffusion contribution</strong>:</p>
+
+<div class="formula-box">
+b(X<sub>n</sub>, t<sub>n</sub>) (Δt)<sup>1/2</sup> Z<sub>n</sub>
+</div>
+
+<p>This method is simple but surprisingly effective for educational and exploratory purposes. More advanced schemes exist (Milstein, Runge–Kutta SDE schemes), but Euler–Maruyama provides the clearest conceptual link between theory and computation.</p>
+
+<hr />
+
+<h2 id="demo"><strong>Demo</strong></h2>
+
+<div class="hw11">
+    <div class="card">
+        <h1>Stochastic Differential Equation Simulator</h1>
+        <div class="panel">
+            <div class="row">
+                <label for="mode">Mode</label>
+                <select id="mode">
+                    <option value="wiener">Wiener process: dX = dW</option>
+                    <option value="general">General SDE: dX = a(X,t) dt + b(X,t) dW</option>
+                </select>
+
+                <label for="T">Final time T</label>
+                <input id="T" type="number" min="0.1" step="0.1" value="1" />
+
+                <label for="steps">Time steps N</label>
+                <input id="steps" type="number" min="10" step="10" value="500" />
+
+                <label for="paths">Number of paths</label>
+                <input id="paths" type="number" min="1" max="50" value="5" />
+
+                <label for="x0">Initial value X₀</label>
+                <input id="x0" type="number" step="0.1" value="0" />
+            </div>
+
+            <div class="row general-only">
+                <label for="drift">Drift a(x, t)</label>
+                <input id="drift" type="text" value="0" placeholder="Example: -0.5 * x" />
+
+                <label for="diffusion">Diffusion b(x, t)</label>
+                <input id="diffusion" type="text" value="1" placeholder="Example: 1 + 0.2 * t" />
+            </div>
+
+            <div class="buttons">
+                <button id="btn-simulate">Simulate</button>
+                <button id="btn-reset" class="danger">Reset</button>
+            </div>
+
+            <div class="info">
+                <p id="status"></p>
+            </div>
+        </div>
+
+        <!-- NOTE: no width/height attributes here; size is controlled via CSS + JS -->
+        <canvas id="sdeCanvas"></canvas>
+    </div>
+
+    <script>
+        // Wrap everything to avoid leaking globals
+        (function () {
+            // === DOM elements ===
+            const modeSel = document.getElementById('mode');
+            const TInput = document.getElementById('T');
+            const stepsInput = document.getElementById('steps');
+            const pathsInput = document.getElementById('paths');
+            const x0Input = document.getElementById('x0');
+            const driftInput = document.getElementById('drift');
+            const diffInput = document.getElementById('diffusion');
+            const btnSim = document.getElementById('btn-simulate');
+            const btnReset = document.getElementById('btn-reset');
+            const statusEl = document.getElementById('status');
+
+            const generalRow = document.querySelector('.row.general-only');
+
+            const canvas = document.getElementById('sdeCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Store last simulation so we can redraw on resize
+            let lastSimulation = null;
+
+            // Default values
+            const DEFAULTS = {
+                mode: 'wiener',
+                T: 1,
+                N: 500,
+                nPaths: 5,
+                x0: 0,
+                drift: '0',
+                diffusion: '1'
+            };
+
+            // Show/hide info block based on status text
+            function updateInfoVisibility() {
+                const infoDiv = statusEl.parentElement;
+                if (!infoDiv) return;
+
+                if (statusEl.textContent.trim() === "") {
+                    infoDiv.classList.remove("visible");
+                } else {
+                    infoDiv.classList.add("visible");
+                }
+            }
+
+            function applyDefaults() {
+                modeSel.value = DEFAULTS.mode;
+                TInput.value = DEFAULTS.T;
+                stepsInput.value = DEFAULTS.N;
+                pathsInput.value = DEFAULTS.nPaths;
+                x0Input.value = DEFAULTS.x0;
+                driftInput.value = DEFAULTS.drift;
+                diffInput.value = DEFAULTS.diffusion;
+                updateModeUI();
+            }
+
+            // === Make canvas crisp on high DPI screens ===
+            function resizeCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                const rect = canvas.getBoundingClientRect();
+
+                // Internal resolution scaled by device pixel ratio
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+            }
+
+            // === Utility: standard normal random variable (Box-Muller) ===
+            function randn() {
+                // Generate Z ~ N(0,1)
+                let u = 0, v = 0;
+                while (u === 0) u = Math.random();
+                while (v === 0) v = Math.random();
+                return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+            }
+
+            // === Core simulator using Euler–Maruyama ===
+            function simulateSDE(options) {
+                /*
+                 * Simulate SDE:
+                 *   dX_t = a(X_t, t) dt + b(X_t, t) dW_t
+                 * with Euler–Maruyama:
+                 *   X_{n+1} = X_n + a(X_n, t_n) dt + b(X_n, t_n) sqrt(dt) * Z_n
+                 * where Z_n ~ N(0,1).
+                 */
+                const { T, N, nPaths, x0, a, b } = options;
+
+                const dt = T / N;
+                const sqrtDt = Math.sqrt(dt);
+
+                // Precompute times
+                const times = new Array(N + 1);
+                for (let n = 0; n <= N; n++) {
+                    times[n] = n * dt;
+                }
+
+                // Allocate paths: paths[i][n]
+                const paths = new Array(nPaths);
+                for (let i = 0; i < nPaths; i++) {
+                    paths[i] = new Array(N + 1);
+                    paths[i][0] = x0;
+                }
+
+                // Time-stepping
+                for (let n = 0; n < N; n++) {
+                    const t = times[n];
+                    for (let i = 0; i < nPaths; i++) {
+                        const x = paths[i][n];
+
+                        const drift = a(x, t);      // a(X_n, t_n)
+                        const diffusion = b(x, t);  // b(X_n, t_n)
+                        const z = randn();          // Z_n ~ N(0,1)
+
+                        // Euler–Maruyama update
+                        const xNext = x + drift * dt + diffusion * sqrtDt * z;
+                        paths[i][n + 1] = xNext;
+                    }
+                }
+
+                return { times, paths };
+            }
+
+            // === Build drift/diffusion functions from text expressions ===
+            function buildFunction(expr, name) {
+                /*
+                 * Build a(x, t) or b(x, t) from user input.
+                 * The expression can use variables x, t and Math.* functions.
+                 */
+                try {
+                    const fn = new Function('x', 't', `
+                "use strict";
+                return (${expr});
+            `);
+                    // Test a simple call to catch obvious runtime errors
+                    fn(0, 0);
+                    return fn;
+                } catch (err) {
+                    alert('Error in ' + name + ' expression: ' + err.message);
+                    throw err;
+                }
+            }
+
+            // === Draw only axes, no paths (for empty initial view / reset) ===
+            function drawEmptyAxes() {
+                const w = canvas.width;
+                const h = canvas.height;
+
+                ctx.clearRect(0, 0, w, h);
+
+                const marginLeft = 50;
+                const marginRight = 20;
+                const marginTop = 20;
+                const marginBottom = 40;
+
+                const xMin = 0;
+                const xMax = parseFloat(TInput.value) || DEFAULTS.T;
+                const yMin = -1;
+                const yMax = 1;
+
+                function xToCanvas(t) {
+                    return marginLeft + (t - xMin) / (xMax - xMin) * (w - marginLeft - marginRight);
+                }
+
+                function yToCanvas(x) {
+                    return marginTop + (yMax - x) / (yMax - yMin) * (h - marginTop - marginBottom);
+                }
+
+                // Axes
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1;
+
+                const xAxisY = yToCanvas(0);
+
+                // x-axis
+                ctx.beginPath();
+                ctx.moveTo(marginLeft, xAxisY);
+                ctx.lineTo(w - marginRight, xAxisY);
+                ctx.stroke();
+
+                // y-axis
+                ctx.beginPath();
+                ctx.moveTo(marginLeft, marginTop);
+                ctx.lineTo(marginLeft, h - marginBottom);
+                ctx.stroke();
+
+                // Labels
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '12px system-ui';
+                ctx.textAlign = 'center';
+                ctx.fillText('time t', (w + marginLeft - marginRight) / 2, h - 10);
+
+                ctx.save();
+                ctx.translate(15, (h - marginBottom + marginTop) / 2);
+                ctx.rotate(-Math.PI / 2);
+                ctx.fillText('X(t)', 0, 0);
+                ctx.restore();
+
+                // Ticks
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'top';
+
+                const xTicks = 5;
+                for (let i = 0; i <= xTicks; i++) {
+                    const t = xMin + (i / xTicks) * (xMax - xMin);
+                    const cx = xToCanvas(t);
+                    const cy = xAxisY;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy - 3);
+                    ctx.lineTo(cx, cy + 3);
+                    ctx.stroke();
+                    ctx.fillText(t.toFixed(2), cx, cy + 5);
+                }
+
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                const yTicks = 5;
+                for (let i = 0; i <= yTicks; i++) {
+                    const xVal = yMin + (i / yTicks) * (yMax - yMin);
+                    const cy = yToCanvas(xVal);
+                    ctx.beginPath();
+                    ctx.moveTo(marginLeft - 3, cy);
+                    ctx.lineTo(marginLeft + 3, cy);
+                    ctx.stroke();
+                    ctx.fillText(xVal.toFixed(2), marginLeft - 5, cy);
+                }
+            }
+
+            // === Plotting ===
+            function drawPaths(times, paths) {
+                /*
+                 * Draw all simulated paths on the canvas.
+                 * x-axis: time t
+                 * y-axis: X_t value
+                 */
+                const w = canvas.width;
+                const h = canvas.height;
+
+                // Clear canvas
+                ctx.clearRect(0, 0, w, h);
+
+                // Margins for axes
+                const marginLeft = 50;
+                const marginRight = 20;
+                const marginTop = 20;
+                const marginBottom = 40;
+
+                // Find min and max among all paths to scale y-axis
+                let minVal = Infinity;
+                let maxVal = -Infinity;
+                for (const path of paths) {
+                    for (const x of path) {
+                        if (!Number.isFinite(x)) continue;
+                        if (x < minVal) minVal = x;
+                        if (x > maxVal) maxVal = x;
+                    }
+                }
+
+                if (!Number.isFinite(minVal) || !Number.isFinite(maxVal)) {
+                    statusEl.textContent = 'Error: non-finite values in simulation.';
+                    updateInfoVisibility();
+                    return;
+                }
+
+                // Avoid zero range
+                if (maxVal === minVal) {
+                    const eps = Math.abs(maxVal) > 0 ? 0.1 * Math.abs(maxVal) : 1;
+                    maxVal += eps;
+                    minVal -= eps;
+                }
+
+                const xMin = times[0];
+                const xMax = times[times.length - 1];
+
+                // Coordinate transforms
+                function xToCanvas(t) {
+                    return marginLeft + (t - xMin) / (xMax - xMin) * (w - marginLeft - marginRight);
+                }
+
+                function yToCanvas(x) {
+                    return marginTop + (maxVal - x) / (maxVal - minVal) * (h - marginTop - marginBottom);
+                }
+
+                // Draw axes
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1;
+
+                // x-axis (time)
+                const xAxisY = yToCanvas(0); // may be outside canvas but it's ok
+                ctx.beginPath();
+                ctx.moveTo(marginLeft, xAxisY);
+                ctx.lineTo(w - marginRight, xAxisY);
+                ctx.stroke();
+
+                // y-axis
+                ctx.beginPath();
+                ctx.moveTo(marginLeft, marginTop);
+                ctx.lineTo(marginLeft, h - marginBottom);
+                ctx.stroke();
+
+                // Axis labels (simple)
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '12px system-ui';
+                ctx.textAlign = 'center';
+                ctx.fillText('time t', (w + marginLeft - marginRight) / 2, h - 10);
+
+                ctx.save();
+                ctx.translate(15, (h - marginBottom + marginTop) / 2);
+                ctx.rotate(-Math.PI / 2);
+                ctx.fillText('X(t)', 0, 0);
+                ctx.restore();
+
+                // Tick marks (simple: 5 ticks on each axis)
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'top';
+
+                const xTicks = 5;
+                for (let i = 0; i <= xTicks; i++) {
+                    const t = xMin + (i / xTicks) * (xMax - xMin);
+                    const cx = xToCanvas(t);
+                    const cy = xAxisY;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy - 3);
+                    ctx.lineTo(cx, cy + 3);
+                    ctx.stroke();
+                    ctx.fillText(t.toFixed(2), cx, cy + 5);
+                }
+
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                const yTicks = 5;
+                for (let i = 0; i <= yTicks; i++) {
+                    const xVal = minVal + (i / yTicks) * (maxVal - minVal);
+                    const cy = yToCanvas(xVal);
+                    ctx.beginPath();
+                    ctx.moveTo(marginLeft - 3, cy);
+                    ctx.lineTo(marginLeft + 3, cy);
+                    ctx.stroke();
+                    ctx.fillText(xVal.toFixed(2), marginLeft - 5, cy);
+                }
+
+                // Draw paths
+                for (let p = 0; p < paths.length; p++) {
+                    const path = paths[p];
+
+                    // Slightly thicker for the first path
+                    ctx.lineWidth = (p === 0) ? 2 : 1;
+                    // Different hue per path (quick and dirty)
+                    const hue = (p * 60) % 360;
+                    ctx.strokeStyle = `hsl(${hue}, 70%, 60%)`;
+
+                    ctx.beginPath();
+                    for (let n = 0; n < times.length; n++) {
+                        const cx = xToCanvas(times[n]);
+                        const cy = yToCanvas(path[n]);
+                        if (n === 0) {
+                            ctx.moveTo(cx, cy);
+                        } else {
+                            ctx.lineTo(cx, cy);
+                        }
+                    }
+                    ctx.stroke();
+                }
+            }
+
+            // === Handle mode change (Wiener / general SDE) ===
+            function updateModeUI() {
+                const mode = modeSel.value;
+                if (mode === 'wiener') {
+                    // For Wiener process: a(x,t) = 0, b(x,t) = 1 (ignored inputs)
+                    generalRow.classList.add('disabled');
+                    driftInput.disabled = true;
+                    diffInput.disabled = true;
+                } else {
+                    generalRow.classList.remove('disabled');
+                    driftInput.disabled = false;
+                    diffInput.disabled = false;
+                }
+            }
+
+            modeSel.addEventListener('change', updateModeUI);
+
+            // === Main click handler: run simulation and plot ===
+            btnSim.addEventListener('click', () => {
+                statusEl.textContent = '';
+                updateInfoVisibility();
+
+                const mode = modeSel.value;
+                const T = parseFloat(TInput.value);
+                const N = parseInt(stepsInput.value, 10);
+                const nPaths = parseInt(pathsInput.value, 10);
+                const x0 = parseFloat(x0Input.value);
+
+                if (!(T > 0) || !(N >= 10) || !(nPaths >= 1)) {
+                    statusEl.textContent = 'Please choose T > 0, N ≥ 10, and at least one path.';
+                    updateInfoVisibility();
+                    return;
+                }
+
+                let a, b;
+
+                if (mode === 'wiener') {
+                    // === Required part: Wiener process dX = dW ===
+                    // This corresponds to a(x,t) = 0, b(x,t) = 1
+                    a = (x, t) => 0;
+                    b = (x, t) => 1;
+                    statusEl.textContent = 'Simulating Wiener process: dX = dW with Euler–Maruyama.';
+                    updateInfoVisibility();
+                } else {
+                    // === Optional extension: general SDE dX = a(X,t) dt + b(X,t) dW ===
+                    const driftExpr = driftInput.value.trim();
+                    const diffExpr = diffInput.value.trim();
+
+                    try {
+                        a = buildFunction(driftExpr || '0', 'drift a(x,t)');
+                        b = buildFunction(diffExpr || '1', 'diffusion b(x,t)');
+                        statusEl.textContent = 'Simulating general SDE with user-defined drift and diffusion.';
+                        updateInfoVisibility();
+                    } catch (err) {
+                        // buildFunction already alerted the user
+                        return;
+                    }
+                }
+
+                const { times, paths } = simulateSDE({ T, N, nPaths, x0, a, b });
+                lastSimulation = { times, paths };
+                drawPaths(times, paths);
+            });
+
+            // === Reset handler ===
+            btnReset.addEventListener('click', () => {
+                statusEl.textContent = '';
+                updateInfoVisibility();
+                lastSimulation = null;
+                applyDefaults();
+                resizeCanvas();
+                drawEmptyAxes();
+            });
+
+            // Initial setup: defaults, canvas size, empty axes (no simulation)
+            applyDefaults();
+            resizeCanvas();
+            statusEl.textContent = '';
+            updateInfoVisibility();
+            drawEmptyAxes();
+
+            // On window resize, keep it sharp and redraw
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                if (lastSimulation) {
+                    drawPaths(lastSimulation.times, lastSimulation.paths);
+                } else {
+                    drawEmptyAxes();
+                }
+            });
+        })();
+    </script>
+</div>
+
+<hr />
+
+<h1 id="structure-of-the-code"><strong>Structure of the Code</strong></h1>
+
+<h2 id="code-screenshot"><strong>Code Screenshot</strong></h2>
+<p><img src="/assets/images/code_7.png" alt="code" /></p>
+
+<h3 id="1-the-euler-maruyama-simulator"><strong>1. The Euler-Maruyama Simulator</strong></h3>
+
+<p>This function implements the full numerical method:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">simulateSDE</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">T</span><span class="p">,</span> <span class="nx">N</span><span class="p">,</span> <span class="nx">nPaths</span><span class="p">,</span> <span class="nx">x0</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">options</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">dt</span> <span class="o">=</span> <span class="nx">T</span> <span class="o">/</span> <span class="nx">N</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">sqrtDt</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">dt</span><span class="p">);</span>
+
+    <span class="kd">const</span> <span class="nx">times</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">n</span> <span class="o">&lt;=</span> <span class="nx">N</span><span class="p">;</span> <span class="nx">n</span><span class="o">++</span><span class="p">)</span> <span class="nx">times</span><span class="p">[</span><span class="nx">n</span><span class="p">]</span> <span class="o">=</span> <span class="nx">n</span> <span class="o">*</span> <span class="nx">dt</span><span class="p">;</span>
+
+    <span class="kd">const</span> <span class="nx">paths</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">nPaths</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nPaths</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">paths</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="nx">paths</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">x0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">n</span> <span class="o">&lt;</span> <span class="nx">N</span><span class="p">;</span> <span class="nx">n</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">times</span><span class="p">[</span><span class="nx">n</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nPaths</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">paths</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">n</span><span class="p">];</span>
+            <span class="kd">const</span> <span class="nx">drift</span> <span class="o">=</span> <span class="nx">a</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">t</span><span class="p">);</span>
+            <span class="kd">const</span> <span class="nx">diffusion</span> <span class="o">=</span> <span class="nx">b</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">t</span><span class="p">);</span>
+            <span class="kd">const</span> <span class="nx">z</span> <span class="o">=</span> <span class="nx">randn</span><span class="p">();</span>
+            <span class="nx">paths</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">drift</span> <span class="o">*</span> <span class="nx">dt</span> <span class="o">+</span> <span class="nx">diffusion</span> <span class="o">*</span> <span class="nx">sqrtDt</span> <span class="o">*</span> <span class="nx">z</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="nx">times</span><span class="p">,</span> <span class="nx">paths</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><strong>Explanation</strong><br />
+This function directly implements the Euler–Maruyama method. For each time step, it evaluates the drift and diffusion functions at the current state, generates a Gaussian increment through the randn() function, and computes the next state. The procedure is repeated for each independent path, allowing many trajectories to be generated in parallel.</p>
+
+<p>The structure of the function reveals the fundamental relationship between theory and computation: the numerical scheme mirrors the mathematical update rule, with dt and sqrt(dt) applying exactly as prescribed by the continuous-time model.</p>
+
+<h3 id="2-parsing-user-defined-drift-and-diffusion"><strong>2. Parsing User-Defined Drift and Diffusion</strong></h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">buildFunction</span><span class="p">(</span><span class="nx">expr</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">fn</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Function</span><span class="p">(</span><span class="dl">'</span><span class="s1">x</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">t</span><span class="dl">'</span><span class="p">,</span> <span class="s2">`
+            "use strict";
+            return (</span><span class="p">${</span><span class="nx">expr</span><span class="p">}</span><span class="s2">);
+        `</span><span class="p">);</span>
+        <span class="nx">fn</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">fn</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">Error in </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> expression: </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+        <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Explanation</strong><br />
+This component allows the user to write mathematical expressions directly into the interface. The system transforms these expressions into JavaScript functions of the variables x and t. By testing the resulting function on simple inputs, the code detects syntax errors before the simulation begins.</p>
+
+<p>This flexible approach encourages experimentation and allows the simulator to support a broad class of SDEs without requiring predefined functional forms.</p>
+
+<h3 id="3-generating-standard-normal-random-variables"><strong>3. Generating Standard Normal Random Variables</strong></h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">randn</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">u</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">u</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">u</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">();</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">v</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">v</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">u</span><span class="p">))</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="nx">v</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Explanation</strong><br />
+This implementation uses the <strong>Box–Muller transform</strong> to convert uniformly distributed random numbers into standard normal variables. These variables represent the increments Z_n used in the Euler–Maruyama update rule. The mathematical properties of Gaussian increments are essential to reproducing the behavior of the Wiener process, and therefore to simulating any SDE.</p>
+
+<h3 id="4-rendering-sample-paths-on-the-canvas"><strong>4. Rendering Sample Paths on the Canvas</strong></h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">drawPaths</span><span class="p">(</span><span class="nx">times</span><span class="p">,</span> <span class="nx">paths</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Canvas setup omitted for brevity</span>
+    <span class="c1">// Axes drawing, scaling, ticks...</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">p</span> <span class="o">&lt;</span> <span class="nx">paths</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">p</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">paths</span><span class="p">[</span><span class="nx">p</span><span class="p">];</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="p">(</span><span class="nx">p</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">?</span> <span class="mi">2</span> <span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="kd">const</span> <span class="nx">hue</span> <span class="o">=</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span><span class="p">;</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="s2">`hsl(</span><span class="p">${</span><span class="nx">hue</span><span class="p">}</span><span class="s2">, 70%, 60%)`</span><span class="p">;</span>
+
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">n</span> <span class="o">&lt;</span> <span class="nx">times</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">n</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">cx</span> <span class="o">=</span> <span class="nx">xToCanvas</span><span class="p">(</span><span class="nx">times</span><span class="p">[</span><span class="nx">n</span><span class="p">]);</span>
+            <span class="kd">const</span> <span class="nx">cy</span> <span class="o">=</span> <span class="nx">yToCanvas</span><span class="p">(</span><span class="nx">path</span><span class="p">[</span><span class="nx">n</span><span class="p">]);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="nx">cx</span><span class="p">,</span> <span class="nx">cy</span><span class="p">);</span>
+            <span class="k">else</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">cx</span><span class="p">,</span> <span class="nx">cy</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Explanation</strong><br />
+This function handles the visualization of the simulated trajectories. It assigns a distinct color to each path to improve readability, computes the appropriate canvas coordinates for each point, and draws smooth lines connecting successive states.</p>
+
+<p>The dynamic nature of the scaling functions xToCanvas and yToCanvas ensures that the displayed graph adapts automatically to the magnitude of the simulated values, whether they remain close to the origin or diverge widely due to strong drift or diffusion.</p>
+
+<hr />
+
+<h2 id="conclusions"><strong>Conclusions</strong></h2>
+
+<p>This homework assignment provides a comprehensive introduction to <strong>Stochastic Differential Equations</strong> both in theory and in computational practice. By implementing the <strong>Euler–Maruyama method</strong> and integrating it into an interactive visualization tool, the student gains direct insight into the behavior of SDEs, their sensitivity to drift and diffusion, and the variability of sample paths.</p>
+
+<p>The simulator demonstrates how numerical methods can approximate continuous-time stochastic models and highlights the importance of randomness in shaping the evolution of such systems. Through experimentation, one can observe mean reversion, instability, oscillation, and dispersion, developing a deeper intuition for the mathematical structures underlying stochastic dynamics.</p>
+
+<hr />
+
         © 2025 Simone Di Gregorio — Statistics Course Blog
       </section>
     </div>
